@@ -8,7 +8,6 @@ public class GameplayManager : MonoBehaviour
 {
     public GameObject playerPrefab;
 
-
     public void Start()
     {
         if (!PhotonNetwork.IsConnected)
