@@ -32,4 +32,9 @@ public class ButtonManager : MonoBehaviour
 	{
 		PhotonManager.Instance.JoinChatroom();
 	}
+
+	public void JoinFPS()
+    {
+		PhotonManager.Instance.CreateRoom();
+    }
 }

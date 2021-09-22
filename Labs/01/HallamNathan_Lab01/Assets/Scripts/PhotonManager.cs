@@ -16,6 +16,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	RoomOptions roomOptions = new RoomOptions();
 	static string gameplayLevel = "GameScene";
 	static string chatLevel = "ChatRoom";
+	static string fpsLevel = "FPSScene";
 	private string username;
 	PhotonView PV;
 
@@ -81,7 +82,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	public override void OnCreatedRoom()
 	{
 		Debug.Log("[PhotonManager][OnCreateRoom]");
-		PhotonNetwork.LoadLevel(gameplayLevel);
+		PhotonNetwork.LoadLevel(fpsLevel);
 	}
 	#endregion
 

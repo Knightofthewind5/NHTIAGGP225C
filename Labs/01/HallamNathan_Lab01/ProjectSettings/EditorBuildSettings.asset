@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ChatRoom.unity
     guid: 0eb689822b326734a992612afca2e4b7
+  - enabled: 1
+    path: Assets/Scenes/FPSScene.unity
+    guid: 9e8b8b3c152921346b3e97ede33f804a
   m_configObjects: {}
