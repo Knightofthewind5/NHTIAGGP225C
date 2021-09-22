@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
 
@@ -16,6 +18,8 @@ public class PlayerManager3 : MonoBehaviour
     public Vector3 playerVelocity;
     public float gravityValue = -9.81f;
     bool groundedPlayer = true;
+    public Image healthbar;
+    public TMP_Text user;
 
     void Awake()
     {
