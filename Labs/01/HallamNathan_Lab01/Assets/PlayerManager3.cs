@@ -6,6 +6,7 @@ using Photon.Realtime;
 
 public class PlayerManager3 : MonoBehaviour
 {
+    public float health = 100f;
     GameObject Player;
     CharacterController controller;
     public GameObject projectileSpawn;
@@ -54,6 +55,16 @@ public class PlayerManager3 : MonoBehaviour
             {
                 PhotonNetwork.Instantiate(projectile.name, projectileSpawn.transform.position, projectileSpawn.transform.rotation);
             }
+        }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+
+        if (health <= 0)
+        {
+            Destroy(this.gameObject);
         }
     }
 }

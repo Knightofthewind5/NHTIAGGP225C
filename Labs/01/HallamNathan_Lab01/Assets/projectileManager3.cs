@@ -28,4 +28,16 @@ public class projectileManager3 : MonoBehaviour
             Destroy(this.gameObject);
         }    
     }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.GetComponent<PlayerManager3>())
+        {
+            PlayerManager3 player = other.gameObject.GetComponent<PlayerManager3>();
+
+            player.TakeDamage(damage);
+
+            Destroy(this.gameObject);
+        }
+    }
 }
