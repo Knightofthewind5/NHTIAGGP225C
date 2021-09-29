@@ -63,6 +63,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		{
 			PhotonNetwork.ConnectUsingSettings();
 			PhotonNetwork.GameVersion = gameVersion;
+			PhotonNetwork.AutomaticallySyncScene = true;
 		}
 	}
 
@@ -82,7 +83,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	public override void OnCreatedRoom()
 	{
 		Debug.Log("[PhotonManager][OnCreateRoom]");
-		PhotonNetwork.LoadLevel(fpsLevel);
+		PhotonNetwork.LoadLevel(gameplayLevel);
 	}
 	#endregion
 
@@ -98,7 +99,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	public override void OnJoinedRoom()
 	{
-		Debug.Log("[PhotonManager][OnJoinedRoom] Room Joined!");
+		Debug.Log("[PhotonManager][OnJoinedRoom] Room " + PhotonNetwork.CurrentRoom.Name + " Joined!");
+
+		if (GameManager3.Instance)
+        {
+			Debug.Log("Found GameManager3");
+
+			GameManager3.Instance.OnLoadLevel();
+		}
 	}
 
 	public void JoinChatroom()
@@ -125,6 +133,35 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 				Debug.LogError("[PhotonManager][JoinChatroom] No username detected - Unable to join chatroom!");
 			}
 		}	
+	}
+
+	public void JoinFPS()
+	{
+		if (ButtonManager.Instance)
+		{
+			if (!string.IsNullOrEmpty(ButtonManager.Instance.input.text) && PhotonNetwork.CountOfPlayersInRooms < 5)
+			{
+				if (Instance != null)
+				{
+					Debug.Log("[PhotonManager][JoinFPS] Joining Shooter...");
+
+					username = ButtonManager.Instance.input.text;
+
+					PlayerPrefs.SetString("Username", username);
+
+					PhotonNetwork.JoinRandomOrCreateRoom();
+
+					if (PhotonNetwork.IsMasterClient)
+                    {
+						PhotonNetwork.LoadLevel(fpsLevel);
+					}
+				}
+			}
+			else
+			{
+				Debug.LogError("[PhotonManager][JoinFPS] No username detected - Unable to join fps!");
+			}
+		}
 	}
 
 	#endregion Join Rooms

@@ -35,6 +35,6 @@ public class ButtonManager : MonoBehaviour
 
 	public void JoinFPS()
     {
-		PhotonManager.Instance.CreateRoom();
+		PhotonManager.Instance.JoinFPS();
     }
 }
