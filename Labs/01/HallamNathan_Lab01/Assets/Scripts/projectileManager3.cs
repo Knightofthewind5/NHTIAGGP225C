@@ -25,7 +25,7 @@ public class projectileManager3 : MonoBehaviour
         lifetime -= Time.deltaTime;
         if (lifetime <= 0)
         {
-            Destroy(this.gameObject);
+            PhotonNetwork.Destroy(gameObject);
         }    
     }
 
@@ -37,7 +37,7 @@ public class projectileManager3 : MonoBehaviour
 
             player.TakeDamage(damage);
 
-            Destroy(gameObject);
+            PhotonNetwork.Destroy(gameObject);
         }
     }
 }

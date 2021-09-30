@@ -19,6 +19,8 @@ public class GameManager3 : MonoBehaviour
         numOfSpawns = spawnpoints.Count;
 
         Instance = this;
+
+        OnLoadLevel();
     }
 
     public void OnLoadLevel()

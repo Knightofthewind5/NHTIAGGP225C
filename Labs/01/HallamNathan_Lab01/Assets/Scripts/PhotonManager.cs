@@ -101,11 +101,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	{
 		Debug.Log("[PhotonManager][OnJoinedRoom] Room " + PhotonNetwork.CurrentRoom.Name + " Joined!");
 
-		if (GameManager3.Instance)
-        {
-			Debug.Log("Found GameManager3");
-
-			GameManager3.Instance.OnLoadLevel();
+		if (PhotonNetwork.IsMasterClient)
+		{
+			Debug.Log("is master");
+			PhotonNetwork.LoadLevel(fpsLevel);
 		}
 	}
 
@@ -149,12 +148,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 					PlayerPrefs.SetString("Username", username);
 
-					PhotonNetwork.JoinRandomOrCreateRoom();
-
-					if (PhotonNetwork.IsMasterClient)
-                    {
-						PhotonNetwork.LoadLevel(fpsLevel);
-					}
+					PhotonNetwork.JoinRandomOrCreateRoom();	
 				}
 			}
 			else

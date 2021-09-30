@@ -70,6 +70,8 @@ public class PlayerManager3 : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        //gameObject.GetPhotonView().RPC("TakeDamageRPC", RpcTarget.Others, damage);
+
         Debug.Log("[PM3][TakeDamage]");
 
         health -= damage;
@@ -78,6 +80,12 @@ public class PlayerManager3 : MonoBehaviour
         {
             PhotonNetwork.Destroy(gameObject);
         }
+    }
+
+    [PunRPC]
+    public void TakeDamageRPC(float damage)
+    {
+        
     }
 
     public void UpdateHealth()
