@@ -8,95 +8,103 @@ using Photon.Realtime;
 
 public class PlayerManager3 : MonoBehaviour
 {
-    public float health;
-    public float maxHealth = 100f;
-    GameObject Player;
-    CharacterController controller;
-    public GameObject projectileSpawn;
-    public GameObject projectile;
-    public float playerSpeed = 2;
-    public float jumpHeight = 2;
-    public Vector3 playerVelocity;
-    public float gravityValue = -9.81f;
-    bool groundedPlayer = true;
-    public Image healthbar;
-    public TMP_Text user;
+	GameObject Player;
+	CharacterController controller;
+	public GameObject projectileSpawn;
+	public GameObject projectile;
+	public float playerSpeed = 2;
+	public float jumpHeight = 2;
+	float playerVelocity;
+	public float gravityValue = 9.81f;
+	bool groundedPlayer = true;
+	public TMP_Text user;
+	PhotonView photonView;
+	public float projectileSpeed = 1000f;
+	public float projectileLifetime = 5f;
+	public float verticalSpeed = 1f;
+	public float horizontalSpeed = 1f;
+	private float xRotation = 0.0f;
+	private float yRotation = 0.0f;
+	public Camera cam;
 
-    float fillAmount;
+	public GameObject playerInfo;
+	private Animator anim;
 
-    void Awake()
-    {
-        Player = gameObject;
-        controller = gameObject.GetComponent<CharacterController>();
-        health = maxHealth;
-    }
+	public AudioSource audioSource;
 
-    //https://docs.unity3d.com/ScriptReference/CharacterController.Move.html
-    void Update()
-    {
-        UpdateHealth();
+	void Awake()
+	{
+		Player = gameObject;
+		controller = gameObject.GetComponent<CharacterController>();
+		photonView = GetComponent<PhotonView>();
 
-        if (gameObject.GetPhotonView().IsMine)
-        {
-            groundedPlayer = controller.isGrounded;
-            if (groundedPlayer && playerVelocity.y < 0)
-            {
-                playerVelocity.y = 0f;
-            }
+		if (photonView.IsMine)
+		{
+			cam.GetComponent<Camera>().enabled = true;
+		}
+		else
+		{
+			cam.GetComponent<Camera>().enabled = false;
+		}
 
-            Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            controller.Move(move * Time.deltaTime * playerSpeed);
+		anim = gameObject.GetComponent<Animator>();
+	}
 
-            if (move != Vector3.zero)
-            {
-                gameObject.transform.forward = move;
-            }
+	//http://gyanendushekhar.com/2020/02/06/first-person-movement-in-unity-3d/
+	void Update()
+	{
+		if (photonView.IsMine)
+		{
+			float mouseX = Input.GetAxis("Mouse X") * horizontalSpeed;
+			float mouseY = Input.GetAxis("Mouse Y") * verticalSpeed;
 
-            // Changes the height position of the player..
-            if (Input.GetButtonDown("Jump") && groundedPlayer)
-            {
-                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-            }
+			yRotation += mouseX;
+			xRotation -= mouseY;
+			xRotation = Mathf.Clamp(xRotation, -90, 90);
 
-            playerVelocity.y += gravityValue * Time.deltaTime;
-            controller.Move(playerVelocity * Time.deltaTime);
+			cam.transform.eulerAngles = new Vector3(xRotation, yRotation, 0.0f);
+			gameObject.transform.eulerAngles = new Vector3(0.0f, yRotation, 0.0f);
 
-            if (Input.GetButtonDown("Fire1"))
-            {
-                PhotonNetwork.Instantiate(projectile.name, projectileSpawn.transform.position, projectileSpawn.transform.rotation);
-            }
-        }
-    }
 
-    public void TakeDamage(float damage)
-    {
-        //gameObject.GetPhotonView().RPC("TakeDamageRPC", RpcTarget.Others, damage);
+			float horizontal = Input.GetAxis("Horizontal") * playerSpeed;
+			float vertical = Input.GetAxis("Vertical") * playerSpeed;
+			controller.Move((cam.transform.right * horizontal + cam.transform.forward * vertical) * Time.deltaTime);
 
-        Debug.Log("[PM3][TakeDamage]");
+			float move = Mathf.Abs(horizontal + vertical);
 
-        health -= damage;
 
-        if (health <= 0)
-        {
-            PhotonNetwork.Destroy(gameObject);
-        }
-    }
+			anim.SetFloat("Move", move);
 
-    [PunRPC]
-    public void TakeDamageRPC(float damage)
-    {
-        
-    }
+			// Gravity
+			if (controller.isGrounded)
+			{
+				playerVelocity = 0;
+			}
+			else
+			{
+				playerVelocity -= gravityValue * Time.deltaTime;
+				controller.Move(new Vector3(0, playerVelocity, 0));
+			}
 
-    public void UpdateHealth()
-    {
-        if (health > maxHealth)
-        {
-            health = maxHealth;
-        }
+			if (Input.GetButtonDown("Fire1"))
+			{
+				Fire();
+			}
+		}
+	}
 
-        fillAmount = (health / maxHealth);
+	public void Fire()
+	{
+		photonView.RPC("RPCFire", RpcTarget.All, projectileSpawn.transform.forward * projectileSpeed);
+	}
 
-        healthbar.fillAmount = fillAmount;
-    }
+
+	[PunRPC]
+	public void RPCFire(Vector3 velocity)
+	{
+		GameObject proj = Instantiate(projectile, projectileSpawn.transform.position, projectileSpawn.transform.rotation);
+		Rigidbody rb = proj.GetComponent<Rigidbody>();
+		rb.velocity = velocity;
+		Destroy(proj, projectileLifetime);
+	}
 }

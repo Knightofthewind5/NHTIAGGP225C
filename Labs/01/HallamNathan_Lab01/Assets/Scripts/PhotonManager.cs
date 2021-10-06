@@ -100,12 +100,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	public override void OnJoinedRoom()
 	{
 		Debug.Log("[PhotonManager][OnJoinedRoom] Room " + PhotonNetwork.CurrentRoom.Name + " Joined!");
-
-		if (PhotonNetwork.IsMasterClient)
-		{
-			Debug.Log("is master");
-			PhotonNetwork.LoadLevel(fpsLevel);
-		}
 	}
 
 	public void JoinChatroom()
@@ -148,7 +142,17 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 					PlayerPrefs.SetString("Username", username);
 
-					PhotonNetwork.JoinRandomOrCreateRoom();	
+					PhotonNetwork.JoinRandomOrCreateRoom();
+
+					if (PhotonNetwork.IsMasterClient)
+					{
+						Debug.Log("is master");
+						SceneManager.LoadScene(fpsLevel);
+					}
+					else
+					{
+						PhotonNetwork.LoadLevel(fpsLevel);
+					}
 				}
 			}
 			else
@@ -206,6 +210,22 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	}
 
 	#endregion Chatrooms
+
+	[PunRPC]
+	public void DestroyObject(int id)
+	{
+		GameObject[] objs = FindObjectsOfType<GameObject>();
+
+		foreach (GameObject go in objs)
+		{
+			if (go.GetInstanceID() == id)
+			{
+				Destroy(go);
+				return;
+			}
+		}
+	}
+
 
 	#endregion Functions
 }

@@ -309,13 +309,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c206808c0dd366488f10de435fa8288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 4038370757525563136, guid: 4447dbb2ff1551245af1765f6cb573e1,
+  playerPrefab: {fileID: 3567526884563907306, guid: 78cb2cd4607afe24182f0f3abace41c6,
     type: 3}
   spawnpoints:
   - {fileID: 1254664245}
   - {fileID: 446373656}
   - {fileID: 1625735854}
   - {fileID: 359535274}
+  gameTime: 60
 --- !u!4 &516819229
 Transform:
   m_ObjectHideFlags: 0
@@ -348,7 +349,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 516819228}
   sceneViewId: 2
   InstantiationId: 0
   isRuntimeInstantiated: 0
