@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
 
 public class GameManager3 : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -15,6 +16,9 @@ public class GameManager3 : MonoBehaviourPunCallbacks, IPunObservable
 
 	public float gameTime = 60f;
 	float timer;
+
+	public AudioSource music;
+	float musicTime;
 
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
@@ -61,7 +65,8 @@ public class GameManager3 : MonoBehaviourPunCallbacks, IPunObservable
 		{
 			timer = 0;
 
-			// Load Main Scene
+			PhotonNetwork.DestroyAll();
+			PhotonNetwork.LeaveRoom();
 		}
 	}
 

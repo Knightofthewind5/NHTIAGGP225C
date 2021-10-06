@@ -31,6 +31,10 @@ public class PlayerManager3 : MonoBehaviour
 	private Animator anim;
 
 	public AudioSource audioSource;
+	public AudioClip shoot;
+	public AudioClip walk;
+	public float volume;
+	public Transform sourceTransform;
 
 	void Awake()
 	{
@@ -106,5 +110,17 @@ public class PlayerManager3 : MonoBehaviour
 		Rigidbody rb = proj.GetComponent<Rigidbody>();
 		rb.velocity = velocity;
 		Destroy(proj, projectileLifetime);
+
+		audioSource.PlayOneShot(shoot);
+	}
+
+	public void WalkSound()
+	{
+		Debug.Log("Play Walk");
+
+		if (photonView.IsMine)
+		{
+			audioSource.Play();
+		}
 	}
 }

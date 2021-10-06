@@ -1575,6 +1575,10 @@ MonoBehaviour:
   cam: {fileID: 1723788299141707889}
   playerInfo: {fileID: 6034615998763223486}
   audioSource: {fileID: 8311850160099209227}
+  shoot: {fileID: 8300000, guid: fd20c45c184816941bc9b4b5fd14ba20, type: 3}
+  walk: {fileID: 8300000, guid: 38440783818cadf48a8467d3520dddb8, type: 3}
+  volume: 1
+  sourceTransform: {fileID: 3573312443110880688}
 --- !u!114 &168088223370319573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1609,8 +1613,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 38440783818cadf48a8467d3520dddb8, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
+  m_Volume: 0.25
+  m_Pitch: 1.5
   Loop: 0
   Mute: 0
   Spatialize: 0
