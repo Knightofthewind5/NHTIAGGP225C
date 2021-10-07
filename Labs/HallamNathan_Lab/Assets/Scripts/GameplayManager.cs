@@ -4,26 +4,23 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class GameplayManager : MonoBehaviour
+public class GameplayManager : MonoBehaviourPunCallbacks
 {
-    public GameObject playerPrefab;
+	public GameObject playerPrefab;
 
-    public void Start()
-    {
-        if (!PhotonNetwork.IsConnected)
-        {
-            PhotonNetwork.LoadLevel("SampleScene");
+	public override void OnJoinedRoom()
+	{
+		base.OnJoinedRoom();
+		
+		if (playerPrefab)
+		{
+			GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
 
-            return;
-        }
-
-        if (playerPrefab)
-        {
-            PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
-        }
-        else
-        {
-            Debug.Log("[GameplayManager][Start](playerPrefab) No prefab set");
-        }
-    }
+			PhotonNetwork.LocalPlayer.NickName = PlayerPrefs.GetString("Username");
+		}
+		else
+		{
+			Debug.Log("[GameplayManager][Start](playerPrefab) No prefab set");
+		}
+	}
 }

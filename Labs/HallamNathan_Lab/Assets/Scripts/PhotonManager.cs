@@ -14,12 +14,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	/// </summary>
 	string gameVersion = "0";
 	RoomOptions roomOptions = new RoomOptions();
-	static string gameplayLevel = "GameScene";
-	static string chatLevel = "ChatRoom";
 	static string fpsLevel = "FPSScene";
-	static string fpsLobby = "FPSLobbby";
+	static string fpsLobby = "FPSLobby";
 	private string username;
-	PhotonView PV;
+	PhotonView photonView;
 
 	//Singleton 
 	public static PhotonManager Instance { get; private set; }
@@ -39,8 +37,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		else
 		{
 			Instance = this;
-			PV = gameObject.AddComponent<PhotonView>();
-			PV.ViewID = 999;
+			photonView = gameObject.AddComponent<PhotonView>();
+			photonView.ViewID = 999;
 			DontDestroyOnLoad(this);
 		}
 
@@ -84,7 +82,32 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	public override void OnCreatedRoom()
 	{
 		Debug.Log("[PhotonManager][OnCreateRoom]");
-		PhotonNetwork.LoadLevel(gameplayLevel);
+	}
+
+	public void CreateFPSLobby()
+	{
+		if (ButtonManager.Instance)
+		{
+			if (!string.IsNullOrEmpty(ButtonManager.Instance.input.text) && PhotonNetwork.CountOfPlayersInRooms < 5)
+			{
+				if (Instance != null)
+				{
+					Debug.Log("[PhotonManager][CreateFPSLobby] Creating Lobby for FPS...");
+
+					username = ButtonManager.Instance.input.text;
+
+					PlayerPrefs.SetString("Username", username);
+
+					PhotonNetwork.CreateRoom(null, roomOptions);
+
+					SceneManager.LoadScene(fpsLobby);		
+				}
+			}
+			else
+			{
+				Debug.LogError("[PhotonManager][CreateFPSLobby] No username detected - Unable to join lobby!");
+			}
+		}
 	}
 	#endregion
 
@@ -95,7 +118,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 		PhotonNetwork.JoinRandomOrCreateRoom();
 		
-		PhotonNetwork.LoadLevel(gameplayLevel);
+		PhotonNetwork.LoadLevel(fpsLobby);
 	}
 
 	public override void OnJoinedRoom()
@@ -103,7 +126,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		Debug.Log("[PhotonManager][OnJoinedRoom] Room " + PhotonNetwork.CurrentRoom.Name + " Joined!");
 	}
 
-	public void JoinChatroom()
+	public void JoinFPSLobby()
 	{
 		if (ButtonManager.Instance)
 		{
@@ -111,67 +134,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			{
 				if (Instance != null)
 				{
-					Debug.Log("[PhotonManager][JoinChatroom] Joining Chatroom...");
-
-					username = ButtonManager.Instance.input.text;
-
-					PlayerPrefs.SetString("Username", username);
-
-					PhotonNetwork.JoinRandomOrCreateRoom();
-
-					PhotonNetwork.LoadLevel(chatLevel);
-				}
-			}
-			else
-			{
-				Debug.LogError("[PhotonManager][JoinChatroom] No username detected - Unable to join chatroom!");
-			}
-		}	
-	}
-
-	public void JoinFPS()
-	{
-		if (ButtonManager.Instance)
-		{
-			if (!string.IsNullOrEmpty(ButtonManager.Instance.input.text) && PhotonNetwork.CountOfPlayersInRooms < 5)
-			{
-				if (Instance != null)
-				{
-					Debug.Log("[PhotonManager][JoinFPS] Joining Shooter...");
-
-					username = ButtonManager.Instance.input.text;
-
-					PlayerPrefs.SetString("Username", username);
-
-					PhotonNetwork.JoinRandomOrCreateRoom();
-
-					if (PhotonNetwork.IsMasterClient)
-					{
-						Debug.Log("is master");
-						SceneManager.LoadScene(fpsLevel);
-					}
-					else
-					{
-						PhotonNetwork.LoadLevel(fpsLevel);
-					}
-				}
-			}
-			else
-			{
-				Debug.LogError("[PhotonManager][JoinFPS] No username detected - Unable to join fps!");
-			}
-		}
-	}
-
-	public void JoinLobby()
-	{
-		if (ButtonManager.Instance)
-		{
-			if (!string.IsNullOrEmpty(ButtonManager.Instance.input.text) && PhotonNetwork.CountOfPlayersInRooms < 5)
-			{
-				if (Instance != null)
-				{
-					Debug.Log("[PhotonManager][JoinLobby] Joining Lobby for FPS...");
+					Debug.Log("[PhotonManager][JoinFPSLobby] Joining Lobby for FPS...");
 
 					username = ButtonManager.Instance.input.text;
 
@@ -192,7 +155,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			}
 			else
 			{
-				Debug.LogError("[PhotonManager][JoinLobby] No username detected - Unable to join lobby!");
+				Debug.LogError("[PhotonManager][JoinFPSLobby] No username detected - Unable to join lobby!");
 			}
 		}
 	}
@@ -202,9 +165,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	#region Disconnection and Failures
 	public override void OnLeftRoom()
 	{
-		PhotonNetwork.LoadLevel("SampleScene");
+		PhotonNetwork.LoadLevel("MainMenu");
 
-		SceneManager.LoadScene("SampleScene");
+		SceneManager.LoadScene("MainMenu");
 	}
 
 	public override void OnDisconnected(DisconnectCause cause)
@@ -238,10 +201,23 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		Debug.Log(string.Format("ChatMessage {0} {1}", _username, _chat));
 	}
 
+
 	[PunRPC]
-	public void SetPlayerCount()
+	public void SetUserList(int playerCount)
 	{
-		RPCChat.Instance.memberCounter.text = RPCChat.Instance.playerCount + "/4";
+		RPCChat.Instance.memberCounter.text = playerCount + "/4";
+
+		RPCChat chat = RPCChat.Instance;
+
+		chat.memberCounter.text = playerCount + "/4";
+		PhotonNetwork.CurrentRoom.MaxPlayers = 4;
+
+		chat.username.text = " ";
+		
+		for (int i = 0; i < playerCount; i++)
+		{
+			chat.username.text += "\n" + PhotonNetwork.PlayerList[i].NickName;
+		}
 	}
 
 	#endregion Chatrooms

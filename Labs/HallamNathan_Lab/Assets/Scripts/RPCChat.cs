@@ -6,14 +6,13 @@ using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class RPCChat : MonoBehaviour
+public class RPCChat : MonoBehaviourPunCallbacks
 {
 	public TMP_Text username;
 	public TMP_Text chatRoomString;
 	public TMP_InputField inputString;
 	public TMP_Text memberCounter;
 	public int playerCount;
-	public float updateTick;
 
 
 	public static RPCChat Instance { get; private set; }
@@ -29,27 +28,16 @@ public class RPCChat : MonoBehaviour
 			Instance = this;
 		}
 
-		username.text = PlayerPrefs.GetString("Username");
+		//username1.text = PlayerPrefs.GetString("Username");
+		//username.text = PhotonNetwork.PlayerList[0].NickName;
 	}
 
 	public void Update()
 	{
-		updateTick++;
-
-
-		if (Instance)
+		if (Instance && PhotonNetwork.InRoom)
 		{
-			if (playerCount <= 4 && updateTick > 20) // UpdateTick is needed to prevent noinstance error occuring. Error did not cause problems but do not like the red!
-			{
-				playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-				memberCounter.text = playerCount + "/4";
-				PhotonNetwork.CurrentRoom.MaxPlayers = 4;
-				updateTick = 0;
-			}
-			else if (playerCount > 4)
-			{
-
-			}
+			playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+			PhotonManager.Instance.gameObject.GetPhotonView().RPC("SetUserList", RpcTarget.All, playerCount);
 		}
 	}
 

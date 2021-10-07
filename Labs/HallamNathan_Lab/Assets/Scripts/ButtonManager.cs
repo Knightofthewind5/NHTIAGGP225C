@@ -28,13 +28,13 @@ public class ButtonManager : MonoBehaviour
 		PhotonManager.Instance.JoinRandomRoom();
 	}
 
-	public void JoinChatroom()
+	public void CreateFPSLobby()
 	{
-		PhotonManager.Instance.JoinChatroom();
+		PhotonManager.Instance.CreateFPSLobby();
 	}
 
-	public void JoinFPS()
+	public void JoinFPSLobby()
 	{
-		PhotonManager.Instance.JoinFPS();
+		PhotonManager.Instance.JoinFPSLobby();
 	}
 }
