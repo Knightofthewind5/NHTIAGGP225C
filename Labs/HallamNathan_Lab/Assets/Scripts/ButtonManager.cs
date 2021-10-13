@@ -30,11 +30,6 @@ public class ButtonManager : MonoBehaviour
 		PhotonManager.Instance.JoinRandomRoom();
 	}
 
-	public void CreateFPSLobby()
-	{
-		PhotonManager.Instance.CreateFPSLobby();
-	}
-
 	public void JoinFPSLobby()
 	{
 		PhotonManager.Instance.JoinFPSLobby();

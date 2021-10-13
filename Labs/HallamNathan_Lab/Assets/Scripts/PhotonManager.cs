@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
-using TMPro;
 
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
@@ -15,7 +14,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	/// </summary>
 	string gameVersion = "0";
 	RoomOptions roomOptions = new RoomOptions();
-	static string fpsLevel = "FPSScene";
 	static string fpsLobby = "FPSLobby";
 	private string username;
 	PhotonView photonView;
@@ -94,32 +92,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	public override void OnCreatedRoom()
 	{
 		Debug.Log("[PhotonManager][OnCreateRoom]");
-	}
-
-	public void CreateFPSLobby()
-	{
-		if (ButtonManager.Instance)
-		{
-			if (!string.IsNullOrEmpty(ButtonManager.Instance.input.text) && PhotonNetwork.CountOfPlayersInRooms < 5)
-			{
-				if (Instance != null)
-				{
-					Debug.Log("[PhotonManager][CreateFPSLobby] Creating Lobby for FPS...");
-
-					username = ButtonManager.Instance.input.text;
-
-					PlayerPrefs.SetString("Username", username);
-
-					PhotonNetwork.CreateRoom(null, roomOptions);
-
-					SceneManager.LoadScene(fpsLobby);		
-				}
-			}
-			else
-			{
-				Debug.LogError("[PhotonManager][CreateFPSLobby] No username detected - Unable to join lobby!");
-			}
-		}
 	}
 	#endregion
 

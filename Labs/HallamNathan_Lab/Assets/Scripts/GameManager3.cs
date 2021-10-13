@@ -82,12 +82,7 @@ public class GameManager3 : MonoBehaviourPunCallbacks
 			{
 				PhotonNetwork.LoadLevel("FPSLobby");
 			}
-		}
-
-		if (!hasSpawned)
-		{
-			
-		}		
+		}	
 
 		if (PhotonNetwork.IsMasterClient)
 		{

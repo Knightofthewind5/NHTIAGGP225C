@@ -83,8 +83,9 @@ public class RPCChat : MonoBehaviourPunCallbacks
 
 	public void LeaveRoom()
 	{
-		if (PhotonNetwork.CountOfPlayers <= 1)
+		if (PhotonNetwork.CurrentRoom.PlayerCount <= 1)
 		{
+			//Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
 			PhotonNetwork.DestroyAll();
 		}
 		PhotonNetwork.LeaveRoom();
