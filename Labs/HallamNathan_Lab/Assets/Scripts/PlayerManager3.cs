@@ -8,7 +8,6 @@ using Photon.Realtime;
 
 public class PlayerManager3 : MonoBehaviour
 {
-	GameObject Player;
 	CharacterController controller;
 	public GameObject projectileSpawn;
 	public GameObject projectile;
@@ -16,7 +15,6 @@ public class PlayerManager3 : MonoBehaviour
 	public float jumpHeight = 2;
 	float playerVelocity;
 	public float gravityValue = 9.81f;
-	bool groundedPlayer = true;
 	public TMP_Text user;
 	PhotonView photonView;
 	public float projectileSpeed = 1000f;
@@ -26,6 +24,10 @@ public class PlayerManager3 : MonoBehaviour
 	private float xRotation = 0.0f;
 	private float yRotation = 0.0f;
 	public Camera cam;
+
+	public Image healthBar;
+	DataSync DS;
+	GameManager3 GM;
 
 	public GameObject playerInfo;
 	private Animator anim;
@@ -38,7 +40,8 @@ public class PlayerManager3 : MonoBehaviour
 
 	void Awake()
 	{
-		Player = gameObject;
+		GM = FindObjectOfType<GameManager3>();
+		healthBar = GM.HealthBar;
 		controller = gameObject.GetComponent<CharacterController>();
 		photonView = GetComponent<PhotonView>();
 
@@ -52,6 +55,7 @@ public class PlayerManager3 : MonoBehaviour
 		}
 
 		anim = gameObject.GetComponent<Animator>();
+		DS = GetComponent<DataSync>();
 	}
 
 	//http://gyanendushekhar.com/2020/02/06/first-person-movement-in-unity-3d/
@@ -59,26 +63,6 @@ public class PlayerManager3 : MonoBehaviour
 	{
 		if (photonView.IsMine)
 		{
-			float mouseX = Input.GetAxis("Mouse X") * horizontalSpeed;
-			float mouseY = Input.GetAxis("Mouse Y") * verticalSpeed;
-
-			yRotation += mouseX;
-			xRotation -= mouseY;
-			xRotation = Mathf.Clamp(xRotation, -90, 90);
-
-			cam.transform.eulerAngles = new Vector3(xRotation, yRotation, 0.0f);
-			gameObject.transform.eulerAngles = new Vector3(0.0f, yRotation, 0.0f);
-
-
-			float horizontal = Input.GetAxis("Horizontal") * playerSpeed;
-			float vertical = Input.GetAxis("Vertical") * playerSpeed;
-			controller.Move((cam.transform.right * horizontal + cam.transform.forward * vertical) * Time.deltaTime);
-
-			float move = Mathf.Abs(horizontal + vertical);
-
-
-			anim.SetFloat("Move", move);
-
 			// Gravity
 			if (controller.isGrounded)
 			{
@@ -90,9 +74,37 @@ public class PlayerManager3 : MonoBehaviour
 				controller.Move(new Vector3(0, playerVelocity, 0));
 			}
 
-			if (Input.GetButtonDown("Fire1"))
+			healthBar.fillAmount = (DS.Health / DS.MaxHealth);
+
+			if (GameManager3.Instance.Chat.IsActive() == false)
 			{
-				Fire();
+				float mouseX = Input.GetAxis("Mouse X") * horizontalSpeed;
+				float mouseY = Input.GetAxis("Mouse Y") * verticalSpeed;
+
+				yRotation += mouseX;
+				xRotation -= mouseY;
+				xRotation = Mathf.Clamp(xRotation, -90, 90);
+
+				cam.transform.eulerAngles = new Vector3(xRotation, yRotation, 0.0f);
+				gameObject.transform.eulerAngles = new Vector3(0.0f, yRotation, 0.0f);
+
+				float horizontal = Input.GetAxis("Horizontal") * playerSpeed;
+				float vertical = Input.GetAxis("Vertical") * playerSpeed;
+				controller.Move((cam.transform.right * horizontal + cam.transform.forward * vertical) * Time.deltaTime);
+
+				float move = Mathf.Abs(horizontal + vertical);
+
+
+				anim.SetFloat("Move", move);
+
+				if (Input.GetButtonDown("Fire1"))
+				{
+					Fire();
+				}
+			}
+			else
+			{
+				anim.SetFloat("Move", 0);
 			}
 		}
 	}

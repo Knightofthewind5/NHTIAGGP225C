@@ -1428,7 +1428,7 @@ GameObject:
   - component: {fileID: 8311850160099209227}
   m_Layer: 0
   m_Name: FPSPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1573,6 +1573,7 @@ MonoBehaviour:
   verticalSpeed: 1
   horizontalSpeed: 1
   cam: {fileID: 1723788299141707889}
+  healthBar: {fileID: 0}
   playerInfo: {fileID: 6034615998763223486}
   audioSource: {fileID: 8311850160099209227}
   shoot: {fileID: 8300000, guid: fd20c45c184816941bc9b4b5fd14ba20, type: 3}
@@ -1595,6 +1596,7 @@ MonoBehaviour:
   ObjRotation: {x: 0, y: 0, z: 0, w: 0}
   CameraRotation: {x: 0, y: 0, z: 0, w: 0}
   ObjScale: {x: 0, y: 0, z: 0}
+  color: {r: 0, g: 0, b: 0, a: 0}
   LerpSpeed: 3
   Health: 100
   MaxHealth: 100
@@ -3024,7 +3026,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &5449741461310368992
 MonoBehaviour:
   m_ObjectHideFlags: 0

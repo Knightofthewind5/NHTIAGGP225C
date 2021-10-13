@@ -255,9 +255,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Join Room
-
-'
+  m_text: Quit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -526,7 +524,7 @@ GameObject:
   - component: {fileID: 178290584}
   - component: {fileID: 178290583}
   m_Layer: 5
-  m_Name: Button - JoinRoom
+  m_Name: Button - Quit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -598,7 +596,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1919176980}
         m_TargetAssemblyTypeName: ButtonManager, Assembly-CSharp
-        m_MethodName: JoinFPSLobby
+        m_MethodName: QuitApplication
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -725,8 +723,8 @@ GameObject:
   - component: {fileID: 633879113}
   - component: {fileID: 633879112}
   m_Layer: 5
-  m_Name: Button - CreateRoom
-  m_TagString: Untagged
+  m_Name: Button - Start
+  m_TagString: StartButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -790,14 +788,14 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 633879113}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1919176980}
         m_TargetAssemblyTypeName: ButtonManager, Assembly-CSharp
-        m_MethodName: CreateFPSLobby
+        m_MethodName: JoinFPSLobby
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2169,7 +2167,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Create Room
+  m_text: Start
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2687,3 +2685,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   input: {fileID: 1693277462}
+  chosenColor: {fileID: 1410900752}

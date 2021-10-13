@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
 using TMPro;
 
@@ -12,6 +13,7 @@ public class ButtonManager : MonoBehaviour
 	public static ButtonManager Instance { get; private set; }
 
 	public TMP_InputField input;
+	public Image chosenColor;
 
 	public void Awake()
 	{
@@ -37,4 +39,15 @@ public class ButtonManager : MonoBehaviour
 	{
 		PhotonManager.Instance.JoinFPSLobby();
 	}
+
+	public void QuitApplication()
+	{
+#if UNITY_EDITOR
+
+		UnityEditor.EditorApplication.isPlaying = false;
+
+#endif
+
+		Application.Quit();
+	}	
 }

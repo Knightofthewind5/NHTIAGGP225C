@@ -107,10 +107,10 @@ public class ColorPicker : MonoBehaviour
 			if (Input.GetMouseButtonDown(0))
 			{
 				OnColorSelect?.Invoke(color);
-				PlayerPrefs.SetFloat("ColorR", color.r);
-				PlayerPrefs.SetFloat("ColorG", color.g);
-				PlayerPrefs.SetFloat("ColorB", color.b);
-				PlayerPrefs.SetFloat("ColorA", color.a);
+				PlayerPrefs.SetFloat("colorRed", color.r);
+				PlayerPrefs.SetFloat("colorGreen", color.g);
+				PlayerPrefs.SetFloat("colorBlue", color.b);
+				PlayerPrefs.SetFloat("colorAlpha", color.a);
 				group.SetActive(false);
 			}
 		}

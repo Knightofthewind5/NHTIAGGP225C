@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
@@ -19,6 +20,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	private string username;
 	PhotonView photonView;
 
+	Button StartButton;
+
 	//Singleton 
 	public static PhotonManager Instance { get; private set; }
 
@@ -26,7 +29,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	#region Functions
 
-	#region Start and Awake
+	#region Start Awake
 	public void Awake()
 	{	
 		if (Instance)
@@ -44,13 +47,15 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 		PhotonNetwork.AutomaticallySyncScene = true;
 		roomOptions.MaxPlayers = 4;
+
+		StartButton = GameObject.FindGameObjectWithTag("StartButton").GetComponent<Button>();
 	}
 
 	public void Start()
 	{
 		Connect();
 	}
-	#endregion Start and Awake
+	#endregion Start Awake
 
 	#region Connections
 	/// <summary>
@@ -69,6 +74,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	public override void OnConnectedToMaster()
 	{
 		Debug.Log("[PhotonManager][OnConnectedToMaster]");
+		StartButton.interactable = true;
+
+		if (ButtonManager.Instance)
+		{
+			ButtonManager.Instance.chosenColor.color = new Color(PlayerPrefs.GetFloat("colorRed"), PlayerPrefs.GetFloat("colorGreen"), PlayerPrefs.GetFloat("colorBlue"), PlayerPrefs.GetFloat("colorAlpha"));
+			ButtonManager.Instance.input.text = PlayerPrefs.GetString("Username");
+		}
 	}
 	#endregion Connections
 
@@ -205,22 +217,59 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	[PunRPC]
 	public void SetUserList(int playerCount)
 	{
-		RPCChat.Instance.memberCounter.text = playerCount + "/4";
+		//RPCChat.Instance.memberCounter.text = playerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers;
 
 		RPCChat chat = RPCChat.Instance;
 
-		chat.memberCounter.text = playerCount + "/4";
-		PhotonNetwork.CurrentRoom.MaxPlayers = 4;
+		chat.memberCounter.text = playerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers;
+		//PhotonNetwork.CurrentRoom.MaxPlayers = 4;
+	}
 
-		chat.username.text = " ";
-		
-		for (int i = 0; i < playerCount; i++)
+	[PunRPC]
+	public void SetGameTimer(float timer)
+	{
+		RPCChat chat = RPCChat.Instance;
+
+		if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
 		{
-			chat.username.text += "\n" + PhotonNetwork.PlayerList[i].NickName;
+			chat.timerText.text = "Game Start in: " + timer.ToString("F2");
+		}
+		else
+		{
+			chat.timerText.text = "Waiting for Players...";
+		}
+	}
+
+	[PunRPC]
+	public void JoinGame()
+	{
+		if (PhotonNetwork.IsMasterClient)
+		{
+			SceneManager.LoadScene("FPSScene");
+		}
+		else
+		{
+			PhotonNetwork.LoadLevel("FPSScene");
 		}
 	}
 
 	#endregion Chatrooms
+
+	[PunRPC]
+	public void SetGameHUDTimer(float timer)
+	{
+		GameManager3 GM = FindObjectOfType<GameManager3>();
+
+		GM.GameTime.text = "Time Remaining: " + timer.ToString("F2");
+	}
+
+	[PunRPC]
+	public void RemoveFromAlivePlayers()
+	{
+		GameManager3 GM = FindObjectOfType<GameManager3>();
+
+		GM.playersAlive--;
+	}
 
 	[PunRPC]
 	public void DestroyObject(int id)
