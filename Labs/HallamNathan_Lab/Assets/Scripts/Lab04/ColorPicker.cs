@@ -111,6 +111,7 @@ public class ColorPicker : MonoBehaviour
 				PlayerPrefs.SetFloat("colorGreen", color.g);
 				PlayerPrefs.SetFloat("colorBlue", color.b);
 				PlayerPrefs.SetFloat("colorAlpha", color.a);
+				PhotonManager.Instance.color = color;
 				group.SetActive(false);
 			}
 		}

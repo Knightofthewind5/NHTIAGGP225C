@@ -17,7 +17,7 @@ public class LobbySync : MonoBehaviourPun, IPunObservable
 	{
 		if (photonView.IsMine)
 		{
-			username.text = PlayerPrefs.GetString("Username");
+			username.text = PhotonManager.Instance.username;
 			color.r = PlayerPrefs.GetFloat("colorRed");
 			color.g = PlayerPrefs.GetFloat("colorGreen");
 			color.b = PlayerPrefs.GetFloat("colorBlue");

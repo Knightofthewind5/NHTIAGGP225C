@@ -8,6 +8,7 @@ public class projectileManager3 : MonoBehaviour
 {
 	public float damage = 2f;
 	Rigidbody rb;
+	bool hasDealtDamage = false;
 
 	public void Awake()
 	{
@@ -23,9 +24,13 @@ public class projectileManager3 : MonoBehaviour
 
 			if (ds)
 			{
-				ds.TakeDamage(damage);
+				if (!hasDealtDamage)
+                {
+					hasDealtDamage = true;
+					ds.TakeDamage(damage);
+				}
 
-				PhotonManager.Instance.gameObject.GetPhotonView().RPC("DestroyObject", RpcTarget.All, gameObject.GetInstanceID());
+				PhotonManager.Instance.gameObject.GetPhotonView().RPC("DestroyObject", RpcTarget.AllViaServer, gameObject.GetInstanceID());
 			}
 		}
 	}

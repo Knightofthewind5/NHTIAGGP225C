@@ -54,7 +54,7 @@ public class GameManager3 : MonoBehaviourPunCallbacks
 	}
 
 
-	public void Update()
+	public void LateUpdate()
 	{
 		if (playersAlive == 1 && !gameDone)
 		{
@@ -91,6 +91,7 @@ public class GameManager3 : MonoBehaviourPunCallbacks
 
 		if (photonView.IsMine) // Open close chat window
 		{
+			//Debug.Log("View is Mine " + PlayerPrefs.GetString("Username"));
 			if (Input.GetKeyDown(KeyCode.Tab))
 			{
 				if (Chat.IsActive())

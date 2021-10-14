@@ -1562,17 +1562,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpawn: {fileID: 6163053278636816286}
-  projectile: {fileID: 2413874948831984784, guid: 6a6a85802eb1277458be3ad046a05a03,
+  pistolBullet: {fileID: 2413874948831984784, guid: 6a6a85802eb1277458be3ad046a05a03,
+    type: 3}
+  rifleBullet: {fileID: 2413874948831984784, guid: 40e000f5beb983344beca04798129a9b,
+    type: 3}
+  shotgunBullet: {fileID: 2413874948831984784, guid: f2b7172915105194aabc48a8e9525b08,
     type: 3}
   playerSpeed: 5
   jumpHeight: 1
   gravityValue: 9.81
   user: {fileID: 1305333004089663497}
-  projectileSpeed: 10
+  pistolProjectileSpeed: 50
+  rifleProjectileSpeed: 100
+  shotgunProjectileSpeed: 25
   projectileLifetime: 5
   verticalSpeed: 1
   horizontalSpeed: 1
   cam: {fileID: 1723788299141707889}
+  pistol: 1
+  rifle: 0
+  shotgun: 0
   healthBar: {fileID: 0}
   playerInfo: {fileID: 6034615998763223486}
   audioSource: {fileID: 8311850160099209227}

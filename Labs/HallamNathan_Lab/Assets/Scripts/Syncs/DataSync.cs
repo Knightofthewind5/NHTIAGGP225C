@@ -94,7 +94,7 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 		{
 			Debug.Log(gameObject.name + " Damage Taken");
 
-			photonView.RPC("Damage", RpcTarget.All, amount);
+			photonView.RPC("Damage", RpcTarget.AllViaServer, amount);
 		}
 	}
 
@@ -116,15 +116,11 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 			stream.SendNext(color.g);
 			stream.SendNext(color.b);
 			stream.SendNext(color.a);
+			stream.SendNext(Health);
 
 			if (camera)
 			{
 				stream.SendNext(camera.gameObject.transform.rotation);
-			}
-			
-			if (MaxHealth > 0)
-			{
-				stream.SendNext(Health);
 			}
 		}
 		else if (stream.IsReading)
@@ -137,15 +133,11 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 			color.g = (float)stream.ReceiveNext();
 			color.b = (float)stream.ReceiveNext();
 			color.a = (float)stream.ReceiveNext();
+			Health = (float)stream.ReceiveNext();
 
 			if (camera)
 			{
 				CameraRotation = (Quaternion)stream.ReceiveNext();
-			}
-
-			if (MaxHealth > 0)
-			{
-				Health = (float)stream.ReceiveNext();
 			}
 		}
 	}

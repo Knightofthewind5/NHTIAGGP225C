@@ -15,7 +15,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	string gameVersion = "0";
 	RoomOptions roomOptions = new RoomOptions();
 	static string fpsLobby = "FPSLobby";
-	private string username;
+	public string username;
+	public Color color;
 	PhotonView photonView;
 
 	Button StartButton;
@@ -43,7 +44,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			DontDestroyOnLoad(this);
 		}
 
-		PhotonNetwork.AutomaticallySyncScene = true;
 		roomOptions.MaxPlayers = 4;
 
 		StartButton = GameObject.FindGameObjectWithTag("StartButton").GetComponent<Button>();
@@ -123,6 +123,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 					username = ButtonManager.Instance.input.text;
 
 					PlayerPrefs.SetString("Username", username);
+
+					PhotonNetwork.AutomaticallySyncScene = true;
 
 					PhotonNetwork.JoinRandomOrCreateRoom();
 

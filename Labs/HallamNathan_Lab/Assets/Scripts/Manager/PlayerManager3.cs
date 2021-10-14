@@ -10,20 +10,27 @@ public class PlayerManager3 : MonoBehaviour
 {
 	CharacterController controller;
 	public GameObject projectileSpawn;
-	public GameObject projectile;
+	public GameObject pistolBullet;
+	public GameObject rifleBullet;
+	public GameObject shotgunBullet;
 	public float playerSpeed = 2;
 	public float jumpHeight = 2;
 	float playerVelocity;
 	public float gravityValue = 9.81f;
 	public TMP_Text user;
 	PhotonView photonView;
-	public float projectileSpeed = 1000f;
+	public float pistolProjectileSpeed = 1000f;
+	public float rifleProjectileSpeed = 1000f;
+	public float shotgunProjectileSpeed = 1000f;
 	public float projectileLifetime = 5f;
 	public float verticalSpeed = 1f;
 	public float horizontalSpeed = 1f;
 	private float xRotation = 0.0f;
 	private float yRotation = 0.0f;
 	public Camera cam;
+	public bool pistol = true;
+	public bool rifle = false;
+	public bool shotgun = false;
 
 	public Image healthBar;
 	DataSync DS;
@@ -99,6 +106,7 @@ public class PlayerManager3 : MonoBehaviour
 
 				if (Input.GetButtonDown("Fire1"))
 				{
+					Debug.Log("LMB Clicked");
 					Fire();
 				}
 			}
@@ -111,24 +119,58 @@ public class PlayerManager3 : MonoBehaviour
 
 	public void Fire()
 	{
-		photonView.RPC("RPCFire", RpcTarget.All, projectileSpawn.transform.forward * projectileSpeed);
+		if (pistol)
+		{
+			photonView.RPC("RPCFire", RpcTarget.All, projectileSpawn.transform.forward * pistolProjectileSpeed);
+		}
+		else if (rifle)
+		{
+			photonView.RPC("RPCFire", RpcTarget.All, projectileSpawn.transform.forward * rifleProjectileSpeed);
+		}
+		else if (shotgun)
+		{
+			photonView.RPC("RPCFire", RpcTarget.All, projectileSpawn.transform.forward * shotgunProjectileSpeed);
+		}	
 	}
 
 
 	[PunRPC]
 	public void RPCFire(Vector3 velocity)
 	{
-		GameObject proj = Instantiate(projectile, projectileSpawn.transform.position, projectileSpawn.transform.rotation);
-		Rigidbody rb = proj.GetComponent<Rigidbody>();
-		rb.velocity = velocity;
-		Destroy(proj, projectileLifetime);
+		GameObject proj;
 
-		audioSource.PlayOneShot(shoot);
+		if (pistol)
+        {
+			proj = Instantiate(pistolBullet, projectileSpawn.transform.position, projectileSpawn.transform.rotation);
+			Rigidbody rb = proj.GetComponent<Rigidbody>();
+			rb.velocity = velocity;
+			Destroy(proj, projectileLifetime);
+
+			audioSource.PlayOneShot(shoot);
+		}
+		else if (rifle)
+        {
+			proj = Instantiate(rifleBullet, projectileSpawn.transform.position, projectileSpawn.transform.rotation);
+			Rigidbody rb = proj.GetComponent<Rigidbody>();
+			rb.velocity = velocity;
+			Destroy(proj, projectileLifetime);
+
+			audioSource.PlayOneShot(shoot);
+		}
+		else if (shotgun)
+        {
+			proj = Instantiate(shotgunBullet, projectileSpawn.transform.position, projectileSpawn.transform.rotation);
+			Rigidbody rb = proj.GetComponent<Rigidbody>();
+			rb.velocity = velocity;
+			Destroy(proj, projectileLifetime);
+
+			audioSource.PlayOneShot(shoot);
+		}
 	}
 
 	public void WalkSound()
 	{
-		Debug.Log("Play Walk");
+		//Debug.Log("Play Walk");
 
 		if (photonView.IsMine)
 		{

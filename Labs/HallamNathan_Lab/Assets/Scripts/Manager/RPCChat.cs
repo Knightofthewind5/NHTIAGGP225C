@@ -16,6 +16,7 @@ public class RPCChat : MonoBehaviourPunCallbacks
 	public float gameStartTimer = 5f;
 	public float timerToStart = 0f;
 	bool joinGame = false;
+	public bool lobby;
 
 	public static RPCChat Instance { get; private set; }
 
@@ -37,14 +38,14 @@ public class RPCChat : MonoBehaviourPunCallbacks
 	{
 		if (Instance && PhotonNetwork.InRoom)
 		{
-			if (memberCounter != null)
+			playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
+
+			PhotonManager.Instance.gameObject.GetPhotonView().RPC("SetUserList", RpcTarget.All, playerCount);
+
+			if (PhotonNetwork.IsMasterClient)
 			{
-				playerCount = PhotonNetwork.CurrentRoom.PlayerCount;
-
-				PhotonManager.Instance.gameObject.GetPhotonView().RPC("SetUserList", RpcTarget.All, playerCount);
-
-				if (PhotonNetwork.IsMasterClient)
-				{
+				if (lobby)
+                {
 					if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
 					{
 						timerToStart -= Time.deltaTime;
@@ -59,7 +60,8 @@ public class RPCChat : MonoBehaviourPunCallbacks
 							if (!joinGame)
 							{
 								joinGame = true;
-								PhotonManager.Instance.photonView.RPC("JoinGame", RpcTarget.All);
+								PhotonNetwork.LoadLevel("FPSScene");
+								//PhotonManager.Instance.photonView.RPC("JoinGame", RpcTarget.All);
 							}
 						}
 					}
@@ -68,15 +70,15 @@ public class RPCChat : MonoBehaviourPunCallbacks
 						timerToStart = gameStartTimer;
 						PhotonManager.Instance.photonView.RPC("SetGameTimer", RpcTarget.All, timerToStart);
 					}
-				}
-			}			
+				}		
+			}					
 		}
 	}
 
 	public void SendMessage()
 	{
 		PhotonManager.Instance.gameObject.GetPhotonView()
-		.RPC("UsernameRPC", RpcTarget.AllBuffered, PlayerPrefs.GetString("Username"), inputString.text);
+		.RPC("UsernameRPC", RpcTarget.AllBuffered, PhotonManager.Instance.username, inputString.text);
 
 		inputString.text = "";
 	}
@@ -85,9 +87,10 @@ public class RPCChat : MonoBehaviourPunCallbacks
 	{
 		if (PhotonNetwork.CurrentRoom.PlayerCount <= 1)
 		{
-			//Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
 			PhotonNetwork.DestroyAll();
 		}
+
+		Debug.Log("[RPCChat][LeaveRoom]");
 		PhotonNetwork.LeaveRoom();
 	}
 }
