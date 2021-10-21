@@ -28,10 +28,11 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 			Debug.Log("Calling Spawn");
 
 			SpawnPlayer(PlayerPrefs.GetString("Username"),
-						PlayerPrefs.GetFloat("colorRed"),
-						PlayerPrefs.GetFloat("colorGreen"),
-						PlayerPrefs.GetFloat("colorBlue"),
-						PlayerPrefs.GetFloat("colorAlpha"));
+							PlayerPrefs.GetFloat("colorRed"),
+							PlayerPrefs.GetFloat("colorGreen"),
+							PlayerPrefs.GetFloat("colorBlue"),
+							PlayerPrefs.GetFloat("colorAlpha"));
+
 		}
 	}
 
@@ -55,7 +56,7 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 	}
 	
 	[PunRPC]
-	void RPCSpawnPlayer(string username, float colorR, float colorG, float colorB, float colorA)
+	void PUNSpawnPlayer(string username, float colorR, float colorG, float colorB, float colorA)
     {
 		SpawnPlayer(username, colorR, colorG, colorB, colorA);
     }
@@ -64,24 +65,18 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 	{
 		if (playerPrefab)
 		{
-			GameObject player = Instantiate(playerPrefab, playerListHolder.transform.position, playerListHolder.transform.rotation);
+			GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, playerListHolder.transform.position, playerListHolder.transform.rotation);
 
 			if (player)
 			{
-				Debug.Log("Player Spawned: Username: " + username + " R:" + colorR + " G:" + colorG + " B:" + colorB + " A:" + colorA);
+				playerSpawned = true;
 
 				player.transform.SetParent(playerListHolder.transform);
 
 				player.gameObject.name = username;
 
-				player.gameObject.GetComponent<LobbySync>().username = username;
-				player.gameObject.GetComponent<LobbySync>().color = new Color(colorR, colorG, colorB, colorA);
-
-
 				player.GetComponent<TMP_Text>().text = username;
 				player.GetComponent<TMP_Text>().color = new Color(colorR, colorG, colorB, colorA);
-
-				playerSpawned = true;
 			}
 			else
 			{
