@@ -13,12 +13,13 @@ public class PlayerManager3 : MonoBehaviour
 	public GameObject pistolBullet;
 	public GameObject rifleBullet;
 	public GameObject shotgunBullet;
-	public float playerSpeed = 2;
+	public float currentPlayerSpeed = 5;
+	public float defaultPlayerSpeed = 5;
 	public float jumpHeight = 2;
 	float playerVelocity;
 	public float gravityValue = 9.81f;
 	public TMP_Text user;
-	PhotonView photonView;
+	[HideInInspector] public PhotonView photonView;
 	public float pistolProjectileSpeed = 1000f;
 	public float rifleProjectileSpeed = 1000f;
 	public float shotgunProjectileSpeed = 1000f;
@@ -31,6 +32,16 @@ public class PlayerManager3 : MonoBehaviour
 	public bool pistol = true;
 	public bool rifle = false;
 	public bool shotgun = false;
+	public bool holdFire = false;
+	public float pistolFireRate = 1f;
+	public float rifleFireRate = 0.5f;
+	public float shotgunFireRate = 2f;
+	float fireCooldown = 0f;
+	bool canFireForever = false;
+
+	float boostSpeedTime = 0f;
+	float boostSpeed = 10f;
+
 
 	public Image healthBar;
 	DataSync DS;
@@ -47,6 +58,8 @@ public class PlayerManager3 : MonoBehaviour
 
 	void Awake()
 	{
+		currentPlayerSpeed = defaultPlayerSpeed;
+
 		GM = FindObjectOfType<GameManager3>();
 		healthBar = GM.HealthBar;
 		controller = gameObject.GetComponent<CharacterController>();
@@ -70,6 +83,23 @@ public class PlayerManager3 : MonoBehaviour
 	{
 		if (photonView.IsMine)
 		{
+			fireCooldown -= Time.deltaTime;
+
+			if (fireCooldown <= -10 && canFireForever)
+			{
+				canFireForever = false;
+			}
+
+			if (boostSpeedTime > 0)
+			{
+				boostSpeedTime -= Time.deltaTime;
+				currentPlayerSpeed = boostSpeed;
+			}
+			else
+			{
+				currentPlayerSpeed = defaultPlayerSpeed;
+			}
+
 			// Gravity
 			if (controller.isGrounded)
 			{
@@ -95,8 +125,8 @@ public class PlayerManager3 : MonoBehaviour
 				cam.transform.eulerAngles = new Vector3(xRotation, yRotation, 0.0f);
 				gameObject.transform.eulerAngles = new Vector3(0.0f, yRotation, 0.0f);
 
-				float horizontal = Input.GetAxis("Horizontal") * playerSpeed;
-				float vertical = Input.GetAxis("Vertical") * playerSpeed;
+				float horizontal = Input.GetAxis("Horizontal") * currentPlayerSpeed;
+				float vertical = Input.GetAxis("Vertical") * currentPlayerSpeed;
 				controller.Move((cam.transform.right * horizontal + cam.transform.forward * vertical) * Time.deltaTime);
 
 				float move = Mathf.Abs(horizontal + vertical);
@@ -104,16 +134,45 @@ public class PlayerManager3 : MonoBehaviour
 
 				anim.SetFloat("Move", move);
 
-				if (Input.GetButtonDown("Fire1"))
+				if (Input.GetButtonDown("Fire1") && !holdFire && fireCooldown <= 0)
 				{
-					Debug.Log("LMB Clicked");
 					Fire();
 				}
+				else if (Input.GetButton("Fire1") && holdFire && fireCooldown <= 0)
+                {
+					Fire();
+                }
 			}
 			else
 			{
 				anim.SetFloat("Move", 0);
 			}
+		}
+
+		if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+			Debug.Log("1 Pressed");
+
+			pistol = true;
+			rifle = false;
+			shotgun = false;
+			holdFire = false;
+		}
+		else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+			Debug.Log("2 Pressed");		
+			pistol = false;
+			rifle = true;
+			shotgun = false;
+			holdFire = true;
+		}
+		else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+			Debug.Log("3 Pressed");
+			pistol = false;
+			rifle = false;
+			shotgun = true;
+			holdFire = false;
 		}
 	}
 
@@ -121,14 +180,28 @@ public class PlayerManager3 : MonoBehaviour
 	{
 		if (pistol)
 		{
+			if (!canFireForever)
+            {
+				fireCooldown = pistolFireRate;
+			}
+
 			photonView.RPC("RPCFire", RpcTarget.All, projectileSpawn.transform.forward * pistolProjectileSpeed);
 		}
 		else if (rifle)
-		{
+        {
+            if (!canFireForever)
+            {
+				fireCooldown = rifleFireRate;
+			}
+
 			photonView.RPC("RPCFire", RpcTarget.All, projectileSpawn.transform.forward * rifleProjectileSpeed);
 		}
 		else if (shotgun)
 		{
+			if (!canFireForever)
+			{
+				fireCooldown = shotgunFireRate;
+			}
 			photonView.RPC("RPCFire", RpcTarget.All, projectileSpawn.transform.forward * shotgunProjectileSpeed);
 		}	
 	}
@@ -167,6 +240,20 @@ public class PlayerManager3 : MonoBehaviour
 			audioSource.PlayOneShot(shoot);
 		}
 	}
+
+	[PunRPC]
+	public void setFireFoever()
+    {
+		canFireForever = true;
+    }
+
+	[PunRPC]
+	public void setSpeed(float value)
+    {
+		Debug.Log("Speed Set");
+		boostSpeedTime = 10;
+		boostSpeed = value;
+    }
 
 	public void WalkSound()
 	{

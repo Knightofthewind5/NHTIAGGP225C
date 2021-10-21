@@ -1568,10 +1568,12 @@ MonoBehaviour:
     type: 3}
   shotgunBullet: {fileID: 2413874948831984784, guid: f2b7172915105194aabc48a8e9525b08,
     type: 3}
-  playerSpeed: 5
+  currentPlayerSpeed: 5
+  defaultPlayerSpeed: 5
   jumpHeight: 1
   gravityValue: 9.81
   user: {fileID: 1305333004089663497}
+  photonView: {fileID: 0}
   pistolProjectileSpeed: 50
   rifleProjectileSpeed: 100
   shotgunProjectileSpeed: 25
@@ -1582,6 +1584,10 @@ MonoBehaviour:
   pistol: 1
   rifle: 0
   shotgun: 0
+  holdFire: 0
+  pistolFireRate: 0.1
+  rifleFireRate: 0.15
+  shotgunFireRate: 0.33
   healthBar: {fileID: 0}
   playerInfo: {fileID: 6034615998763223486}
   audioSource: {fileID: 8311850160099209227}

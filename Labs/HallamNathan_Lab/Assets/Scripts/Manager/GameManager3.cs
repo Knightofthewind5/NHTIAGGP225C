@@ -73,9 +73,9 @@ public class GameManager3 : MonoBehaviourPunCallbacks
 		{
 			timer = 0;
 
-			PhotonNetwork.DestroyAll();
 			if (PhotonNetwork.IsMasterClient)
 			{
+				PhotonNetwork.DestroyAll();
 				SceneManager.LoadScene("FPSLobby");
 			}
 			else

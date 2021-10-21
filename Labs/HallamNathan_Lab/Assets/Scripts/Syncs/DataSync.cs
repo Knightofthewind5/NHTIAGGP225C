@@ -96,6 +96,10 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 
 			photonView.RPC("Damage", RpcTarget.AllViaServer, amount);
 		}
+		else
+        {
+			Health -= amount;
+        }
 	}
 
 	[PunRPC]

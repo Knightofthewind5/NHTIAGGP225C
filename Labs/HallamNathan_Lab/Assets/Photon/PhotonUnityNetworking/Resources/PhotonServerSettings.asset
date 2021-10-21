@@ -57,6 +57,10 @@ MonoBehaviour:
   - JoinGame
   - SetGameHUDTimer
   - RemoveFromAlivePlayers
+  - setFireFoever
+  - setSpeed
+  - RPCSpawnPlayer
+  - PUNSpawnPlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

@@ -11,13 +11,14 @@ public class LobbySync : MonoBehaviourPun, IPunObservable
 	public Transform parentTransform;
 	public Color color;
 
-	public TMP_Text username;
+	[SerializeField] TMP_Text userText;
+	public string username;
 
 	private void Awake()
 	{
-		if (photonView.IsMine)
+		if (gameObject.GetPhotonView().IsMine)
 		{
-			username.text = PhotonManager.Instance.username;
+			userText.text = username;
 			color.r = PlayerPrefs.GetFloat("colorRed");
 			color.g = PlayerPrefs.GetFloat("colorGreen");
 			color.b = PlayerPrefs.GetFloat("colorBlue");
@@ -37,7 +38,7 @@ public class LobbySync : MonoBehaviourPun, IPunObservable
 			if (parentTransform)
 			{
 				gameObject.transform.SetParent(parentTransform);
-				username.color = color;
+				userText.color = color;
 			}
 		}
 	}
@@ -46,7 +47,7 @@ public class LobbySync : MonoBehaviourPun, IPunObservable
 	{
 		if (stream.IsWriting)
 		{
-			stream.SendNext(username.text);
+			stream.SendNext(userText.text);
 			stream.SendNext(color.r);
 			stream.SendNext(color.g);
 			stream.SendNext(color.b);
@@ -54,7 +55,7 @@ public class LobbySync : MonoBehaviourPun, IPunObservable
 		}
 		else if (stream.IsReading)
 		{
-			username.text = (string)stream.ReceiveNext();
+			userText.text = (string)stream.ReceiveNext();
 			color.r = (float)stream.ReceiveNext();
 			color.g = (float)stream.ReceiveNext();
 			color.b = (float)stream.ReceiveNext();

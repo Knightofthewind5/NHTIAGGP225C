@@ -30,7 +30,7 @@ public class projectileManager3 : MonoBehaviour
 					ds.TakeDamage(damage);
 				}
 
-				PhotonManager.Instance.gameObject.GetPhotonView().RPC("DestroyObject", RpcTarget.AllViaServer, gameObject.GetInstanceID());
+				PhotonManager.Instance.gameObject.GetPhotonView().RPC("DestroyObject", RpcTarget.All, gameObject.GetInstanceID());
 			}
 		}
 	}
