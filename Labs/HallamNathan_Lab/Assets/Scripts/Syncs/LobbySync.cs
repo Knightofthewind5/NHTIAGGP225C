@@ -10,14 +10,20 @@ public class LobbySync : MonoBehaviourPun, IPunObservable
 {
 	public Transform parentTransform;
 	public Color color;
+	public string username;
 
-	public TMP_Text username;
+	string Username;
+	Color PlayerColor;
+
+
+	public TMP_Text userText;
 
 	private void Awake()
 	{
+		parentTransform = FindObjectOfType<GameplayManager>().playerListHolder.transform;
 		if (photonView.IsMine)
 		{
-			username.text = PhotonManager.Instance.username;
+			username = PhotonManager.Instance.username;
 			color.r = PlayerPrefs.GetFloat("colorRed");
 			color.g = PlayerPrefs.GetFloat("colorGreen");
 			color.b = PlayerPrefs.GetFloat("colorBlue");
@@ -25,20 +31,20 @@ public class LobbySync : MonoBehaviourPun, IPunObservable
 		}
 	}
 
-	private void Start()
-	{
-		parentTransform = FindObjectOfType<GameplayManager>().playerListHolder.transform;
-	}
-
 	private void Update()
 	{
 		if (!photonView.IsMine)
 		{
-			if (parentTransform)
-			{
-				gameObject.transform.SetParent(parentTransform);
-				username.color = color;
-			}
+			gameObject.transform.SetParent(parentTransform);
+			userText.color = color;
+			userText.text = username;
+			gameObject.name = username;		
+		}
+		else
+        {
+			userText.color = color;
+			userText.text = username;
+			gameObject.name = username;
 		}
 	}
 
@@ -46,7 +52,7 @@ public class LobbySync : MonoBehaviourPun, IPunObservable
 	{
 		if (stream.IsWriting)
 		{
-			stream.SendNext(username.text);
+			stream.SendNext(username);
 			stream.SendNext(color.r);
 			stream.SendNext(color.g);
 			stream.SendNext(color.b);
@@ -54,7 +60,7 @@ public class LobbySync : MonoBehaviourPun, IPunObservable
 		}
 		else if (stream.IsReading)
 		{
-			username.text = (string)stream.ReceiveNext();
+			username = (string)stream.ReceiveNext();
 			color.r = (float)stream.ReceiveNext();
 			color.g = (float)stream.ReceiveNext();
 			color.b = (float)stream.ReceiveNext();

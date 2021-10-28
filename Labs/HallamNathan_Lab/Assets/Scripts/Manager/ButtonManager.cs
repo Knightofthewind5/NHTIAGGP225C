@@ -32,6 +32,12 @@ public class ButtonManager : MonoBehaviour
 
 	public void JoinFPSLobby()
 	{
+		PhotonManager.Instance.username = input.text;
+		PhotonManager.Instance.color = new Color(PlayerPrefs.GetFloat("colorRed"),
+												 PlayerPrefs.GetFloat("colorGreen"),
+												 PlayerPrefs.GetFloat("colorBlue"),
+												 PlayerPrefs.GetFloat("colorAlpha"));
+
 		PhotonManager.Instance.JoinFPSLobby();
 	}
 

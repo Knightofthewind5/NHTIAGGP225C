@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
@@ -13,12 +15,22 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 	PhotonView photonView;
 	bool playerSpawned = false;
 
+	public static GameplayManager Instance { get; private set; }
+
 	public void Awake()
 	{
+		if (Instance)
+		{
+			Debug.Log("GameplayManager already exists");
+			Destroy(gameObject);
+		}
+		else
+		{
+			Instance = this;
+		}
+
 		photonView = gameObject.GetPhotonView();
 		playerListHolder = GameObject.FindGameObjectWithTag("LobbyPlayerHolder");
-
-		playerSpawned = false;	
 	}
 
     public void Update()
@@ -27,12 +39,26 @@ public class GameplayManager : MonoBehaviourPunCallbacks
         {
 			Debug.Log("Calling Spawn");
 
-			SpawnPlayer(PlayerPrefs.GetString("Username"),
-							PlayerPrefs.GetFloat("colorRed"),
-							PlayerPrefs.GetFloat("colorGreen"),
-							PlayerPrefs.GetFloat("colorBlue"),
-							PlayerPrefs.GetFloat("colorAlpha"));
+			if (PhotonNetwork.LocalPlayer.IsLocal)
+            {
+				string username = PlayerPrefs.GetString("Username");
 
+				PhotonNetwork.LocalPlayer.NickName = username;
+
+				Color color = new Color(PlayerPrefs.GetFloat("colorRed"), PlayerPrefs.GetFloat("colorGreen"), PlayerPrefs.GetFloat("colorBlue"), PlayerPrefs.GetFloat("colorAlpha"));
+
+				Instance.gameObject.GetPhotonView().RPC("PUNSpawnPlayer", RpcTarget.AllBuffered,
+					username, color.r, color.g, color.b, color.a);
+			}				
+
+
+			
+
+			/*			SpawnPlayer(PlayerPrefs.GetString("Username"),
+										PlayerPrefs.GetFloat("colorRed"),
+										PlayerPrefs.GetFloat("colorGreen"),
+										PlayerPrefs.GetFloat("colorBlue"),
+										PlayerPrefs.GetFloat("colorAlpha"));*/
 		}
 	}
 
@@ -41,9 +67,8 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 		base.OnJoinedRoom();
 
 		PhotonNetwork.CurrentRoom.MaxPlayers = MaxPlayers;
-		PhotonNetwork.LocalPlayer.NickName = PlayerPrefs.GetString("Username");
 
-        /*SpawnPlayer(PlayerPrefs.GetString("Username"),
+/*        SpawnPlayer(PlayerPrefs.GetString("Username"),
         PlayerPrefs.GetFloat("colorRed"),
         PlayerPrefs.GetFloat("colorGreen"),
         PlayerPrefs.GetFloat("colorBlue"),
@@ -61,27 +86,34 @@ public class GameplayManager : MonoBehaviourPunCallbacks
 		SpawnPlayer(username, colorR, colorG, colorB, colorA);
     }
 
-	public void SpawnPlayer(string username, float colorR, float colorG, float colorB, float colorA)
+	public void SpawnPlayer(string _username, float _colorR, float _colorG, float _colorB, float _colorA)
 	{
 		if (playerPrefab)
 		{
-			GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, playerListHolder.transform.position, playerListHolder.transform.rotation);
-
-			if (player)
-			{
+			if (!playerSpawned)
+            {
 				playerSpawned = true;
 
-				player.transform.SetParent(playerListHolder.transform);
+				GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, playerListHolder.transform.position, playerListHolder.transform.rotation);
 
-				player.gameObject.name = username;
+				if (player)
+				{
+					player.transform.SetParent(playerListHolder.transform);
 
-				player.GetComponent<TMP_Text>().text = username;
-				player.GetComponent<TMP_Text>().color = new Color(colorR, colorG, colorB, colorA);
+					player.gameObject.name = _username;
+
+					player.GetComponent<TMP_Text>().text = _username;
+					player.GetComponent<TMP_Text>().color = new Color(_colorR, _colorG, _colorB, _colorA);
+				}
+				else
+				{
+					Debug.Log("No Player Instantaited");
+				}
 			}
 			else
-			{
-				Debug.Log("No Player Instantaited");
-			}
+            {
+				Debug.LogWarning("Player already spawned on " + PhotonNetwork.LocalPlayer);
+            }
 		}
 		else
 		{

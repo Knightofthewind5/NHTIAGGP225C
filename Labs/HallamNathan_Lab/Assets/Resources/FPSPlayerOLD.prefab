@@ -255,6 +255,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2881288463116653005}
   - component: {fileID: 6442861294572237702}
+  - component: {fileID: 6977047859999033737}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -271,7 +272,7 @@ Transform:
   m_GameObject: {fileID: 3081371119281619170}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.1, y: 0.9, z: 1.1}
   m_Children:
   - {fileID: 1498383902476378872}
   - {fileID: 4038370757580833277}
@@ -321,6 +322,102 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!82 &6977047859999033737
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3081371119281619170}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &4038370756724560819
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,6 +480,7 @@ GameObject:
   - component: {fileID: 4038370757525563142}
   - component: {fileID: 4038370757525563137}
   - component: {fileID: 8828368738000191350}
+  - component: {fileID: 2799620610248707303}
   m_Layer: 0
   m_Name: FPSPlayerOLD
   m_TagString: Player
@@ -398,7 +496,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4038370757525563136}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2881288463116653005}
@@ -505,18 +603,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpawn: {fileID: 4038370757580833276}
-  projectile: {fileID: 2413874948831984784, guid: 6a6a85802eb1277458be3ad046a05a03,
+  pistolBullet: {fileID: 2413874948831984784, guid: 6a6a85802eb1277458be3ad046a05a03,
     type: 3}
-  playerSpeed: 5
+  rifleBullet: {fileID: 2413874948831984784, guid: 40e000f5beb983344beca04798129a9b,
+    type: 3}
+  shotgunBullet: {fileID: 2413874948831984784, guid: f2b7172915105194aabc48a8e9525b08,
+    type: 3}
+  currentPlayerSpeed: 5
+  defaultPlayerSpeed: 5
   jumpHeight: 1
   gravityValue: 9.81
-  username: {fileID: 2681550001227188526}
-  projectileSpeed: 10
+  user: {fileID: 2681550001227188526}
+  photonView: {fileID: 0}
+  pistolProjectileSpeed: 1000
+  rifleProjectileSpeed: 1000
+  shotgunProjectileSpeed: 1000
   projectileLifetime: 5
   verticalSpeed: 1
   horizontalSpeed: 1
-  cam: {fileID: 3081371119281619170}
+  cam: {fileID: 6442861294572237702}
+  pistol: 1
+  rifle: 0
+  shotgun: 0
+  holdFire: 0
+  pistolFireRate: 1
+  rifleFireRate: 0.5
+  shotgunFireRate: 2
+  healthBar: {fileID: 3490446663356271441}
   playerInfo: {fileID: 8980210008633250631}
+  audioSource: {fileID: 6977047859999033737}
+  shoot: {fileID: 8300000, guid: fd20c45c184816941bc9b4b5fd14ba20, type: 3}
+  walk: {fileID: 8300000, guid: 38440783818cadf48a8467d3520dddb8, type: 3}
+  volume: 1
+  sourceTransform: {fileID: 4038370757525563144}
 --- !u!143 &4038370757525563137
 CharacterController:
   m_ObjectHideFlags: 0
@@ -549,13 +668,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ObjPosition: {x: 0, y: 0, z: 0}
   ObjRotation: {x: 0, y: 0, z: 0, w: 0}
+  CameraRotation: {x: 0, y: 0, z: 0, w: 0}
   ObjScale: {x: 0, y: 0, z: 0}
+  color: {r: 0, g: 0, b: 0, a: 0}
   LerpSpeed: 3
   Health: 100
   MaxHealth: 100
   MinHealth: 0
   username: {fileID: 2681550001227188526}
   healthbar: {fileID: 3490446663356271441}
+--- !u!95 &2799620610248707303
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4038370757525563136}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 998d62273f70c64468b0c581a3b3f9ae, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4038370757580833276
 GameObject:
   m_ObjectHideFlags: 0
