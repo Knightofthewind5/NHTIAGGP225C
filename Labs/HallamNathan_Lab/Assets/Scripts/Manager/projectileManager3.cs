@@ -22,16 +22,16 @@ public class projectileManager3 : MonoBehaviour
 		{
 			DataSync ds = collision.gameObject.GetComponent<DataSync>();
 
-			if (ds)
+			if (ds && PhotonNetwork.IsMasterClient)
 			{
 				if (!hasDealtDamage)
-                {
+				{
 					hasDealtDamage = true;
 					ds.TakeDamage(damage);
 				}
-
-				PhotonManager.Instance.gameObject.GetPhotonView().RPC("DestroyObject", RpcTarget.All, gameObject.GetInstanceID());
 			}
 		}
+
+		PhotonManager.Instance.gameObject.GetPhotonView().RPC("DestroyObject", RpcTarget.All, gameObject.GetInstanceID());
 	}
 }

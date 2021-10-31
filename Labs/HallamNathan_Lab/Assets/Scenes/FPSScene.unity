@@ -1491,7 +1491,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c206808c0dd366488f10de435fa8288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 7146682970444215707, guid: b0f7357ca91caf94993f4ea003502984,
+  playerPrefab: {fileID: 3567526884563907306, guid: 78cb2cd4607afe24182f0f3abace41c6,
     type: 3}
   spawnpoints:
   - {fileID: 1254664245}
@@ -1508,7 +1508,7 @@ MonoBehaviour:
   hasSpawned: 0
   players: []
   playersAlive: 0
-  gameTime: 10
+  gameTime: 30
   music: {fileID: 516819231}
 --- !u!4 &516819229
 Transform:

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +6,7 @@ using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class PlayerManager3 : MonoBehaviour
+public class TestingPlayerManager : MonoBehaviour
 {
 	CharacterController controller;
 	public GameObject projectileSpawn;
@@ -81,72 +81,67 @@ public class PlayerManager3 : MonoBehaviour
 	//http://gyanendushekhar.com/2020/02/06/first-person-movement-in-unity-3d/
 	void Update()
 	{
-		if (photonView.IsMine)
+		fireCooldown -= Time.deltaTime;
+
+		if (fireCooldown <= -10 && canFireForever)
 		{
-			fireCooldown -= Time.deltaTime;
+			canFireForever = false;
+		}
 
-			if (fireCooldown <= -10 && canFireForever)
-			{
-				canFireForever = false;
-			}
+		if (boostSpeedTime > 0)
+		{
+			boostSpeedTime -= Time.deltaTime;
+			currentPlayerSpeed = boostSpeed;
+		}
+		else
+		{
+			currentPlayerSpeed = defaultPlayerSpeed;
+		}
 
-			if (boostSpeedTime > 0)
-			{
-				boostSpeedTime -= Time.deltaTime;
-				currentPlayerSpeed = boostSpeed;
-			}
-			else
-			{
-				currentPlayerSpeed = defaultPlayerSpeed;
-			}
+		// Gravity
+		if (controller.isGrounded)
+		{
+			playerVelocity = 0;
+		}
+		else
+		{
+			playerVelocity -= gravityValue * Time.deltaTime;
+			controller.Move(new Vector3(0, playerVelocity, 0));
+		}
 
-			// Gravity
-			if (controller.isGrounded)
-			{
-				playerVelocity = 0;
-			}
-			else
-			{
-				playerVelocity -= gravityValue * Time.deltaTime;
-				controller.Move(new Vector3(0, playerVelocity, 0));
-			}
+		//healthBar.fillAmount = (DS.Health / DS.MaxHealth);
 
-			healthBar.fillAmount = (DS.Health / DS.MaxHealth);
+		float mouseX = Input.GetAxis("Mouse X") * horizontalSpeed;
+		float mouseY = Input.GetAxis("Mouse Y") * verticalSpeed;
 
-			if (GameManager3.Instance.Chat.IsActive() == false)
-			{
-				float mouseX = Input.GetAxis("Mouse X") * horizontalSpeed;
-				float mouseY = Input.GetAxis("Mouse Y") * verticalSpeed;
+		yRotation += mouseX;
+		xRotation -= mouseY;
+		xRotation = Mathf.Clamp(xRotation, -90, 90);
 
-				yRotation += mouseX;
-				xRotation -= mouseY;
-				xRotation = Mathf.Clamp(xRotation, -90, 90);
+		cam.transform.eulerAngles = new Vector3(xRotation, yRotation, 0.0f);
+		gameObject.transform.eulerAngles = new Vector3(0.0f, yRotation, 0.0f);
 
-				cam.transform.eulerAngles = new Vector3(xRotation, yRotation, 0.0f);
-				gameObject.transform.eulerAngles = new Vector3(0.0f, yRotation, 0.0f);
+		float horizontal = Input.GetAxis("Horizontal") * currentPlayerSpeed;
+		float vertical = Input.GetAxis("Vertical") * currentPlayerSpeed;
+		controller.Move((cam.transform.right * horizontal + cam.transform.forward * vertical) * Time.deltaTime);
 
-				float horizontal = Input.GetAxis("Horizontal") * currentPlayerSpeed;
-				float vertical = Input.GetAxis("Vertical") * currentPlayerSpeed;
-				controller.Move((cam.transform.right * horizontal + cam.transform.forward * vertical) * Time.deltaTime);
-
-				float move = Mathf.Abs(horizontal + vertical);
+		float move = Mathf.Abs(horizontal + vertical);
 
 
-				anim.SetFloat("Move", move);
+		anim.SetFloat("Move", move);
 
-				if (Input.GetButtonDown("Fire1") && !holdFire && fireCooldown <= 0)
-				{
-					Fire();
-				}
-				else if (Input.GetButton("Fire1") && holdFire && fireCooldown <= 0)
-				{
-					Fire();
-				}
-			}
-			else
-			{
-				anim.SetFloat("Move", 0);
-			}
+		if (Input.GetButtonDown("Fire1") && !holdFire && fireCooldown <= 0)
+		{
+			Fire();
+		}
+		else if (Input.GetButton("Fire1") && holdFire && fireCooldown <= 0)
+		{
+			Fire();
+		}
+
+		if (move == 0)
+		{
+			anim.SetFloat("Move", 0);
 		}
 
 		if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -160,7 +155,7 @@ public class PlayerManager3 : MonoBehaviour
 		}
 		else if (Input.GetKeyDown(KeyCode.Alpha2))
 		{
-			Debug.Log("2 Pressed");		
+			Debug.Log("2 Pressed");
 			pistol = false;
 			rifle = true;
 			shotgun = false;
@@ -175,6 +170,7 @@ public class PlayerManager3 : MonoBehaviour
 			holdFire = false;
 		}
 	}
+	
 
 	public void Fire()
 	{
@@ -185,7 +181,7 @@ public class PlayerManager3 : MonoBehaviour
 				fireCooldown = pistolFireRate;
 			}
 
-			photonView.RPC("RPCFire", RpcTarget.All, projectileSpawn.transform.forward * pistolProjectileSpeed);
+			RPCFire(projectileSpawn.transform.forward * pistolProjectileSpeed);
 		}
 		else if (rifle)
 		{
@@ -194,7 +190,7 @@ public class PlayerManager3 : MonoBehaviour
 				fireCooldown = rifleFireRate;
 			}
 
-			photonView.RPC("RPCFire", RpcTarget.All, projectileSpawn.transform.forward * rifleProjectileSpeed);
+			RPCFire(projectileSpawn.transform.forward * rifleProjectileSpeed);
 		}
 		else if (shotgun)
 		{
@@ -202,8 +198,9 @@ public class PlayerManager3 : MonoBehaviour
 			{
 				fireCooldown = shotgunFireRate;
 			}
-			photonView.RPC("RPCFire", RpcTarget.All, projectileSpawn.transform.forward * shotgunProjectileSpeed);
-		}	
+
+			RPCFire(projectileSpawn.transform.forward * shotgunProjectileSpeed);
+		}
 	}
 
 
@@ -239,20 +236,6 @@ public class PlayerManager3 : MonoBehaviour
 
 			audioSource.PlayOneShot(shoot);
 		}
-	}
-
-	[PunRPC]
-	public void setFireFoever()
-	{
-		canFireForever = true;
-	}
-
-	[PunRPC]
-	public void setSpeed(float value)
-	{
-		Debug.Log("Speed Set");
-		boostSpeedTime = 10;
-		boostSpeed = value;
 	}
 
 	public void WalkSound()
