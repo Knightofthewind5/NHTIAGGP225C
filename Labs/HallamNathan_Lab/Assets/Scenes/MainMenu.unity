@@ -1694,6 +1694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   username: 
   color: {r: 0, g: 0, b: 0, a: 0}
+  cosmetic: 
 --- !u!4 &820413417
 Transform:
   m_ObjectHideFlags: 0
@@ -3843,6 +3844,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 1693277462}
   chosenColor: {fileID: 1410900752}
+  cosmetics: {fileID: 82780397}
 --- !u!1 &2019292518
 GameObject:
   m_ObjectHideFlags: 0

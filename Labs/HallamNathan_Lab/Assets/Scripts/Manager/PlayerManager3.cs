@@ -255,6 +255,38 @@ public class PlayerManager3 : MonoBehaviour
 		boostSpeed = value;
 	}
 
+	[PunRPC]
+	public void SetActiveCosmetic(int id, string name)
+	{
+		GameObject[] objects = GameObject.FindGameObjectsWithTag("Player");
+		GameObject Player;
+		GameObject Cosmetic;
+
+		foreach (GameObject obj in objects)
+		{
+			if (obj.GetPhotonView().ViewID == id)
+			{
+				Player = obj;
+
+				Cosmetic = Player.FindInChildren(name);
+
+
+				foreach (GameObject go in Player.GetComponent<DataSync>().cosmetics)
+				{
+					if (go != Cosmetic)
+					{
+						go.SetActive(false);
+					}
+					else
+					{
+						Player.GetComponent<DataSync>().cosmetic = Cosmetic;
+						Debug.Log("Setting " + Player.GetComponent<DataSync>().username + " ID: " + Player.GetPhotonView().GetInstanceID().ToString() + " to " + Cosmetic.name);
+					}
+				}
+			}
+		}
+	}
+
 	public void WalkSound()
 	{
 		//Debug.Log("Play Walk");

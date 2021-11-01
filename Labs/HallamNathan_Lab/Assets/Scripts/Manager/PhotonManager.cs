@@ -17,6 +17,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	static string fpsLobby = "FPSLobby";
 	public string username;
 	public Color color;
+	public int cosmetic;
 	PhotonView photonView;
 
 	Button StartButton;
@@ -121,8 +122,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 					Debug.Log("[PhotonManager][JoinFPSLobby] Joining Lobby for FPS...");
 
 					username = ButtonManager.Instance.input.text;
+					cosmetic = ButtonManager.Instance.cosmetics.value;
 
 					PlayerPrefs.SetString("Username", username);
+					PlayerPrefs.SetInt("Cosmetic", cosmetic);
 
 					PhotonNetwork.AutomaticallySyncScene = true;
 

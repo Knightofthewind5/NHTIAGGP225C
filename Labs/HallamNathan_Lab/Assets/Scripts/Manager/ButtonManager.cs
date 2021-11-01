@@ -14,6 +14,7 @@ public class ButtonManager : MonoBehaviour
 
 	public TMP_InputField input;
 	public Image chosenColor;
+	public TMP_Dropdown cosmetics;
 
 	public void Awake()
 	{

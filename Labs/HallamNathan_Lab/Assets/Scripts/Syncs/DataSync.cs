@@ -5,6 +5,7 @@ using Photon;
 using Photon.Pun;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 public class DataSync : MonoBehaviourPun, IPunObservable
 {
@@ -21,6 +22,11 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 	public float MinHealth;
 
 	Camera camera;
+	int cosmeticIndex;
+	string cosmeticName;
+	public GameObject cosmetic;
+	public GameObject[] cosmetics;
+	//bool cosmeticActive = false;
 
 	public TMP_Text username;
 	public Image healthbar;
@@ -39,7 +45,29 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 			color.g = PlayerPrefs.GetFloat("colorGreen");
 			color.b = PlayerPrefs.GetFloat("colorBlue");
 			color.a = PlayerPrefs.GetFloat("colorAlpha");
+			cosmeticIndex = PlayerPrefs.GetInt("Cosmetic");
 		}
+	}
+
+	void Start()
+	{
+		if (photonView.IsMine)
+		{
+			if (cosmeticIndex == 0)
+			{
+				cosmeticName = "TopHat";
+			}
+			else if (cosmeticIndex == 1)
+			{
+				cosmeticName = "Monocle";
+			}
+			else if (cosmeticIndex == 2)
+			{
+				cosmeticName = "Tie";
+			}
+
+			gameObject.GetPhotonView().RPC("SetActiveCosmetic", RpcTarget.AllBuffered, gameObject.GetPhotonView().ViewID, cosmeticName);
+		}	
 	}
 
 	private void Update()
@@ -48,7 +76,7 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 		{
 			UpdateTransform();
 			username.color = color;
-		}	
+		}
 		else
 		{
 			if (MaxHealth > 0)
@@ -68,7 +96,7 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 					PhotonNetwork.Destroy(gameObject);
 				}
 			}
-		}
+		}	
 
 		fillAmount = (Health / MaxHealth);
 		healthbar.fillAmount = fillAmount;
@@ -97,9 +125,9 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 			photonView.RPC("Damage", RpcTarget.AllViaServer, amount);
 		}
 		else
-        {
+		{
 			Health -= amount;
-        }
+		}
 	}
 
 	[PunRPC]
@@ -121,6 +149,7 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 			stream.SendNext(color.b);
 			stream.SendNext(color.a);
 			stream.SendNext(Health);
+			stream.SendNext(cosmeticName);
 
 			if (camera)
 			{
@@ -138,11 +167,22 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 			color.b = (float)stream.ReceiveNext();
 			color.a = (float)stream.ReceiveNext();
 			Health = (float)stream.ReceiveNext();
+			cosmeticName = (string)stream.ReceiveNext();
 
 			if (camera)
 			{
 				CameraRotation = (Quaternion)stream.ReceiveNext();
 			}
 		}
+	}
+}
+
+public static class Helper
+{
+	public static GameObject FindInChildren(this GameObject go, string name)
+	{
+		return (from x in go.GetComponentsInChildren<Transform>() 
+				where x.gameObject.name == name 
+				select x.gameObject).First();
 	}
 }
