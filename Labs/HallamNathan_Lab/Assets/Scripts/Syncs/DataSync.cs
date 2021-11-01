@@ -32,6 +32,9 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 	public Image healthbar;
 	float fillAmount;
 	GameManager3 GM;
+	private ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable();
+
+
 
 	private void Awake()
 	{
@@ -39,12 +42,11 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 
 		if (photonView.IsMine)
 		{
+			properties = PhotonNetwork.LocalPlayer.CustomProperties;
+
 			camera = GetComponentInChildren<Camera>();
-			username.text = PlayerPrefs.GetString("Username");
-			color.r = PlayerPrefs.GetFloat("colorRed");
-			color.g = PlayerPrefs.GetFloat("colorGreen");
-			color.b = PlayerPrefs.GetFloat("colorBlue");
-			color.a = PlayerPrefs.GetFloat("colorAlpha");
+			username.text = PhotonNetwork.LocalPlayer.NickName;
+			color = new Color((float)properties["colorRed"], (float)properties["colorGreen"], (float)properties["colorBlue"], (float)properties["colorAlpha"]);
 			cosmeticIndex = PlayerPrefs.GetInt("Cosmetic");
 		}
 	}

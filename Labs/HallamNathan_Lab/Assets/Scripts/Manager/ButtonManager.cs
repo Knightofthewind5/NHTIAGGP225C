@@ -33,17 +33,30 @@ public class ButtonManager : MonoBehaviour
 
 	public void JoinFPSLobby()
 	{
-		PhotonManager.Instance.username = input.text;
-		PhotonManager.Instance.color = new Color(PlayerPrefs.GetFloat("colorRed"),
-												 PlayerPrefs.GetFloat("colorGreen"),
-												 PlayerPrefs.GetFloat("colorBlue"),
-												 PlayerPrefs.GetFloat("colorAlpha"));
+		//PhotonManager.Instance.username = input.text;
+
+		PlayerPrefs.SetString("Username", PhotonManager.Instance.username);
+		PlayerPrefs.SetFloat("colorRed", PhotonManager.Instance.color.r);
+		PlayerPrefs.SetFloat("colorGreen", PhotonManager.Instance.color.g);
+		PlayerPrefs.SetFloat("colorBlue", PhotonManager.Instance.color.b);
+		PlayerPrefs.SetFloat("colorAlpha", PhotonManager.Instance.color.a);
 
 		PhotonManager.Instance.JoinFPSLobby();
 	}
 
+	public void OnEndEditUsername()
+	{
+		PhotonManager.Instance.username = input.text;
+	}
+
 	public void QuitApplication()
 	{
+		PlayerPrefs.SetString("Username", PhotonManager.Instance.username);
+		PlayerPrefs.SetFloat("colorRed", PhotonManager.Instance.color.r);
+		PlayerPrefs.SetFloat("colorGreen", PhotonManager.Instance.color.g);
+		PlayerPrefs.SetFloat("colorBlue", PhotonManager.Instance.color.b);
+		PlayerPrefs.SetFloat("colorAlpha", PhotonManager.Instance.color.a);
+
 #if UNITY_EDITOR
 
 		UnityEditor.EditorApplication.isPlaying = false;

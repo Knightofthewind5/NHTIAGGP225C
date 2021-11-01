@@ -22,6 +22,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	Button StartButton;
 
+	private ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable();
+
 	//Singleton 
 	public static PhotonManager Instance { get; private set; }
 
@@ -77,8 +79,16 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 		if (ButtonManager.Instance)
 		{
-			ButtonManager.Instance.chosenColor.color = new Color(PlayerPrefs.GetFloat("colorRed"), PlayerPrefs.GetFloat("colorGreen"), PlayerPrefs.GetFloat("colorBlue"), PlayerPrefs.GetFloat("colorAlpha"));
-			ButtonManager.Instance.input.text = PlayerPrefs.GetString("Username");
+			if (color.a == 0)
+			{
+				Debug.Log("Loading from saved prefs");
+
+				ButtonManager.Instance.chosenColor.color = new Color(PlayerPrefs.GetFloat("colorRed"), PlayerPrefs.GetFloat("colorGreen"), PlayerPrefs.GetFloat("colorBlue"), PlayerPrefs.GetFloat("colorAlpha"));
+				ButtonManager.Instance.input.text = PlayerPrefs.GetString("Username");
+
+				color = ButtonManager.Instance.chosenColor.color;
+				username = ButtonManager.Instance.input.text;
+			}
 		}
 	}
 	#endregion Connections
@@ -124,8 +134,17 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 					username = ButtonManager.Instance.input.text;
 					cosmetic = ButtonManager.Instance.cosmetics.value;
 
-					PlayerPrefs.SetString("Username", username);
+					//PlayerPrefs.SetString("Username", username);
 					PlayerPrefs.SetInt("Cosmetic", cosmetic);
+
+					PhotonNetwork.NickName = username;
+
+					properties["colorRed"] = color.r;
+					properties["colorGreen"] = color.g;
+					properties["colorBlue"] = color.b;
+					properties["colorAlpha"] = color.a;
+
+					PhotonNetwork.LocalPlayer.SetCustomProperties(properties);
 
 					PhotonNetwork.AutomaticallySyncScene = true;
 
@@ -262,7 +281,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			}
 		}
 	}
-
 
 	#endregion Functions
 }

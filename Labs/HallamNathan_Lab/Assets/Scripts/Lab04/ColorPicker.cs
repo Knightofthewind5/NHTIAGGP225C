@@ -107,11 +107,10 @@ public class ColorPicker : MonoBehaviour
 			if (Input.GetMouseButtonDown(0))
 			{
 				OnColorSelect?.Invoke(color);
-				PlayerPrefs.SetFloat("colorRed", color.r);
-				PlayerPrefs.SetFloat("colorGreen", color.g);
-				PlayerPrefs.SetFloat("colorBlue", color.b);
-				PlayerPrefs.SetFloat("colorAlpha", color.a);
-				PhotonManager.Instance.color = color;
+				PhotonManager.Instance.color.r = color.r;
+				PhotonManager.Instance.color.g = color.g;
+				PhotonManager.Instance.color.b = color.b;
+				PhotonManager.Instance.color.a = color.a;
 				group.SetActive(false);
 			}
 		}

@@ -45,7 +45,7 @@ public class RPCChat : MonoBehaviourPunCallbacks
 			if (PhotonNetwork.IsMasterClient)
 			{
 				if (lobby)
-                {
+				{
 					if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
 					{
 						timerToStart -= Time.deltaTime;
