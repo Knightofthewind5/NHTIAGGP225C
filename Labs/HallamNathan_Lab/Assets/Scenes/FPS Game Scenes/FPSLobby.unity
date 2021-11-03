@@ -1093,7 +1093,7 @@ MonoBehaviour:
   timerToStart: 0
   lobby: 1
   gamemodeDropdown: {fileID: 256887313}
-  MaxPlayers: 2
+  MaxPlayers: 4
 --- !u!4 &445741180
 Transform:
   m_ObjectHideFlags: 0
