@@ -45,7 +45,7 @@ public class PlayerManager3 : MonoBehaviour
 
 	public Image healthBar;
 	DataSync DS;
-	GameManager3 GM;
+	GeneralGameManager GGM;
 
 	public GameObject playerInfo;
 	private Animator anim;
@@ -60,8 +60,10 @@ public class PlayerManager3 : MonoBehaviour
 	{
 		currentPlayerSpeed = defaultPlayerSpeed;
 
-		GM = FindObjectOfType<GameManager3>();
-		healthBar = GM.HealthBar;
+		GGM = FindObjectOfType<GeneralGameManager>();
+
+		healthBar = GGM.HealthBar;
+
 		controller = gameObject.GetComponent<CharacterController>();
 		photonView = GetComponent<PhotonView>();
 
@@ -113,7 +115,7 @@ public class PlayerManager3 : MonoBehaviour
 
 			healthBar.fillAmount = (DS.Health / DS.MaxHealth);
 
-			if (GameManager3.Instance.Chat.IsActive() == false)
+			if (GeneralGameManager.Instance.Chat.IsActive() == false)
 			{
 				float mouseX = Input.GetAxis("Mouse X") * horizontalSpeed;
 				float mouseY = Input.GetAxis("Mouse Y") * verticalSpeed;
@@ -151,16 +153,13 @@ public class PlayerManager3 : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.Alpha1))
 		{
-			Debug.Log("1 Pressed");
-
 			pistol = true;
 			rifle = false;
 			shotgun = false;
 			holdFire = false;
 		}
 		else if (Input.GetKeyDown(KeyCode.Alpha2))
-		{
-			Debug.Log("2 Pressed");		
+		{	
 			pistol = false;
 			rifle = true;
 			shotgun = false;
@@ -168,7 +167,6 @@ public class PlayerManager3 : MonoBehaviour
 		}
 		else if (Input.GetKeyDown(KeyCode.Alpha3))
 		{
-			Debug.Log("3 Pressed");
 			pistol = false;
 			rifle = false;
 			shotgun = true;
@@ -215,6 +213,7 @@ public class PlayerManager3 : MonoBehaviour
 		if (pistol)
 		{
 			proj = Instantiate(pistolBullet, projectileSpawn.transform.position, projectileSpawn.transform.rotation);
+			proj.GetComponent<projectileManager3>().owner = gameObject.GetPhotonView().Owner.NickName;
 			Rigidbody rb = proj.GetComponent<Rigidbody>();
 			rb.velocity = velocity;
 			Destroy(proj, projectileLifetime);
@@ -224,6 +223,7 @@ public class PlayerManager3 : MonoBehaviour
 		else if (rifle)
 		{
 			proj = Instantiate(rifleBullet, projectileSpawn.transform.position, projectileSpawn.transform.rotation);
+			proj.GetComponent<projectileManager3>().owner = gameObject.GetPhotonView().Owner.NickName;
 			Rigidbody rb = proj.GetComponent<Rigidbody>();
 			rb.velocity = velocity;
 			Destroy(proj, projectileLifetime);
@@ -233,6 +233,7 @@ public class PlayerManager3 : MonoBehaviour
 		else if (shotgun)
 		{
 			proj = Instantiate(shotgunBullet, projectileSpawn.transform.position, projectileSpawn.transform.rotation);
+			proj.GetComponent<projectileManager3>().owner = gameObject.GetPhotonView().Owner.NickName;
 			Rigidbody rb = proj.GetComponent<Rigidbody>();
 			rb.velocity = velocity;
 			Destroy(proj, projectileLifetime);
@@ -280,7 +281,6 @@ public class PlayerManager3 : MonoBehaviour
 					else
 					{
 						Player.GetComponent<DataSync>().cosmetic = Cosmetic;
-						Debug.Log("Setting " + Player.GetComponent<DataSync>().username + " ID: " + Player.GetPhotonView().GetInstanceID().ToString() + " to " + Cosmetic.name);
 					}
 				}
 			}
@@ -289,8 +289,6 @@ public class PlayerManager3 : MonoBehaviour
 
 	public void WalkSound()
 	{
-		//Debug.Log("Play Walk");
-
 		if (photonView.IsMine)
 		{
 			audioSource.Play();

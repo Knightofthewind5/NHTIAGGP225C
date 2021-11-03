@@ -9,6 +9,7 @@ public class projectileManager3 : MonoBehaviour
 	public float damage = 2f;
 	Rigidbody rb;
 	bool hasDealtDamage = false;
+	public string owner;
 
 	public void Awake()
 	{
@@ -16,7 +17,7 @@ public class projectileManager3 : MonoBehaviour
 		rb.useGravity = false;
 	}
 
-	private void OnCollisionEnter(Collision collision)
+	public void OnCollisionEnter(Collision collision)
 	{
 		if (collision.gameObject.GetComponent<PlayerManager3>())
 		{
@@ -27,7 +28,7 @@ public class projectileManager3 : MonoBehaviour
 				if (!hasDealtDamage)
 				{
 					hasDealtDamage = true;
-					ds.TakeDamage(damage);
+					ds.TakeDamage(damage, owner);
 				}
 			}
 		}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
@@ -26,19 +27,18 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 	string cosmeticName;
 	public GameObject cosmetic;
 	public GameObject[] cosmetics;
-	//bool cosmeticActive = false;
 
 	public TMP_Text username;
 	public Image healthbar;
 	float fillAmount;
-	GameManager3 GM;
+	GeneralGameManager GGM;
 	private ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable();
 
-
+	private string lastTookDamageFrom;
 
 	private void Awake()
 	{
-		GM = FindObjectOfType<GameManager3>();
+		GGM = FindObjectOfType<GeneralGameManager>();
 
 		if (photonView.IsMine)
 		{
@@ -89,13 +89,36 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 				}
 				else if (Health <= MinHealth)
 				{
+					Debug.Log(gameObject.GetPhotonView().Owner.NickName + " died from " + lastTookDamageFrom);
+
 					Health = MinHealth;
-					GM.hasSpawned = false;
-					GM.spawnCanvas.SetActive(true);
-					GM.spawnCanvas.GetComponentInChildren<Button>().interactable = false;
-					GM.playCanvas.SetActive(false);
-					PhotonManager.Instance.photonView.RPC("RemoveFromAlivePlayers", RpcTarget.All);
-					PhotonNetwork.Destroy(gameObject);
+
+					if (GGM is BulletRoundManager)
+					{
+						Debug.Log("GMM is BulletRoundManager");
+
+						GGM.hasSpawned = false;
+						GGM.spawnCanvas.SetActive(true);
+						GGM.spawnTimerText.fontSize = 50;
+						GGM.spawnTimerText.text = "You are dead! You will respawn next game";
+						GGM.playCanvas.SetActive(false);
+						PhotonManager.Instance.photonView.RPC("RemoveFromAlivePlayers", RpcTarget.All);
+						PhotonNetwork.Destroy(gameObject);
+					}
+					else if (GGM is DeathmatchManager)
+					{
+						Debug.Log("GMM is DeathmatchManager");
+
+						GGM.hasSpawned = false;
+						GGM.spawnCanvas.SetActive(true);
+						GGM.playCanvas.SetActive(false);
+						
+						DeathmatchManager.Instance.photonView.RPC("RPCAddToScore", RpcTarget.All, lastTookDamageFrom);
+
+						GGM.players.Remove(gameObject);
+						PhotonManager.Instance.photonView.RPC("RemoveFromAlivePlayers", RpcTarget.All);
+						PhotonNetwork.Destroy(gameObject);
+					}
 				}
 			}
 		}	
@@ -116,18 +139,25 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 		}
 	}
 
-	public void TakeDamage(float amount)
+	public void TakeDamage(float amount, string dealer)
 	{
-		Debug.Log(gameObject.name + " Attempt Damage");
-
 		if (!photonView.IsMine)
 		{
-			Debug.Log(gameObject.name + " Damage Taken");
+			if (dealer != null)
+			{
+				Debug.Log(gameObject.GetPhotonView().Owner.NickName + " Damage Taken from " + dealer);
+				lastTookDamageFrom = dealer;
+			}
 
-			photonView.RPC("Damage", RpcTarget.AllViaServer, amount);
+			photonView.RPC("Damage", RpcTarget.AllBuffered, amount);
 		}
 		else
 		{
+			if (dealer != null)
+			{
+				lastTookDamageFrom = dealer;
+			}
+
 			Health -= amount;
 		}
 	}
@@ -152,6 +182,10 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 			stream.SendNext(color.a);
 			stream.SendNext(Health);
 			stream.SendNext(cosmeticName);
+			if (lastTookDamageFrom != null)
+			{
+				stream.SendNext(lastTookDamageFrom);
+			}
 
 			if (camera)
 			{
@@ -170,10 +204,15 @@ public class DataSync : MonoBehaviourPun, IPunObservable
 			color.a = (float)stream.ReceiveNext();
 			Health = (float)stream.ReceiveNext();
 			cosmeticName = (string)stream.ReceiveNext();
-
-			if (camera)
+			string temp = (string)stream.ReceiveNext();
+			if (temp != null)
 			{
-				CameraRotation = (Quaternion)stream.ReceiveNext();
+				lastTookDamageFrom = temp;
+
+				if (camera)
+				{
+					CameraRotation = (Quaternion)stream.ReceiveNext();
+				}
 			}
 		}
 	}

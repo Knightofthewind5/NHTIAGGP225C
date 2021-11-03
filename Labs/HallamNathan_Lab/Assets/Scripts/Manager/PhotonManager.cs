@@ -81,8 +81,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		{
 			if (color.a == 0)
 			{
-				Debug.Log("Loading from saved prefs");
-
 				ButtonManager.Instance.chosenColor.color = new Color(PlayerPrefs.GetFloat("colorRed"), PlayerPrefs.GetFloat("colorGreen"), PlayerPrefs.GetFloat("colorBlue"), PlayerPrefs.GetFloat("colorAlpha"));
 				ButtonManager.Instance.input.text = PlayerPrefs.GetString("Username");
 
@@ -129,8 +127,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			{
 				if (Instance != null)
 				{
-					Debug.Log("[PhotonManager][JoinFPSLobby] Joining Lobby for FPS...");
-
 					username = ButtonManager.Instance.input.text;
 					cosmetic = ButtonManager.Instance.cosmetics.value;
 
@@ -254,7 +250,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	[PunRPC]
 	public void SetGameHUDTimer(float timer)
 	{
-		GameManager3 GM = FindObjectOfType<GameManager3>();
+		GeneralGameManager GM = FindObjectOfType<GeneralGameManager>();
 
 		GM.GameTime.text = "Time Remaining: " + timer.ToString("F2");
 	}
@@ -262,9 +258,11 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	[PunRPC]
 	public void RemoveFromAlivePlayers()
 	{
-		GameManager3 GM = FindObjectOfType<GameManager3>();
+		GeneralGameManager GM = FindObjectOfType<GeneralGameManager>();
 
 		GM.playersAlive--;
+
+		Debug.Log("Remove from alive players");
 	}
 
 	[PunRPC]

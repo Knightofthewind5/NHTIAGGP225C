@@ -62,6 +62,11 @@ MonoBehaviour:
   - RPCSpawnPlayer
   - PUNSpawnPlayer
   - SetActiveCosmetic
+  - PUNAddPlayerToList
+  - RPCAddPlayerToList
+  - RPCAddPlayerCount
+  - AddToScore
+  - RPCAddToScore
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

@@ -9,7 +9,7 @@ public class PlayerListing : MonoBehaviour
 {
 	public Player Player { get; private set; }
 	[SerializeField] private TMP_Text _user;
-	[SerializeField] private string _username;
+	public string username { get; private set; }
 	[SerializeField] Color _color;
 	private PhotonView _photonView;
 	private ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable();
@@ -22,14 +22,14 @@ public class PlayerListing : MonoBehaviour
 	private void Update()
 	{
 		_user.color = _color;
-		gameObject.name = _username;
+		gameObject.name = username;
 	}
 
 	public void SetPlayerInfo(Player player)
 	{
 		Player = player;
-		_username = player.NickName;
-		_user.text = _username;
+		username = player.NickName;
+		_user.text = username;
 
 		properties = player.CustomProperties;
 

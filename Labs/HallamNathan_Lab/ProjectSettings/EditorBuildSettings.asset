@@ -9,9 +9,15 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Scenes/FPSLobby.unity
+    path: Assets/Scenes/FPS Game Scenes/FPSLobby.unity
     guid: 7666068a6f750404b90dbb176fac96bf
   - enabled: 1
-    path: Assets/Scenes/FPSScene.unity
+    path: Assets/Scenes/FPS Game Scenes/BREScene.unity
     guid: 9e8b8b3c152921346b3e97ede33f804a
+  - enabled: 1
+    path: Assets/Scenes/FPS Game Scenes/DMScene.unity
+    guid: df88f2434feca9c4bbf5581ea2ea9b8c
+  - enabled: 1
+    path: Assets/Scenes/FPS Game Scenes/OITCScene.unity
+    guid: 0fe4eab504ae1754eaef5141135dbc2a
   m_configObjects: {}

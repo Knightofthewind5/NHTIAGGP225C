@@ -17,6 +17,8 @@ public class RPCChat : MonoBehaviourPunCallbacks
 	public float timerToStart = 0f;
 	bool joinGame = false;
 	public bool lobby;
+	public TMP_Dropdown gamemodeDropdown;
+	public byte MaxPlayers = 4;
 
 	public static RPCChat Instance { get; private set; }
 
@@ -55,13 +57,24 @@ public class RPCChat : MonoBehaviourPunCallbacks
 						if (timerToStart <= 0)
 						{
 							timerToStart = 0;
-							Debug.Log("Max players in lobby, loading game...");
 
 							if (!joinGame)
 							{
 								joinGame = true;
-								PhotonNetwork.LoadLevel("FPSScene");
-								//PhotonManager.Instance.photonView.RPC("JoinGame", RpcTarget.All);
+
+								if (Instance.gamemodeDropdown.GetCurrentSelectionText() == "Bullet Round Elimination")
+								{
+
+									PhotonNetwork.LoadLevel("BREScene");
+								}
+								else if (Instance.gamemodeDropdown.GetCurrentSelectionText() == "Deathmatch")
+								{
+									PhotonNetwork.LoadLevel("DMScene");
+								}
+								else if (Instance.gamemodeDropdown.GetCurrentSelectionText() == "One in the Chamber")
+								{
+									PhotonNetwork.LoadLevel("OITCScene");
+								}
 							}
 						}
 					}
@@ -83,6 +96,13 @@ public class RPCChat : MonoBehaviourPunCallbacks
 		inputString.text = "";
 	}
 
+	public override void OnJoinedRoom()
+	{
+		base.OnJoinedRoom();
+
+		PhotonNetwork.CurrentRoom.MaxPlayers = MaxPlayers;
+	}
+
 	public void LeaveRoom()
 	{
 		if (PhotonNetwork.CurrentRoom.PlayerCount <= 1)
@@ -92,5 +112,13 @@ public class RPCChat : MonoBehaviourPunCallbacks
 
 		Debug.Log("[RPCChat][LeaveRoom]");
 		PhotonNetwork.LeaveRoom();
+	}
+}
+
+public static class DropDownExtensions
+{
+	public static string GetCurrentSelectionText(this TMP_Dropdown dropdown)
+	{
+		return dropdown.options[dropdown.value].text;
 	}
 }

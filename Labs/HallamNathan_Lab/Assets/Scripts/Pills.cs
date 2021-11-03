@@ -21,7 +21,7 @@ public class Pills : Pickup
         {
             if (typeOfPill == PillType.Health)
             {
-                other.gameObject.GetComponent<DataSync>().TakeDamage(-10);
+                other.gameObject.GetComponent<DataSync>().TakeDamage(-10, null);
             }
             else if (typeOfPill == PillType.Speed)
             {

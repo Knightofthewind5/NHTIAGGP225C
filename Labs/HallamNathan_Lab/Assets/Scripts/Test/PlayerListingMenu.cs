@@ -30,10 +30,9 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
 	{
 		listing.gameObject.SetActive(false);
 
-		yield return new WaitForSeconds(Random.Range(0f, 0.1f));
+		yield return new WaitForSecondsRealtime(Random.Range(0f, 0.5f));
 
 		RPCChat.Instance.chatRoomString.text += "\n" + "(Connected)" + listing.gameObject.GetPhotonView().Controller.NickName;
-		Debug.Log(listing.gameObject.GetPhotonView().Controller.NickName + " Joined the game");
 		listing.gameObject.SetActive(true);
 	}
 
@@ -57,6 +56,11 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
 
 			listing.SetPlayerInfo(player);
 
+			if (!PhotonNetwork.IsMasterClient)
+			{
+				RPCChat.Instance.gamemodeDropdown.gameObject.SetActive(false);
+			}
+
 			_listings.Add(listing);
 
 			StartCoroutine(TextSizeBuffer(listing));
@@ -74,11 +78,9 @@ public class PlayerListingMenu : MonoBehaviourPunCallbacks
 		if (index != -1)
 		{
 			RPCChat.Instance.chatRoomString.text += "\n" + "(Disconnected)" + _listings[index].gameObject.GetPhotonView().Controller.NickName;
-			Debug.Log(_listings[index].gameObject.GetPhotonView().Controller.NickName + " Has left the game");
 
 			Destroy(_listings[index].gameObject);
 			_listings.RemoveAt(index);
 		}
 	}
-
 }

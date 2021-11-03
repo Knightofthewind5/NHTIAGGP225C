@@ -45,7 +45,7 @@ public class TestingPlayerManager : MonoBehaviour
 
 	public Image healthBar;
 	DataSync DS;
-	GameManager3 GM;
+	BulletRoundManager GM;
 
 	public GameObject playerInfo;
 	private Animator anim;
@@ -60,7 +60,7 @@ public class TestingPlayerManager : MonoBehaviour
 	{
 		currentPlayerSpeed = defaultPlayerSpeed;
 
-		GM = FindObjectOfType<GameManager3>();
+		GM = FindObjectOfType<BulletRoundManager>();
 		healthBar = GM.HealthBar;
 		controller = gameObject.GetComponent<CharacterController>();
 		photonView = GetComponent<PhotonView>();
