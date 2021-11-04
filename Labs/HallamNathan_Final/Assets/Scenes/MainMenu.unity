@@ -1231,7 +1231,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 602689553}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1988486860}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &602689553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3337,7 +3349,7 @@ MonoBehaviour:
   OptionsCanvas: {fileID: 1335760672}
   MultiplayerCanvas: {fileID: 838990443}
   RoomList: {fileID: 900727612}
-  RoomObjectPrefab: {fileID: 2990652336885112991, guid: c478aab0550aae441a6a1870fd221d0c, type: 3}
+  RoomObjectPrefab: {fileID: 1474178030847330513, guid: c478aab0550aae441a6a1870fd221d0c, type: 3}
 --- !u!4 &1988486862
 Transform:
   m_ObjectHideFlags: 0
