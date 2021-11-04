@@ -14,9 +14,12 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	/// </summary>
 	string gameVersion = "0";
 	RoomOptions roomOptions = new RoomOptions();
-    new PhotonView photonView;
+	new PhotonView photonView;
 
 	private ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable();
+
+	public string username;
+	public Color color = new Color(1f, 1f, 1f, 1f);
 
 	//Singleton 
 	public static PhotonManager Instance { get; private set; }
@@ -72,13 +75,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	#endregion Connections
 
 	#region Create Rooms
-	public void CreateRoom()
+	public void CreateRoom(string roomName = "Player Room", byte maxPlayers = 4)
 	{
-		roomOptions.MaxPlayers = 4;
+		roomOptions.MaxPlayers = maxPlayers;
 		roomOptions.IsVisible = true;
 
-		PhotonNetwork.CreateRoom("Test Room", roomOptions);
-		Debug.Log("[PhotonManager][CreateRoom] Creating room...");
+		PhotonNetwork.CreateRoom(roomName, roomOptions);
+		Debug.Log("[PhotonManager][CreateRoom] Creating room " + roomName + " for " + maxPlayers + " Players");
 	}
 
 	public override void OnCreatedRoom()
@@ -89,9 +92,17 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	#region Join Rooms
 	public void JoinRoom(string roomName)
-    {
+	{
+		PhotonNetwork.LocalPlayer.NickName = username;
+		properties.Add("colorRed", color.r);
+		properties.Add("colorGreen", color.g);
+		properties.Add("colorBlue", color.b);
+		properties.Add("colorAlpha", color.a);
+
+		PhotonNetwork.LocalPlayer.CustomProperties = properties;	
+		
 		PhotonNetwork.JoinRoom(roomName);
-    }
+	}
 
 	public void JoinRandomRoom()
 	{
@@ -106,10 +117,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	{
 		Debug.Log("[PhotonManager][OnJoinedRoom] Room " + PhotonNetwork.CurrentRoom.Name + " Joined!");
 	}
-    #endregion Join Rooms
+	#endregion Join Rooms
 
-    #region Disconnection and Failures
-    public override void OnLeftRoom()
+	#region Disconnection and Failures
+	public override void OnLeftRoom()
 	{
 		PhotonNetwork.LoadLevel("MainMenu");
 
@@ -136,6 +147,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	{
 		Debug.Log("[PhotonManager][OnJoinRandomFailed] " + message);
 	}
-    #endregion Disconnection and Failures
-    #endregion Functions
+	#endregion Disconnection and Failures
+	#endregion Functions
 }
