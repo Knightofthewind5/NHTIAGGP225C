@@ -3360,9 +3360,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 838990441}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &842685305
 GameObject:
@@ -6302,7 +6302,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1897240753}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -6555,6 +6555,7 @@ MonoBehaviour:
   _username: {fileID: 639484063}
   _roomName: {fileID: 1236401025}
   _playerCount: {fileID: 457185809}
+  _chosenColor: {fileID: 253875313}
 --- !u!4 &1988486862
 Transform:
   m_ObjectHideFlags: 0

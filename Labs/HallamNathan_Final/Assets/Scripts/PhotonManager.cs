@@ -59,6 +59,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	{
 		if (!PhotonNetwork.IsConnected)
 		{
+			username = PlayerPrefs.GetString("Username");
+			color = new Color(PlayerPrefs.GetFloat("colorRed"), PlayerPrefs.GetFloat("colorGreen"), PlayerPrefs.GetFloat("colorBlue"), PlayerPrefs.GetFloat("colorAlpha"));
+
 			PhotonNetwork.ConnectUsingSettings();
 			PhotonNetwork.GameVersion = gameVersion;
 			PhotonNetwork.AutomaticallySyncScene = true;
@@ -81,7 +84,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		roomOptions.IsVisible = true;
 
 		PhotonNetwork.CreateRoom(roomName, roomOptions);
-		Debug.Log("[PhotonManager][CreateRoom] Creating room " + roomName + " for " + maxPlayers + " Players");
+		Debug.Log("[PhotonManager][CreateRoom] Creating " + roomName + " for " + maxPlayers + " Players");
 	}
 
 	public override void OnCreatedRoom()
@@ -92,15 +95,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	#region Join Rooms
 	public void JoinRoom(string roomName)
-	{
-		PhotonNetwork.LocalPlayer.NickName = username;
-		properties.Add("colorRed", color.r);
-		properties.Add("colorGreen", color.g);
-		properties.Add("colorBlue", color.b);
-		properties.Add("colorAlpha", color.a);
-
-		PhotonNetwork.LocalPlayer.CustomProperties = properties;	
-		
+	{		
 		PhotonNetwork.JoinRoom(roomName);
 	}
 
@@ -115,7 +110,21 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	public override void OnJoinedRoom()
 	{
-		Debug.Log("[PhotonManager][OnJoinedRoom] Room " + PhotonNetwork.CurrentRoom.Name + " Joined!");
+		Debug.Log("[PhotonManager][OnJoinedRoom] " + PhotonNetwork.CurrentRoom.Name + " Joined!");
+
+		PhotonNetwork.LocalPlayer.NickName = username;
+		properties.Add("colorRed", color.r);
+		properties.Add("colorGreen", color.g);
+		properties.Add("colorBlue", color.b);
+		properties.Add("colorAlpha", color.a);
+
+		PlayerPrefs.SetString("Username", username);
+		PlayerPrefs.SetFloat("colorRed", color.r);
+		PlayerPrefs.SetFloat("colorGreen", color.g);
+		PlayerPrefs.SetFloat("colorBlue", color.b);
+		PlayerPrefs.SetFloat("colorAlpha", color.a);
+
+		PhotonNetwork.LocalPlayer.CustomProperties = properties;
 	}
 	#endregion Join Rooms
 

@@ -25,12 +25,23 @@ public class MainMenuButtonManager : MonoBehaviourPunCallbacks
 	[SerializeField] TMP_InputField _username;
 	[SerializeField] TMP_InputField _roomName;
 	[SerializeField] TMP_InputField _playerCount;
+	[SerializeField] Image _chosenColor;
 
 	private List<RoomInfo> _roomList = new List<RoomInfo>();
 
 	public void Awake()
 	{
 		Instance = this;
+
+		StartCoroutine(WaitForConnection());
+	}
+
+	IEnumerator WaitForConnection()
+	{
+		yield return new WaitUntil(() => PhotonNetwork.InLobby);
+
+		_username.text = PhotonManager.Instance.username;
+		_chosenColor.color = PhotonManager.Instance.color;
 	}
 
 	public void SinglePlayer_Click()
@@ -43,7 +54,26 @@ public class MainMenuButtonManager : MonoBehaviourPunCallbacks
 		if (_username.text.Length != 0)
 		{
 			PhotonManager.Instance.username = _username.text;
-			PhotonManager.Instance.CreateRoom(_roomName.text, (byte)int.Parse(_playerCount.text));
+
+			if (_roomName.text.Length != 0 && _playerCount.text.Length == 0)
+			{
+				PhotonManager.Instance.CreateRoom(_roomName.text);
+
+			}
+			else if (_roomName.text.Length == 0 && _playerCount.text.Length != 0)
+			{
+				PhotonManager.Instance.CreateRoom("Default Roomname", (byte)int.Parse(_playerCount.text));
+
+			}
+			else if (_roomName.text.Length == 0 && _playerCount.text.Length == 0)
+			{
+				PhotonManager.Instance.CreateRoom();
+
+			}
+			else
+			{
+				PhotonManager.Instance.CreateRoom(_roomName.text, (byte)int.Parse(_playerCount.text));
+			}
 		}
 		else
 		{
