@@ -33,8 +33,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	{
 		if (Instance)
 		{
-			Debug.Log("Already have a photon view");
-			Destroy(GetComponent<PhotonView>());
+			Destroy(gameObject);
 		}
 		else
 		{
@@ -80,22 +79,32 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	#region Create Rooms
 	public void CreateRoom(string roomName = "Player Room", byte maxPlayers = 4)
 	{
+		if (roomName == "Player Room")
+		{
+			roomName = Random.Range(100000000, 999999999).ToString();
+		}
+
+
 		roomOptions.MaxPlayers = maxPlayers;
 		roomOptions.IsVisible = true;
 
+		SetCustomProperties();
+
 		PhotonNetwork.CreateRoom(roomName, roomOptions);
-		Debug.Log("[PhotonManager][CreateRoom] Creating " + roomName + " for " + maxPlayers + " Players");
+		//Debug.Log("[PhotonManager][CreateRoom] Creating " + roomName + " for " + maxPlayers + " Players");
 	}
 
 	public override void OnCreatedRoom()
 	{
-		Debug.Log("[PhotonManager][OnCreateRoom]");
+		//Debug.Log("[PhotonManager][OnCreateRoom]");
 	}
 	#endregion
 
 	#region Join Rooms
 	public void JoinRoom(string roomName)
-	{		
+	{
+		SetCustomProperties();
+
 		PhotonNetwork.JoinRoom(roomName);
 	}
 
@@ -110,21 +119,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	public override void OnJoinedRoom()
 	{
-		Debug.Log("[PhotonManager][OnJoinedRoom] " + PhotonNetwork.CurrentRoom.Name + " Joined!");
-
-		PhotonNetwork.LocalPlayer.NickName = username;
-		properties.Add("colorRed", color.r);
-		properties.Add("colorGreen", color.g);
-		properties.Add("colorBlue", color.b);
-		properties.Add("colorAlpha", color.a);
-
-		PlayerPrefs.SetString("Username", username);
-		PlayerPrefs.SetFloat("colorRed", color.r);
-		PlayerPrefs.SetFloat("colorGreen", color.g);
-		PlayerPrefs.SetFloat("colorBlue", color.b);
-		PlayerPrefs.SetFloat("colorAlpha", color.a);
-
-		PhotonNetwork.LocalPlayer.CustomProperties = properties;
+		//Debug.Log("[PhotonManager][OnJoinedRoom] " + PhotonNetwork.CurrentRoom.Name + " Joined!");	
 	}
 	#endregion Join Rooms
 
@@ -149,7 +144,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	public override void OnJoinRoomFailed(short returnCode, string message)
 	{
-		Debug.Log("[PhotonManager][OnCreateRoomFailed] " + message);
+		Debug.Log("[PhotonManager][OnJoinRoomFailed] " + message);
 	}
 
 	public override void OnJoinRandomFailed(short returnCode, string message)
@@ -157,5 +152,26 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		Debug.Log("[PhotonManager][OnJoinRandomFailed] " + message);
 	}
 	#endregion Disconnection and Failures
+
+	public void SetCustomProperties()
+	{
+		Debug.Log("Setting custom properties");
+
+		PhotonNetwork.LocalPlayer.NickName = username;
+
+		properties["colorRed"] = color.r;
+		properties["colorGreen"] = color.g;
+		properties["colorBlue"] = color.b;
+		properties["colorAlpha"] = color.a;
+
+		PlayerPrefs.SetString("Username", username);
+		PlayerPrefs.SetFloat("colorRed", color.r);
+		PlayerPrefs.SetFloat("colorGreen", color.g);
+		PlayerPrefs.SetFloat("colorBlue", color.b);
+		PlayerPrefs.SetFloat("colorAlpha", color.a);
+
+		PhotonNetwork.LocalPlayer.CustomProperties = properties;
+	}
+
 	#endregion Functions
 }

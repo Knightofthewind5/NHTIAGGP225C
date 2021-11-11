@@ -6,7 +6,7 @@ using Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
-using System.Text;
+using UnityEngine.SceneManagement;
 
 public class MainMenuButtonManager : MonoBehaviourPunCallbacks
 {
@@ -20,20 +20,36 @@ public class MainMenuButtonManager : MonoBehaviourPunCallbacks
 	[SerializeField] CanvasGroup _MainCanvas;
 	[SerializeField] CanvasGroup _OptionsCanvas;
 	[SerializeField] CanvasGroup _MultiplayerCanvas;
-	[SerializeField] Transform _RoomList;
-	[SerializeField] RoomListing _RoomObjectPrefab;
+	[SerializeField] Transform _content;
+	[SerializeField] RoomListing _roomListing;
 	[SerializeField] TMP_InputField _username;
 	[SerializeField] TMP_InputField _roomName;
 	[SerializeField] TMP_InputField _playerCount;
 	[SerializeField] Image _chosenColor;
+	[SerializeField] Button _btn_createRoom;
+	[SerializeField] TMP_Text _roomCount;
+	[SerializeField] TMP_Text _totalPlayersInRoomCount;
 
-	private List<RoomInfo> _roomList = new List<RoomInfo>();
+
+	private List<RoomListing> _listing = new List<RoomListing>();
 
 	public void Awake()
 	{
 		Instance = this;
 
 		StartCoroutine(WaitForConnection());
+	}
+
+	public void Update()
+	{
+		if (_username.text.Length > 0)
+		{
+			_btn_createRoom.interactable = true;
+		}
+		else
+		{
+			_btn_createRoom.interactable = false;
+		}
 	}
 
 	IEnumerator WaitForConnection()
@@ -74,10 +90,8 @@ public class MainMenuButtonManager : MonoBehaviourPunCallbacks
 			{
 				PhotonManager.Instance.CreateRoom(_roomName.text, (byte)int.Parse(_playerCount.text));
 			}
-		}
-		else
-		{
-			Debug.LogError("No Username Detected! Can not create room");
+
+			SceneManager.LoadScene("GameLobby");
 		}
 	}
 
@@ -111,32 +125,42 @@ public class MainMenuButtonManager : MonoBehaviourPunCallbacks
 
 	public override void OnRoomListUpdate(List<RoomInfo> roomList)
 	{
-		_roomList = roomList;
-
-
-		Debug.Log("[MainMenuButtonManager][UpdateRoomList] Room Count " + PhotonNetwork.CountOfRooms);
 		ClearRoomList();
 
-
-		foreach (RoomInfo roominfo in _roomList)
+		foreach (RoomInfo info in roomList)
 		{
-			RoomListing RoomObject = Instantiate(_RoomObjectPrefab, _RoomList);
-
-			if (RoomObject != null)
+			if (info.RemovedFromList)
 			{
-				RoomObject.SetRoomInfo(roominfo);
+				int index = _listing.FindIndex(x => x.RoomInfo.Name == info.Name);
+				if (index != -1)
+				{
+					Destroy(_listing[index].gameObject);
+					_listing.RemoveAt(index);
+				}
+			}
+			else
+			{
+				RoomListing listing = Instantiate(_roomListing, _content);
+
+				if (listing != null)
+				{
+					listing.SetRoomInfo(info);
+					_listing.Add(listing);
+				}
 			}
 		}
-
-		base.OnRoomListUpdate(_roomList);
 	}
 
 	void ClearRoomList()
 	{
-		for (int i = 0; i < _RoomList.childCount; i++)
+		for (int i = 0; i < _content.childCount; i++)
 		{
-			Destroy(_RoomList.GetChild(0).gameObject);
+			Destroy(_content.GetChild(0).gameObject);
+			_listing.RemoveAt(0);
 		}
+
+		_roomCount.text = PhotonNetwork.CountOfRooms.ToString();
+		_totalPlayersInRoomCount.text = PhotonNetwork.CountOfPlayersInRooms.ToString();
 	}
 
 	public void Quit_Click()

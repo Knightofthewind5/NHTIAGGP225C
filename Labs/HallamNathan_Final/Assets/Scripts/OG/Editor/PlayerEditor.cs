@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(PlayerController))]
+[CustomEditor(typeof(OGPlayerController))]
 public class PlayerEditor : Editor
 {
-	private PlayerController myTarget;
+	private OGPlayerController myTarget;
 	private SerializedObject soTarget;
 
 	private SerializedProperty playerId;
@@ -23,7 +23,7 @@ public class PlayerEditor : Editor
 
 	public void OnEnable()
 	{
-		myTarget = (PlayerController)target;
+		myTarget = (OGPlayerController)target;
 		soTarget = new SerializedObject(target);
 
 		playerId = soTarget.FindProperty("playerId");

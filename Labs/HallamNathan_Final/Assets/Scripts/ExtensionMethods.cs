@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class ExtensionMethods
 {
+	#region Canvas Group
 	/// <summary>
 	///  ActivatesDeactivates the GameObject, depending on the given true or false/ value.
 	/// </summary>
@@ -50,4 +51,14 @@ public static class ExtensionMethods
 	{
 		return (CG.alpha == 1 ? true : false);
 	}
+	#endregion Canvas Group
+
+	#region Color
+	public static string ColorToHex(this Color32 color)
+	{
+		string hex = color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2");
+		return hex;
+	}
+
+	#endregion Color
 }

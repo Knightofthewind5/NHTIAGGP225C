@@ -12,8 +12,11 @@ public class RoomListing : MonoBehaviour
     [SerializeField] TMP_Text _roomName;
     [SerializeField] TMP_Text _roomPlayerCount;
 
+    public RoomInfo RoomInfo { get; private set; }
+
     public void SetRoomInfo(RoomInfo roomInfo)
     {
+        RoomInfo = roomInfo;
         _roomName.text = roomInfo.Name;
         _roomPlayerCount.text = roomInfo.PlayerCount + "/" + roomInfo.MaxPlayers;
 

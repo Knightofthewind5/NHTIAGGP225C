@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class OGPlayerController : MonoBehaviour
 {
 	//Input Variables
 	public int playerId = 1;
