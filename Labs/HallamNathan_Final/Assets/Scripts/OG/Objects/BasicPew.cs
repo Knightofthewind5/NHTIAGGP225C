@@ -7,15 +7,7 @@ public class BasicPew : MonoBehaviour
 	public float damage = 10;
 	public float lifetime = 8;
 	public float projectileSpeed = 25f;
-	GameObject GM;
-	Manager GameManager;
 	float currentLife = 0;
-
-	private void Awake()
-	{
-		GM = GameObject.FindGameObjectWithTag("Manager");
-		GameManager = GM.GetComponent<Manager>();
-	}
 
 	void Update()
 	{
@@ -27,7 +19,6 @@ public class BasicPew : MonoBehaviour
 	if (currentLife >= lifetime)
 		{
 			Destroy(gameObject);
-			GameManager.currentMPPoints -= 1;
 		}
 	}
 

@@ -43,7 +43,22 @@ public class TestPlayerController : MonoBehaviour
 	bool backward = false;
 	bool left = false;
 	bool right = false;
+	bool fire1 = false;
 	public bool canThrustBack = false;
+
+	//Fire Variables
+	bool fireOneIsEnabled = true;
+	float fireOneCooldown = 0;
+	public bool fireOneOnCooldown = false;
+	public float fireOneCooldownTime = 6;  //in Seconds.
+	public float cooldownOneSpeed = 1; //For Fire1 - 1 is normal speed : 2 is 2X faster : 0.5 is 2X slower. If there were to be powerups - this would change the "reload" speed.
+	//Projectile Instantiate Variables
+	public GameObject PewPrefab;
+	public GameObject SpawnLocation;
+	[SerializeField] float pewLifetime = 1f;
+	[SerializeField] float pewDamage = 1f;
+	[SerializeField] float pewSpeed = 50f;
+
 
 	private void FixedUpdate()
 	{
@@ -75,6 +90,11 @@ public class TestPlayerController : MonoBehaviour
 		{
 			Rotate(-1);
 		}		
+
+		if (fire1)
+		{
+			Fire1();
+		}
 	}
 
 	void GetInputPlayer1()
@@ -83,6 +103,7 @@ public class TestPlayerController : MonoBehaviour
 		backward = Input.GetKey(KeyCode.S);
 		left = Input.GetKey(KeyCode.A);
 		right = Input.GetKey(KeyCode.D);
+		fire1 = Input.GetKey(KeyCode.Space);
 	}
 
 	void Move(float value)
@@ -94,5 +115,39 @@ public class TestPlayerController : MonoBehaviour
 	void Rotate(float value)
 	{
 		gameObject.transform.Rotate(Vector3.back * value * rotationSpeed * Time.deltaTime);
+	}
+
+	IEnumerator FireCooldown()
+	{
+		yield return new WaitForSecondsRealtime(fireOneCooldown);
+
+		fireOneOnCooldown = false;
+	}
+
+	private void Fire1() //Checks if player has used ability and if fire1 is on cooldown, if available then call FireProjectile.
+	{
+		if (fireOneIsEnabled)   //If the player can fire
+		{
+			if (!fireOneOnCooldown)   //If the ability is not on cooldown
+			{
+				fireOneCooldown = fireOneCooldownTime;
+				FireProjectile();
+			}
+		}
+	}
+
+	private void FireProjectile()    //Spawns Projectile when Fire1 is active.
+	{
+		fireOneOnCooldown = true;
+		StartCoroutine(FireCooldown());
+
+		GameObject pew = Instantiate(PewPrefab,                    //Object to Spawn
+				SpawnLocation.transform.position,   //Position to Spawn Object
+				SpawnLocation.transform.rotation);  //Rotation to Spawn Object
+
+		Rigidbody2D pewRB = pew.GetComponent<Rigidbody2D>();
+		pewRB.velocity = gameObject.transform.up * (pewSpeed + rb.velocity.magnitude);
+
+		Destroy(pew, pewLifetime);
 	}
 }

@@ -26,5 +26,4 @@ public class TestScript : MonoBehaviour
 	{
 		PhotonNetwork.Instantiate(PlayerPrefab.name, Vector2.zero, Quaternion.identity);
 	}
-
 }
