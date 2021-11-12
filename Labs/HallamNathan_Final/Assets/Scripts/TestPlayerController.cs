@@ -1,26 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon;
-using Photon.Pun;
-using Photon.Realtime;
 
-[ExecuteInEditMode]
-[RequireComponent(typeof(PhotonView), typeof(Rigidbody2D), typeof(EdgeCollider2D))]
-[RequireComponent(typeof(SpriteRenderer), typeof(ScreenWrap))]
-public class PlayerController : MonoBehaviour
+public class TestPlayerController : MonoBehaviour
 {
-	PhotonView photonView;
 	Rigidbody2D rb;
 	EdgeCollider2D edgeCollider;
 
-	[Tooltip("How fast will the player accelerate")]
-	[SerializeField] float moveSpeed = 15f;
-	[Tooltip("How fast will the player rotate")]
+	[Tooltip("How fast the player is capable of moving")]
+	[SerializeField] float maxSpeed = 10f;
+	[Tooltip("How fast the player will accelerate")]
+	[SerializeField] float acceleration = 10f;
+	[Tooltip("How fast the player will rotate")]
 	[SerializeField] float rotationSpeed = 145f;
-	[Tooltip("How long it takes for the player to stabilize. 0 is no stabilizing")]
+	[Tooltip("How long it takes for the player to stop moving when not thrusting. 0 is no stopping.")]
 	[Range(0f, 1f)]
-	[SerializeField] float driftAmount = 0.15f;
+	[SerializeField] float brakingPower = 0.15f;
 	[Tooltip("The maximum HP the shields have")]
 	[SerializeField] float maxShieldStrength = 10f;
 	[Tooltip("How fast do the shields regenerate after taking damage")]
@@ -34,11 +29,13 @@ public class PlayerController : MonoBehaviour
 	[Tooltip("How many seconds of invulnerability does the player have when their sheilds break")]
 	[SerializeField] float gracePeriod = 1.5f;
 
+	ParticleSystem ps;
+
 	private void Awake()
 	{
-		photonView = GetComponent<PhotonView>();
 		rb = GetComponent<Rigidbody2D>();
 		edgeCollider = GetComponent<EdgeCollider2D>();
+		ps = GetComponent<ParticleSystem>();
 	}
 
 	//Input Variables
@@ -48,40 +45,36 @@ public class PlayerController : MonoBehaviour
 	bool right = false;
 	public bool canThrustBack = false;
 
-	public ParticleSystem ps;
-
 	private void FixedUpdate()
 	{
-		if (photonView.IsMine)
-		{
-			GetInputPlayer1();
+		GetInputPlayer1();
 
-			if (forward)
+		if (forward && rb.velocity.magnitude < maxSpeed)
+		{
+			Move(1);
+			ps.Play();
+		}
+		else
+		{
+			rb.velocity = Vector2.MoveTowards(rb.velocity, Vector2.zero, brakingPower * (rb.velocity.magnitude / 10));
+
+			ps.Stop();
+		}
+		if (backward)
+		{
+			if (canThrustBack == true)
 			{
-				Move(1);
-				ps.Play();
-			}
-			else
-			{
-				rb.velocity = Vector2.MoveTowards(rb.velocity, Vector2.zero, driftAmount * (rb.velocity.magnitude / 10));
-				ps.Stop();
-			}
-			if (backward)
-			{
-				if (canThrustBack == true)
-				{
-					Move(-1);
-				}
-			}
-			if (right)
-			{
-				Rotate(1);
-			}
-			if (left)
-			{
-				Rotate(-1);
+				Move(-1);
 			}
 		}
+		if (right)
+		{
+			Rotate(1);
+		}
+		if (left)
+		{
+			Rotate(-1);
+		}		
 	}
 
 	void GetInputPlayer1()
@@ -95,7 +88,7 @@ public class PlayerController : MonoBehaviour
 	void Move(float value)
 	{
 		// Apply force behind ship to propel forward
-		rb.AddForce(transform.up * moveSpeed * value * Time.deltaTime, ForceMode2D.Impulse);
+		rb.AddForce(transform.up * acceleration * value * Time.deltaTime);
 	}
 
 	void Rotate(float value)
