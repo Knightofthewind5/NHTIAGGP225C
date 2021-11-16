@@ -60,8 +60,10 @@ public class TestPlayerController : MonoBehaviour
 	[SerializeField] float pewSpeed = 50f;
 
 
-	private void FixedUpdate()
+	public void FixedUpdate()
 	{
+		Debug.DrawLine(transform.position, transform.position + (transform.up * 10), new Color(0, 0, 255, 255));
+
 		GetInputPlayer1();
 
 		if (forward && rb.velocity.magnitude < maxSpeed)

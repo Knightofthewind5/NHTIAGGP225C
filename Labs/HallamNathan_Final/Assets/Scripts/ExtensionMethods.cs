@@ -59,6 +59,34 @@ public static class ExtensionMethods
 		string hex = color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2");
 		return hex;
 	}
-
 	#endregion Color
+
+	#region Camera
+	public static bool ObjectIsVisible(this Camera camera, GameObject GO)
+	{
+		Vector3 horizontalOffset = camera.ViewportToWorldPoint(new Vector3(1.0f, 0.5f, -Camera.main.transform.position.z)); //Changed from v
+		Vector3 verticalOffset = camera.ViewportToWorldPoint(new Vector3(0.5f, 1.0f, -Camera.main.transform.position.z)); //
+		float horizontalEdge = horizontalOffset.x;
+		float verticalEdge = verticalOffset.y;
+
+		if (GO.transform.position.x > horizontalEdge)
+		{
+			return false;
+		}
+		else if (GO.transform.position.x < -horizontalEdge)
+		{
+			return false;
+		}
+		if (GO.transform.position.y > verticalEdge)
+		{
+			return false;
+		}
+		else if (GO.transform.position.y < -verticalEdge)
+		{
+			return false;
+		}
+
+		return true;
+	}
+	#endregion Camera
 }
