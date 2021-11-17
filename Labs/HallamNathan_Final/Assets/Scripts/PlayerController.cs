@@ -7,13 +7,13 @@ using Photon.Realtime;
 using UnityEngine.UI;
 using TMPro;
 
-[RequireComponent(typeof(PhotonView), typeof(Rigidbody2D), typeof(EdgeCollider2D))]
-[RequireComponent(typeof(SpriteRenderer), typeof(ScreenWrap))]
+[RequireComponent(typeof(PhotonView), typeof(Rigidbody2D), typeof(PolygonCollider2D))]
+[RequireComponent(typeof(ScreenWrap))]
 public class PlayerController : MonoBehaviour, IPunObservable
 {
 	PhotonView photonView;
 	Rigidbody2D rb;
-	EdgeCollider2D edgeCollider;
+	PolygonCollider2D polyCollider;
 
 	#region Movement Variables
 	[Tooltip("How fast the player is capable of moving")]
@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	{
 		photonView = GetComponent<PhotonView>();
 		rb = GetComponent<Rigidbody2D>();
-		edgeCollider = GetComponent<EdgeCollider2D>();
+		polyCollider = GetComponent<PolygonCollider2D>();
 		ps = GetComponent<ParticleSystem>();
 
 
@@ -223,6 +223,11 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	{
 		rb.position = Vector3.MoveTowards(rb.position, networkPosition, Time.fixedDeltaTime);
 		rb.rotation = Mathf.MoveTowardsAngle(rb.rotation, networkRotation, Time.fixedDeltaTime * 100.0f);
+	}
+
+	public void ModifyHealth(float value)
+	{
+
 	}
 
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

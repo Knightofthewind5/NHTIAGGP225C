@@ -5,7 +5,7 @@ using UnityEngine;
 public class TestPlayerController : MonoBehaviour
 {
 	Rigidbody2D rb;
-	EdgeCollider2D edgeCollider;
+	PolygonCollider2D polyCollider;
 
 	[Tooltip("How fast the player is capable of moving")]
 	[SerializeField] float maxSpeed = 10f;
@@ -34,7 +34,7 @@ public class TestPlayerController : MonoBehaviour
 	private void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
-		edgeCollider = GetComponent<EdgeCollider2D>();
+		polyCollider = GetComponent<PolygonCollider2D>();
 		ps = GetComponent<ParticleSystem>();
 	}
 

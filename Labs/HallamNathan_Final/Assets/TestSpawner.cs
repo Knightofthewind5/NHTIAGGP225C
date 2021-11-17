@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class TestSpawner : MonoBehaviour
 {
-	[SerializeField] GameObject ObjectToSpawn;
-
 	[SerializeField] Vector2 noSpawnArea;
 	[SerializeField] Vector2 spawnArea;
 	[SerializeField] Vector2[] permitAreas = new Vector2[2];
@@ -17,21 +15,18 @@ public class TestSpawner : MonoBehaviour
 	float y;
 	Vector3 difference;
 
+	float horizontalEdge;
+	float verticalEdge;
+
+	int spawnObjectIndex = 0;
+
 	public void Start()
 	{
-
-	}
-
-	void SpawnAsteroids()
-	{
-		int spawnLocationIndex = Random.Range(0, 4);
-
-
 		#region Get Screen Bounds
 		Vector3 horizontalOffset = Camera.main.ViewportToWorldPoint(new Vector3(1.0f, 0.5f, -Camera.main.transform.position.z)); //Changed from v
 		Vector3 verticalOffset = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 1.0f, -Camera.main.transform.position.z)); //
-		float horizontalEdge = horizontalOffset.x;
-		float verticalEdge = verticalOffset.y;
+		horizontalEdge = horizontalOffset.x;
+		verticalEdge = verticalOffset.y;
 		#endregion Get Screen Bounds
 
 		#region Add Screen Edges to list
@@ -40,6 +35,41 @@ public class TestSpawner : MonoBehaviour
 		edgePoints.Add(new Vector2(-horizontalEdge, -verticalEdge));
 		edgePoints.Add(new Vector2(-horizontalEdge, verticalEdge));
 		#endregion region Add Screen Edges to list
+
+		StartCoroutine(GameWaitBeforeSpawn());
+	}
+
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.R))
+		{
+			if (GameManager.Instance.availableWeight > 0)
+			{
+				SpawnAsteroids();
+			}
+			else
+			{
+				Debug.LogWarning("Not enough weight to spawn more asteroids!");
+			}
+		}
+	}
+
+	void SpawnAsteroids()
+	{
+		int spawnLocationIndex = Random.Range(0, 4);
+		int spawnObjectTopIndex = GameManager.Instance.asteroids.Count;
+
+		foreach (AsteroidStats stat in GameManager.Instance.asteroids)
+		{
+			if (stat.weight > GameManager.Instance.availableWeight)
+			{
+				spawnObjectTopIndex--;
+			}
+		}
+
+		spawnObjectIndex = Random.Range(1, spawnObjectTopIndex);
+
+		Debug.Log(spawnObjectIndex);
 
 		switch (spawnLocationIndex)
 		{
@@ -84,7 +114,8 @@ public class TestSpawner : MonoBehaviour
 		float rad2degree = Mathf.Rad2Deg * arccos;
 		#endregion Get available angle to move
 
-		GameObject spawn = Instantiate(ObjectToSpawn, new Vector2(x, y), Quaternion.identity);
+		GameObject spawn = Instantiate(GameManager.Instance.baseGameObject, new Vector2(x, y), Quaternion.identity);
+		spawn.GetComponent<TestAsteroid>().ASs = GameManager.Instance.asteroids[spawnObjectIndex];
 
 		#region Make asteroid look towards origin and give it a slight angle offset
 		difference = new Vector3(0, 0, 0) - spawn.transform.position;
@@ -117,5 +148,29 @@ public class TestSpawner : MonoBehaviour
 
 		Gizmos.color = spawnAreaColor;
 		Gizmos.DrawCube(Vector2.zero, spawnArea);
+	}
+
+
+
+	IEnumerator GameWaitBeforeSpawn()
+	{
+		yield return new WaitForSecondsRealtime(GameManager.Instance.gameStartWait);
+
+		StartCoroutine(SpawnTimer());
+	}
+
+	IEnumerator SpawnTimer()
+	{
+		yield return new WaitUntil(() => GameManager.Instance.availableWeight >= (0.75f * GameManager.Instance.maxWeightForLevel));
+
+		do
+		{
+			SpawnAsteroids();
+
+			yield return new WaitForSecondsRealtime(0.1f);
+		}
+		while (GameManager.Instance.availableWeight > 0);
+
+		StartCoroutine(SpawnTimer());
 	}
 }

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6506785029176839810
+--- !u!1 &434833577101955272
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,39 +8,36 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6506785029176840060}
-  - component: {fileID: 6506785029176840061}
-  - component: {fileID: 6506785029176840063}
-  - component: {fileID: 3313275238013627599}
-  - component: {fileID: 1151968127949345241}
-  m_Layer: 0
-  m_Name: RPC Basic Pew
+  - component: {fileID: 5811579404492436704}
+  - component: {fileID: 8908917494692519775}
+  m_Layer: 6
+  m_Name: SpriteRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6506785029176840060
+--- !u!4 &5811579404492436704
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6506785029176839810}
+  m_GameObject: {fileID: 434833577101955272}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6, z: 0}
-  m_LocalScale: {x: 4, y: 10, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 6506785029176840060}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &6506785029176840061
+--- !u!212 &8908917494692519775
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6506785029176839810}
+  m_GameObject: {fileID: 434833577101955272}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -85,6 +82,41 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &6506785029176839810
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6506785029176840060}
+  - component: {fileID: 6506785029176840063}
+  - component: {fileID: 3313275238013627599}
+  - component: {fileID: 1151968127949345241}
+  - component: {fileID: -2793521630975056722}
+  m_Layer: 9
+  m_Name: RPC Basic Pew
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6506785029176840060
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6506785029176839810}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 6, z: 0}
+  m_LocalScale: {x: 4, y: 10, z: 0}
+  m_Children:
+  - {fileID: 5811579404492436704}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &6506785029176840063
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -130,7 +162,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!114 &1151968127949345241
 MonoBehaviour:
@@ -144,3 +176,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d794b26fc18b67147adce124ace25658, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-2793521630975056722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6506785029176839810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7bd0e9d7925dc54d87cb4e4f9c8c28a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1

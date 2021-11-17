@@ -103,7 +103,6 @@ public class Asteroid : MonoBehaviour
 		{
 		spriteRotate.transform.Rotate(Vector3.back * randomRotationValue * Time.deltaTime);
 		}
-
 	}
 
 	void Move(float value)
