@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
 	public GameObject baseGameObject;
 	public List<AsteroidStats> asteroids = new List<AsteroidStats>();
 	public float gameStartWait = 5f;
+	public List<WeaponStats> weapons = new List<WeaponStats>();
 
 	private void Awake()
 	{
@@ -43,7 +44,7 @@ public class GameManager : MonoBehaviour
 
 	private void Update()
 	{
-		maxWeightForLevel = Mathf.RoundToInt(level * Mathf.Pow((1 + baseAsteroidWeight), asteroidWeightMultiplier));
+		//maxWeightForLevel = Mathf.RoundToInt(level * Mathf.Pow((1 + baseAsteroidWeight), asteroidWeightMultiplier));
 		maxScoreForLevel = Mathf.RoundToInt(level * Mathf.Pow((1 + baseScoreForLevel), levelScoreMultiplier));
 
 		currentWeight = TestAsteroid.totalWeight;

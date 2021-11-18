@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class TestAsteroid : MonoBehaviour
 {
+	public int ID;
+
 	public static int totalWeight; // The maximum weight of asteroids currently in the level
 
 	SpriteRenderer spriteRenderer;
@@ -95,13 +100,13 @@ public class TestAsteroid : MonoBehaviour
 	{
 		for (int count = ASs.splitCount; count > 0; count--)
 		{
-			GameObject go = Instantiate(GameManager.Instance.baseGameObject, gameObject.transform.position, gameObject.transform.rotation);
-			go.GetComponent<TestAsteroid>().ASs = new AsteroidStats(GameManager.Instance.asteroids[ASs.splitIndex]);
+			float rotation = Random.Range(0f, 360f);
 
-			go.transform.position = gameObject.transform.position;
-			go.transform.Rotate(0, 0, Random.Range(0f, 360f));
+			RPCManager.Instance.PV.RPC("SpawnAsteroidsRPC", RpcTarget.All, ASs.splitIndex, gameObject.transform.position, rotation, Random.Range(100000, 999999));
 		}
-		Destroy(gameObject);
+
+		gameObject.name = ID.ToString();
+		RPCManager.Instance.PV.RPC("DestroyGameObject", RpcTarget.All, ID);
 	}
 
 	public void ModifyHealth(float value)
@@ -110,7 +115,10 @@ public class TestAsteroid : MonoBehaviour
 
 		if (HP <= 0)
 		{
-			SpawnSplits();
+			if (PhotonNetwork.IsMasterClient)
+			{
+				SpawnSplits();
+			}
 		}
 	}
 
@@ -127,6 +135,7 @@ public class TestAsteroid : MonoBehaviour
 			else if (Collision.gameObject.transform.TryGetComponent(out Projectile proj))
 			{
 				ModifyHealth(-proj.damage);
+
 				Destroy(proj.gameObject);
 			}
 		}
@@ -134,6 +143,9 @@ public class TestAsteroid : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		totalWeight -= ASs.weight;
+		if (PhotonNetwork.IsMasterClient)
+		{
+			totalWeight -= ASs.weight;
+		}
 	}
 }

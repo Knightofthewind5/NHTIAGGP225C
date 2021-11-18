@@ -187,7 +187,6 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 	{
 		if (PhotonNetwork.LocalPlayer.ActorNumber == PhotonNetwork.CurrentRoom.MasterClientId)
 		{
-			Debug.Log("IsMasterClient");
 			_masterClientSettingsGroup.SetActive(true);
 		}
 

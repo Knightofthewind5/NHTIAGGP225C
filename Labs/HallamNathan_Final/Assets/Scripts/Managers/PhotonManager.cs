@@ -155,8 +155,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	public void SetCustomProperties()
 	{
-		Debug.Log("Setting custom properties");
-
 		PhotonNetwork.LocalPlayer.NickName = username;
 
 		properties["colorRed"] = color.r;

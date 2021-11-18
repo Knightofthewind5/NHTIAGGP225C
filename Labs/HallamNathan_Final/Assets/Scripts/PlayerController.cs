@@ -11,11 +11,12 @@ using TMPro;
 [RequireComponent(typeof(ScreenWrap))]
 public class PlayerController : MonoBehaviour, IPunObservable
 {
-	PhotonView photonView;
-	Rigidbody2D rb;
+	public PhotonView photonView { get; private set; }
+	public Rigidbody2D rb { get; private set; }
 	PolygonCollider2D polyCollider;
 
 	#region Movement Variables
+	[Header("Movement")]
 	[Tooltip("How fast the player is capable of moving")]
 	[SerializeField] float maxSpeed = 71f;
 	[Tooltip("How fast the player will accelerate")]
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	#endregion Movement Variables
 
 	#region Shield Variables
+	[Header("Shields")]
 	[Tooltip("The maximum HP the shields have")]
 	[SerializeField] float maxShieldStrength = 10f;
 	[Tooltip("How fast do the shields regenerate after taking damage")]
@@ -45,6 +47,9 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	ParticleSystem ps;
 	ParticleSystem.MainModule psMain;
 
+	public AudioSource AS { get; private set; }
+	public AudioListener AL { get; private set; }
+
 	#region Input Variables
 	bool forward = false;
 	bool backward = false;
@@ -55,25 +60,17 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	#endregion Input Variables
 
 	#region Weapon Variables
-	bool fireOneIsEnabled = true;
-	float fireOneCooldown = 0;
-	public bool fireOneOnCooldown = false;
-	public float fireOneCooldownTime = 6;  //in Seconds.
-	public float cooldownOneSpeed = 1; //For Fire1 - 1 is normal speed : 2 is 2X faster : 0.5 is 2X slower. If there were to be powerups - this would change the "reload" speed.
-									   //Projectile Instantiate Variables
-	public GameObject PewPrefab;
+	int primaryWeaponIndex = 0;
+	public WeaponStats PrimaryWeapon { get; private set; }
+	float primaryWeaponCooldown = 0;
+	public bool primaryWeaponOnCooldown = false;
 	public GameObject SpawnLocation;
-	[SerializeField] float pewLifetime = 1f;
-	[SerializeField] float pewDamage = 1f;
-	[SerializeField] float pewSpeed = 50f;
 	#endregion Weapon Variables
 
 	#region Sync Variables
 	Vector3 networkPosition;
 	float networkRotation;
 	[SerializeField] Color color;
-
-	public float LerpSpeed = 0.1f;
 
 	private ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable();
 	#endregion Sync Variables
@@ -84,11 +81,12 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		rb = GetComponent<Rigidbody2D>();
 		polyCollider = GetComponent<PolygonCollider2D>();
 		ps = GetComponent<ParticleSystem>();
-
+		AS = GetComponent<AudioSource>();
+		AL = GetComponent<AudioListener>();
 
 		properties = photonView.Controller.CustomProperties;
 
-
+		gameObject.name = "(Player) " + photonView.Controller;
 		color = new Color((float)properties["colorRed"], (float)properties["colorGreen"], (float)properties["colorBlue"], (float)properties["colorAlpha"]);
 	}
 
@@ -97,7 +95,9 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		psMain = ps.main;
 		psMain.startColor = color;
 
-		GetComponent<SpriteRenderer>().color = color;
+		GetComponentInChildren<SpriteRenderer>().color = color;
+
+		PrimaryWeapon = new WeaponStats(GameManager.Instance.weapons[primaryWeaponIndex]);
 	}
 
 	private void FixedUpdate()
@@ -148,6 +148,9 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		else if (!photonView.IsMine)
 		{
 			UpdateTransform();
+
+			AL.enabled = false;
+
 			if (forward)
 			{
 				ps.Play();
@@ -185,38 +188,29 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		gameObject.transform.Rotate(Vector3.back * value * rotationSpeed * Time.deltaTime);
 	}
 
-	IEnumerator FireCooldown()
+	IEnumerator PrimaryWeaponCooldown()
 	{
-		yield return new WaitForSecondsRealtime(fireOneCooldown);
+		yield return new WaitForSecondsRealtime(primaryWeaponCooldown);
 
-		fireOneOnCooldown = false;
+		primaryWeaponOnCooldown = false;
 	}
 
 	private void Fire1() //Checks if player has used ability and if fire1 is on cooldown, if available then call FireProjectile.
 	{
-		if (fireOneIsEnabled)   //If the player can fire
+		if (!primaryWeaponOnCooldown)   //If the ability is not on cooldown
 		{
-			if (!fireOneOnCooldown)   //If the ability is not on cooldown
-			{
-				fireOneCooldown = fireOneCooldownTime;
-				FireProjectile();
-			}
-		}
+			primaryWeaponCooldown = PrimaryWeapon.fireRate;
+			FireProjectile();
+		}	
 	}
 
 	private void FireProjectile()    //Spawns Projectile when Fire1 is active.
 	{
-		fireOneOnCooldown = true;
-		StartCoroutine(FireCooldown());
+		primaryWeaponOnCooldown = true;
 
-		GameObject pew = Instantiate(PewPrefab,                    //Object to Spawn
-				SpawnLocation.transform.position,   //Position to Spawn Object
-				SpawnLocation.transform.rotation);  //Rotation to Spawn Object
+		StartCoroutine(PrimaryWeaponCooldown());
 
-		Rigidbody2D pewRB = pew.GetComponent<Rigidbody2D>();
-		pewRB.velocity = gameObject.transform.up * (pewSpeed + rb.velocity.magnitude);
-
-		Destroy(pew, pewLifetime);
+		RPCManager.Instance.PV.RPC("ShootProjectile", RpcTarget.All, photonView.ViewID);
 	}
 	
 	public void UpdateTransform()
@@ -234,6 +228,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	{
 		if (stream.IsWriting)
 		{
+			stream.SendNext(photonView.Controller.NickName);
 			stream.SendNext(rb.position);
 			stream.SendNext(rb.rotation);
 			stream.SendNext(rb.velocity);
@@ -245,6 +240,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		}
 		else if (stream.IsReading)
 		{
+			gameObject.name = "(Player) " + (string)stream.ReceiveNext();
 			networkPosition = (Vector2)stream.ReceiveNext();
 			networkRotation = (float)stream.ReceiveNext();
 			rb.velocity = (Vector2)stream.ReceiveNext();
