@@ -41,13 +41,14 @@ public class RPCManager : MonoBehaviour
 	{
 		GameObject spawn = Instantiate(GameManager.Instance.baseGameObject, location, Quaternion.identity);
 		spawn.GetComponent<TestAsteroid>().ASs = new AsteroidStats(GameManager.Instance.asteroids[spawnIndex]);
-		spawn.GetComponent<TestAsteroid>().ID = ID;
+		spawn.GetComponent<TestAsteroid>().ID = ID.ToString();
 
 		spawn.transform.rotation = Quaternion.Euler(0, 0, angle);
+
 	}
 
 	[PunRPC]
-	public void ShootProjectile(int viewID)
+	public void ShootProjectile(int viewID, Vector3 position, Quaternion rotation, int ID)
 	{
 		GameObject shooter = PhotonNetwork.GetPhotonView(viewID).gameObject;
 		if (shooter.TryGetComponent(out PlayerController PC))
@@ -55,9 +56,10 @@ public class RPCManager : MonoBehaviour
 			GameObject proj;
 			WeaponStats WSS = PC.PrimaryWeapon;
 
-			proj = Instantiate(WSS.projectilePrefab, PC.SpawnLocation.transform.position, PC.SpawnLocation.transform.rotation);
+			proj = Instantiate(WSS.projectilePrefab, position, rotation);
 			Projectile script = proj.GetComponent<Projectile>();
 			script.owner = PC.photonView.Owner.NickName;
+			script.ID = ID.ToString();
 			script.damage = WSS.damage;
 
 			Rigidbody2D rb = proj.GetComponent<Rigidbody2D>();

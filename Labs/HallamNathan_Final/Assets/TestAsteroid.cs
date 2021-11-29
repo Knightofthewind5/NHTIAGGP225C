@@ -4,10 +4,12 @@ using UnityEngine;
 using Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using ExitGames.Client.Photon;
 
 public class TestAsteroid : MonoBehaviour
 {
-	public int ID;
+	private const int UPDATE_HEALTH = 0;
+	public string ID;
 
 	public static int totalWeight; // The maximum weight of asteroids currently in the level
 
@@ -52,6 +54,8 @@ public class TestAsteroid : MonoBehaviour
 		{
 			edgeCollider.enabled = false;
 		}
+
+		PhotonNetwork.NetworkingClient.EventReceived += this.UpdateAsteroidHealth;
 	}
 
 	public void Update()
@@ -73,6 +77,24 @@ public class TestAsteroid : MonoBehaviour
 			spriteColor.a = Mathf.Lerp(0, 1, ASs.lifetime);
 
 			spriteRenderer.color = spriteColor;
+		}
+	}
+
+	private void UpdateAsteroidHealth(EventData obj)
+	{
+		if (obj.Code == UPDATE_HEALTH)
+		{
+			object[] datas = (object[])obj.CustomData;
+
+			if (datas[0].ToString() == ID)
+			{
+				HP = (float)datas[1];
+
+				if (HP <= 0)
+				{
+					Destroy(gameObject);
+				}
+			}
 		}
 	}
 
@@ -105,44 +127,52 @@ public class TestAsteroid : MonoBehaviour
 			RPCManager.Instance.PV.RPC("SpawnAsteroidsRPC", RpcTarget.All, ASs.splitIndex, gameObject.transform.position, rotation, Random.Range(100000, 999999));
 		}
 
-		gameObject.name = ID.ToString();
-		RPCManager.Instance.PV.RPC("DestroyGameObject", RpcTarget.All, ID);
+		gameObject.name = gameObject.GetInstanceID().ToString();
+		RPCManager.Instance.PV.RPC("DestroyGameObject", RpcTarget.All, gameObject.GetInstanceID());
 	}
 
 	public void ModifyHealth(float value)
 	{
-		HP += value;
-
-		if (HP <= 0)
+		if (PhotonNetwork.IsMasterClient)
 		{
-			if (PhotonNetwork.IsMasterClient)
+			HP += value;
+
+			if (HP <= 0)
 			{
 				SpawnSplits();
 			}
+			object[] datas = new object[] { ID, HP };
+
+			RaiseEventOptions REO = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+
+			PhotonNetwork.RaiseEvent(UPDATE_HEALTH, datas, REO, SendOptions.SendReliable);
 		}
 	}
 
 	private void OnCollisionEnter2D(Collision2D Collision)
 	{
-		if (Collision.otherCollider)
+		if (PhotonNetwork.IsMasterClient)
 		{
-			if (Collision.gameObject.name.Contains("Player"))
+			if (Collision.otherCollider)
 			{
-				GameObject player = Collision.gameObject;
-				PlayerController pc = player.GetComponent<PlayerController>();
-				pc.ModifyHealth(-ASs.damage);
+				if (Collision.gameObject.name.Contains("Player"))
+				{
+					GameObject player = Collision.gameObject;
+					PlayerController pc = player.GetComponent<PlayerController>();
+					pc.ModifyHealth(-ASs.damage);
+				}
+				else if (Collision.gameObject.transform.TryGetComponent(out Projectile proj))
+				{
+					ModifyHealth(-proj.damage);
+				}
 			}
-			else if (Collision.gameObject.transform.TryGetComponent(out Projectile proj))
-			{
-				ModifyHealth(-proj.damage);
-
-				Destroy(proj.gameObject);
-			}
-		}
+		}		
 	}
 
 	private void OnDestroy()
 	{
+		PhotonNetwork.NetworkingClient.EventReceived -= this.UpdateAsteroidHealth;
+
 		if (PhotonNetwork.IsMasterClient)
 		{
 			totalWeight -= ASs.weight;

@@ -147,8 +147,6 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		}
 		else if (!photonView.IsMine)
 		{
-			UpdateTransform();
-
 			AL.enabled = false;
 
 			if (forward)
@@ -210,13 +208,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 		StartCoroutine(PrimaryWeaponCooldown());
 
-		RPCManager.Instance.PV.RPC("ShootProjectile", RpcTarget.All, photonView.ViewID);
-	}
-	
-	public void UpdateTransform()
-	{
-		rb.position = Vector3.MoveTowards(rb.position, networkPosition, Time.fixedDeltaTime);
-		rb.rotation = Mathf.MoveTowardsAngle(rb.rotation, networkRotation, Time.fixedDeltaTime * 100.0f);
+		RPCManager.Instance.PV.RPC("ShootProjectile", RpcTarget.AllBuffered, photonView.ViewID, SpawnLocation.transform.position, SpawnLocation.transform.rotation, Random.Range(100000, 999999));
 	}
 
 	public void ModifyHealth(float value)
@@ -229,8 +221,6 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		if (stream.IsWriting)
 		{
 			stream.SendNext(photonView.Controller.NickName);
-			stream.SendNext(rb.position);
-			stream.SendNext(rb.rotation);
 			stream.SendNext(rb.velocity);
 			stream.SendNext(forward);
 			stream.SendNext(color.r);
@@ -241,8 +231,6 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		else if (stream.IsReading)
 		{
 			gameObject.name = "(Player) " + (string)stream.ReceiveNext();
-			networkPosition = (Vector2)stream.ReceiveNext();
-			networkRotation = (float)stream.ReceiveNext();
 			rb.velocity = (Vector2)stream.ReceiveNext();
 			forward = (bool)stream.ReceiveNext();
 			color.r = (float)stream.ReceiveNext();
@@ -250,28 +238,5 @@ public class PlayerController : MonoBehaviour, IPunObservable
 			color.b = (float)stream.ReceiveNext();
 			color.a = (float)stream.ReceiveNext();
 		}
-
-		/*   if (stream.IsWriting)
-   {
-	   stream.SendNext(rigidbody.position);
-	   stream.SendNext(rigidbody.rotation);
-	   stream.SendNext(rigidbody.velocity);
-   }
-   else
-   {
-	   networkPosition = (Vector3)stream.ReceiveNext();
-	   networkRotation = (Quaternion)stream.ReceiveNext();
-	   rigidbody.velocity = (Vector3)stream.ReceiveNext();
-
-	   float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.timestamp));
-	   networkPosition += (rigidbody.velocity * lag);
-   }
-		 * 
-		 */
-
-
-
-
-
 	}
 }

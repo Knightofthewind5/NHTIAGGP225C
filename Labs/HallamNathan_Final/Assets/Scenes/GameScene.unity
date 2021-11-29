@@ -185,7 +185,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -259,7 +259,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 64
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -309,7 +309,7 @@ MonoBehaviour:
   asteroidWeightMultiplier: 1.25
   maxWeightForLevel: 50
   maxScoreForLevel: 50
-  availableWeight: 50
+  availableWeight: 28
   baseGameObject: {fileID: 4574079346484838310, guid: 370230035f1239f4c927c39847e5bf6d, type: 3}
   asteroids:
   - name: Fragment
@@ -371,7 +371,7 @@ MonoBehaviour:
     projectilePrefab: {fileID: 6506785029176839810, guid: d1e75c4dea671f94e893ace0f9349732, type: 3}
     damage: 1
     speed: 50
-    lifetime: 5
+    lifetime: 1
     fireRate: 0.25
     fireSound: {fileID: 8300000, guid: 81b69c8e406f3fe4892debfc08a526e5, type: 3}
 --- !u!4 &735156507
@@ -516,7 +516,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -730,7 +730,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
