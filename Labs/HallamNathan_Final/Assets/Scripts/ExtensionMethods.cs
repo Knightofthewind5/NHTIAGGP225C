@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public static class ExtensionMethods
 {
@@ -51,6 +52,19 @@ public static class ExtensionMethods
 	{
 		return (CG.alpha == 1 ? true : false);
 	}
+
+	public static void Fade(this CanvasGroup CG, bool fadeIn, float speed)
+	{
+		if (fadeIn)
+		{
+			ExtensionRoutines.Instance.StartRoutine(ExtensionRoutines.Instance.FadeCanvasGroup(CG, CG.alpha, 1, speed));
+		}
+		else if (!fadeIn)
+		{
+			ExtensionRoutines.Instance.StartRoutine(ExtensionRoutines.Instance.FadeCanvasGroup(CG, CG.alpha, 0, speed));
+		}
+	}
+
 	#endregion Canvas Group
 
 	#region Color

@@ -329,7 +329,7 @@ MonoBehaviour:
     size: 1
     weight: 1
     score: 1
-    damage: 0
+    damage: 1
     color: {r: 0, g: 1, b: 0, a: 1}
     sprite: {fileID: 21300000, guid: 3ca0f32ec28c41d419abe87120e0e9e2, type: 3}
     HP: 1
@@ -355,7 +355,7 @@ MonoBehaviour:
     size: 3
     weight: 15
     score: 5
-    damage: 0
+    damage: 10
     color: {r: 1, g: 0, b: 0, a: 1}
     sprite: {fileID: 21300000, guid: 3ca0f32ec28c41d419abe87120e0e9e2, type: 3}
     HP: 10

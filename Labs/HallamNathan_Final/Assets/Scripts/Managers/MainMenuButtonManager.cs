@@ -145,8 +145,8 @@ public class MainMenuButtonManager : MonoBehaviourPunCallbacks
 		}
 		else
 		{
-			_OptionsCanvas.SetActive(true);
 			_MainCanvas.SetActive(false);
+			_OptionsCanvas.SetActive(true);			
 		}
 	}
 

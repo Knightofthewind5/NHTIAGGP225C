@@ -153,7 +153,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 1
+  m_FillAmount: 0
   m_FillClockwise: 0
   m_FillOrigin: 2
   m_UseSpriteMesh: 0
@@ -5148,11 +5148,17 @@ MonoBehaviour:
   rotationSpeed: 145
   brakingPower: 0.15
   maxShieldStrength: 10
-  shieldRegenRate: 10
   shieldRechargeRate: 10
+  shieldRechargeWait: 3
+  shieldEnergytoRecharge: 5
+  shieldRegenRate: 2
   shieldRegenWait: 5
-  shieldRechargeWait: 10
+  shieldRegenPause: 5
+  shieldEnergytoRegen: 10
   gracePeriod: 1.5
+  ShieldBar: {fileID: 6192822319869387879}
+  ShieldRecharge: {fileID: 2300805332621911464}
+  Shields: {fileID: 3287356233225159126}
   canThrustBack: 0
   primaryWeaponOnCooldown: 0
   SpawnLocation: {fileID: 3915791228592224358}
@@ -5507,7 +5513,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 1
+  m_FillAmount: 0
   m_FillClockwise: 0
   m_FillOrigin: 2
   m_UseSpriteMesh: 0
