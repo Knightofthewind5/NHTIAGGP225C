@@ -29,7 +29,7 @@ public class MainMenuButtonManager : MonoBehaviourPunCallbacks
 	[SerializeField] Button _btn_createRoom;
 	[SerializeField] TMP_Text _roomCount;
 	[SerializeField] TMP_Text _totalPlayersInRoomCount;
-
+	private ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable();
 
 	private List<RoomListing> _listing = new List<RoomListing>();
 
@@ -60,9 +60,36 @@ public class MainMenuButtonManager : MonoBehaviourPunCallbacks
 		_chosenColor.color = PhotonManager.Instance.color;
 	}
 
+	IEnumerator JoinSingleplayer()
+	{
+		if (PhotonNetwork.IsConnected)
+		{
+			PhotonNetwork.Disconnect();
+
+			yield return new WaitUntil(() => !PhotonNetwork.IsConnected);
+		}
+
+		PhotonNetwork.OfflineMode = true;
+
+		yield return new WaitUntil(() => PhotonNetwork.IsConnectedAndReady);
+
+		yield return new WaitUntil(() => PhotonNetwork.CreateRoom("Singleplayer", new RoomOptions { MaxPlayers = 1 }, null));
+
+		PhotonNetwork.LocalPlayer.NickName = "Player";
+
+		properties["colorRed"] = 1f;
+		properties["colorGreen"] = 1f;
+		properties["colorBlue"] = 1f;
+		properties["colorAlpha"] = 1f;
+
+		PhotonNetwork.LocalPlayer.CustomProperties = properties;
+
+		PhotonNetwork.LoadLevel("GameLobby");
+	}
+
 	public void SinglePlayer_Click()
 	{
-		
+		StartCoroutine(JoinSingleplayer());
 	}
 
 	public void CreateRoom()

@@ -72,7 +72,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		Debug.Log("[PhotonManager][OnConnectedToMaster]");
 		MainMenuButtonManager.Instance.MultiplayerButton.interactable = true;
 
-		PhotonNetwork.JoinLobby(TypedLobby.Default);
+		if (!PhotonNetwork.OfflineMode)
+		{
+			PhotonNetwork.JoinLobby(TypedLobby.Default);
+		}
 	}
 	#endregion Connections
 

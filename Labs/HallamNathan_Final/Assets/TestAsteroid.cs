@@ -23,6 +23,8 @@ public class TestAsteroid : MonoBehaviour
 	public AsteroidStats ASs;
 	float HP;
 	Color spriteColor;
+	float randomRotationValue;
+
 
 	public void Awake()
 	{
@@ -32,6 +34,8 @@ public class TestAsteroid : MonoBehaviour
 		screenWrap = GetComponent<ScreenWrap>();
 		screenWrap.enabled = false;
 		rb = GetComponent<Rigidbody2D>();
+
+		randomRotationValue = Random.Range(-179, 179);
 	}
 
 	private void Start()
@@ -61,6 +65,7 @@ public class TestAsteroid : MonoBehaviour
 	public void Update()
 	{
 		Move(ASs.speed);
+		SpriteRotate();
 
 		Debug.DrawLine(transform.position, transform.position + (transform.up * 2), new Color(0, 0, 255, 255), 0f, false);
 		if (Camera.main.ObjectIsVisible(gameObject) && offScreen)
@@ -115,6 +120,18 @@ public class TestAsteroid : MonoBehaviour
 		else
 		{
 			rb.velocity = gameObject.transform.up * value * 250 * Time.deltaTime;
+		}
+	}
+
+	void SpriteRotate()
+	{
+		if (ASs.size >= 1)
+		{
+			spriteRenderer.transform.Rotate(Vector3.back * (randomRotationValue / (ASs.size * 2)) * Time.deltaTime);
+		}
+		else
+		{
+			spriteRenderer.transform.Rotate(Vector3.back * randomRotationValue * Time.deltaTime);
 		}
 	}
 

@@ -309,7 +309,7 @@ MonoBehaviour:
   asteroidWeightMultiplier: 1.25
   maxWeightForLevel: 50
   maxScoreForLevel: 50
-  availableWeight: 28
+  availableWeight: 50
   baseGameObject: {fileID: 4574079346484838310, guid: 370230035f1239f4c927c39847e5bf6d, type: 3}
   asteroids:
   - name: Fragment
@@ -342,7 +342,7 @@ MonoBehaviour:
     size: 2
     weight: 5
     score: 5
-    damage: 0
+    damage: 5
     color: {r: 1, g: 1, b: 0, a: 1}
     sprite: {fileID: 21300000, guid: 3ca0f32ec28c41d419abe87120e0e9e2, type: 3}
     HP: 5

@@ -47,13 +47,14 @@ public class PlayerListing : MonoBehaviour
 
 	public void SetPlayerInfo(Player player)
 	{
-		Player = player;
-		username = player.NickName;
-		_user.text = username;
 
-		_color = new Color((float)player.CustomProperties["colorRed"],
-						   (float)player.CustomProperties["colorGreen"],
-						   (float)player.CustomProperties["colorBlue"],
-						   (float)player.CustomProperties["colorAlpha"]);
+			Player = player;
+			username = player.NickName;
+			_user.text = username;
+
+			_color = new Color((float)player.CustomProperties["colorRed"],
+							   (float)player.CustomProperties["colorGreen"],
+							   (float)player.CustomProperties["colorBlue"],
+							   (float)player.CustomProperties["colorAlpha"]);
 	}
 }

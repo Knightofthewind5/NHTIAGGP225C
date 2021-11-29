@@ -616,6 +616,8 @@ MonoBehaviour:
     splitIndex: 2
     lifetime: -1
     scale: {x: 2, y: 2, z: 2}
+  gameStartWait: 5
+  weapons: []
 --- !u!4 &1497906415
 Transform:
   m_ObjectHideFlags: 0

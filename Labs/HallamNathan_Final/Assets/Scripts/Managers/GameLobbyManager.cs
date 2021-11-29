@@ -205,7 +205,16 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 
 	public void LeaveRoom()
 	{
-		PhotonNetwork.LeaveRoom();
+		if (PhotonNetwork.OfflineMode)
+		{
+			PhotonNetwork.Disconnect();
+
+			PhotonManager.Instance.Connect();
+		}
+		else
+		{
+			PhotonNetwork.LeaveRoom();
+		}
 	}
 
 	public void StartGame()
