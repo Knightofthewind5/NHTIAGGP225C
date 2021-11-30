@@ -17,18 +17,27 @@ public class ExtensionRoutines : MonoBehaviour
 		return StartCoroutine(firstIterationResult);
 	}
 
+	public void StopRoutine(IEnumerator firstIterationResult)
+	{
+		StopCoroutine(firstIterationResult);
+	}
+
 	public IEnumerator FadeCanvasGroup(CanvasGroup CG, float start, float end, float lerpTime = 2f)
 	{
 		float _timeStartLerping = Time.time;
 		float timeSinceStarted = Time.time - _timeStartLerping;
 		float percentageComplete = timeSinceStarted / lerpTime;
+		float savedCurrentValue = CG.alpha;
 
 		do
 		{
+			if (CG.alpha != savedCurrentValue) break;
+			
 			timeSinceStarted = Time.time - _timeStartLerping;
 			percentageComplete = timeSinceStarted / lerpTime;
 
 			float currentValue = Mathf.Lerp(start, end, percentageComplete);
+			savedCurrentValue = currentValue;
 
 			CG.alpha = currentValue;
 

@@ -65,6 +65,17 @@ public static class ExtensionMethods
 		}
 	}
 
+	public static void StopFade(this CanvasGroup CG, bool fadeIn)
+	{
+		if (fadeIn)
+		{
+			CG.alpha = 0;
+		}
+		else
+		{
+			CG.alpha = 1;
+		}
+	}
 	#endregion Canvas Group
 
 	#region Color

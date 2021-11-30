@@ -255,7 +255,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 		if (currentShieldStrength != maxShieldStrength && Shields.alpha != 1)
 		{
-			Shields.SetActive(true);
+			Shields.StopFade(false);
 		}
 
 		if (currentShieldStrength <= 0) // If the shield is broken
