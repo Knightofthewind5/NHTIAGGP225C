@@ -5159,6 +5159,11 @@ MonoBehaviour:
   ShieldBar: {fileID: 6192822319869387879}
   ShieldRecharge: {fileID: 2300805332621911464}
   Shields: {fileID: 3287356233225159126}
+  ShieldNormalColor: {r: 1, g: 1, b: 1, a: 1}
+  LowShieldBlink1: {r: 1, g: 0, b: 0, a: 1}
+  LowShieldBlink2: {r: 1, g: 0, b: 0, a: 0.5019608}
+  shieldBlinkInterval1: 0.1
+  shieldBlinkInterval2: 0.15
   canThrustBack: 0
   primaryWeaponOnCooldown: 0
   SpawnLocation: {fileID: 3915791228592224358}

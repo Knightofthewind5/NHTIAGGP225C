@@ -65,9 +65,15 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	public Image ShieldBar;
 	public Image ShieldRecharge;
 	public CanvasGroup Shields;
+	public Color ShieldNormalColor = new Color(1f, 1f, 1f, 1f);
+	public Color LowShieldBlink1 = new Color(1f, 0f, 0f, 1f);
+	public Color LowShieldBlink2 = new Color(1f, 0f, 0f, 0.5f);
+	public float shieldBlinkInterval1 = 0.25f;
+	public float shieldBlinkInterval2 = 0.25f;
 	private float currentShieldStrength = 0f;
 	IEnumerator _shieldTimer;
 	IEnumerator _graceTimer;
+	IEnumerator _shieldBlinkTimer;
 	#endregion Shield Variables
 
 	ParticleSystem ps;
@@ -220,6 +226,12 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		float shieldPercentage = currentShieldStrength / maxShieldStrength;
 
 		ShieldBar.fillAmount = shieldPercentage;
+
+		if (_shieldBlinkTimer == null && currentShieldStrength < (maxShieldStrength / 3))
+		{
+			_shieldBlinkTimer = ShieldBlink();
+			StartCoroutine(ShieldBlink());
+		}
 	}
 
 	IEnumerator PrimaryWeaponCooldown()
@@ -390,6 +402,30 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 		_graceTimer = null;
 	}
+
+	IEnumerator ShieldBlink()
+	{
+		do
+		{
+			Shields.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = LowShieldBlink1;
+			Shields.transform.GetChild(1).GetChild(0).GetComponent<Image>().color = LowShieldBlink1;
+
+			yield return new WaitForSeconds(shieldBlinkInterval1);
+
+			Shields.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = LowShieldBlink2;
+			Shields.transform.GetChild(1).GetChild(0).GetComponent<Image>().color = LowShieldBlink2;
+
+			yield return new WaitForSeconds(shieldBlinkInterval2);
+		}
+		while (currentShieldStrength < (maxShieldStrength / 3));
+
+		Shields.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = ShieldNormalColor;
+		Shields.transform.GetChild(1).GetChild(0).GetComponent<Image>().color = ShieldNormalColor;
+
+		_shieldBlinkTimer = null;
+	}
+
+
 
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
