@@ -5148,13 +5148,11 @@ MonoBehaviour:
   rotationSpeed: 145
   brakingPower: 0.15
   maxShieldStrength: 10
-  shieldRechargeRate: 10
-  shieldRechargeWait: 3
-  shieldEnergytoRecharge: 5
-  shieldRegenRate: 2
+  shieldRechargeRate: 5
+  shieldRechargeWait: 4
+  shieldRegenRate: 4
+  shieldRegenPause: 3
   shieldRegenWait: 5
-  shieldRegenPause: 5
-  shieldEnergytoRegen: 10
   gracePeriod: 1.5
   ShieldBar: {fileID: 6192822319869387879}
   ShieldRecharge: {fileID: 2300805332621911464}

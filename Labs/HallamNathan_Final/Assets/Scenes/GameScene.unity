@@ -333,7 +333,7 @@ MonoBehaviour:
     color: {r: 0, g: 1, b: 0, a: 1}
     sprite: {fileID: 21300000, guid: 3ca0f32ec28c41d419abe87120e0e9e2, type: 3}
     HP: 1
-    speed: 3
+    speed: 1.5
     splitCount: 6
     splitIndex: 0
     lifetime: -1
@@ -346,7 +346,7 @@ MonoBehaviour:
     color: {r: 1, g: 1, b: 0, a: 1}
     sprite: {fileID: 21300000, guid: 3ca0f32ec28c41d419abe87120e0e9e2, type: 3}
     HP: 5
-    speed: 2
+    speed: 1
     splitCount: 5
     splitIndex: 1
     lifetime: -1
@@ -359,7 +359,7 @@ MonoBehaviour:
     color: {r: 1, g: 0, b: 0, a: 1}
     sprite: {fileID: 21300000, guid: 3ca0f32ec28c41d419abe87120e0e9e2, type: 3}
     HP: 10
-    speed: 1
+    speed: 0.5
     splitCount: 3
     splitIndex: 2
     lifetime: -1

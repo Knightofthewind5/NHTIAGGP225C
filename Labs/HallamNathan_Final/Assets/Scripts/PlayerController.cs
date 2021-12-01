@@ -36,26 +36,20 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	[Tooltip("The maximum HP the shields have")]
 	[SerializeField] float maxShieldStrength = 10f;
 
-	[Tooltip("How fast do the shields recharge after taking damage")]
+	[Tooltip("How many points does the shields regenerate per second when damaged")]
 	[SerializeField] float shieldRechargeRate = 10f;
 
-	[Tooltip("How long in seconds it takes for the shields to start recharging")]
-	[SerializeField] float shieldRechargeWait = 2f;
-
-	[Tooltip("How much total energy is needed to recharge shields. The total time in seconds the player has to wait for shields to begin recharge")]
-	[SerializeField] float shieldEnergytoRecharge = 5f;
+	[Tooltip("How long in seconds the player has to wait for shields to begin recharge")]
+	[SerializeField] float shieldRechargeWait = 3f;
 
 	[Tooltip("How many points does the shields regenerate per second when broken")]
 	[SerializeField] float shieldRegenRate = 2f;
 
-	[Tooltip("How long in seconds it takes for the shields to start regenerating")]
-	[SerializeField] float shieldRegenWait = 5f;
-
 	[Tooltip("How long in seconds it takes for the shields regeneration timer to start after the shields are broken")]
 	[SerializeField] float shieldRegenPause = 5f;
 
-	[Tooltip("How much total energy is needed to regenerate shields. The total time in seconds the player has to wait for shields to begin regenerate")]
-	[SerializeField] float shieldEnergytoRegen = 10f;
+	[Tooltip("The total time in seconds the player has to wait for shields to begin regenerate")]
+	[SerializeField] float shieldRegenWait = 10f;
 
 	[Tooltip("How many seconds of invulnerability does the player have when their sheilds break")]
 	[SerializeField] float gracePeriod = 1.5f;
@@ -227,10 +221,15 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 		ShieldBar.fillAmount = shieldPercentage;
 
-		if (_shieldBlinkTimer == null && currentShieldStrength < (maxShieldStrength / 3))
+		if (_shieldBlinkTimer == null && currentShieldStrength < (maxShieldStrength / 3) && currentShieldStrength > 0)
 		{
-			_shieldBlinkTimer = ShieldBlink();
-			StartCoroutine(ShieldBlink());
+			_shieldBlinkTimer = ShieldLowBlink();
+			StartCoroutine(_shieldBlinkTimer);
+		}
+		else if (_shieldBlinkTimer == null && currentShieldStrength == 0)
+		{
+			_shieldBlinkTimer = ShieldBrokenBlink();
+			StartCoroutine(_shieldBlinkTimer);
 		}
 	}
 
@@ -312,13 +311,13 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		{
 			currentShieldEnergy += Time.fixedDeltaTime;
 
-			float shieldRechargePercentage = currentShieldEnergy / shieldEnergytoRecharge;
+			float shieldRechargePercentage = currentShieldEnergy / shieldRechargeWait;
 
 			ShieldRecharge.fillAmount = shieldRechargePercentage;
 
 			yield return new WaitForFixedUpdate();
 		}
-		while (currentShieldEnergy < shieldEnergytoRecharge);
+		while (currentShieldEnergy < shieldRechargeWait);
 
 		yield return new WaitForEndOfFrame();
 
@@ -355,13 +354,13 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		{
 			currentShieldEnergy += Time.fixedDeltaTime;
 
-			float shieldRegenPercentage = currentShieldEnergy / shieldEnergytoRegen;
+			float shieldRegenPercentage = currentShieldEnergy / shieldRegenWait;
 
 			ShieldRecharge.fillAmount = shieldRegenPercentage;
 
 			yield return new WaitForFixedUpdate();
 		}
-		while (currentShieldEnergy < shieldEnergytoRegen);
+		while (currentShieldEnergy < shieldRegenWait);
 
 		yield return new WaitForEndOfFrame();
 
@@ -403,7 +402,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		_graceTimer = null;
 	}
 
-	IEnumerator ShieldBlink()
+	IEnumerator ShieldBrokenBlink()
 	{
 		do
 		{
@@ -417,7 +416,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 			yield return new WaitForSeconds(shieldBlinkInterval2);
 		}
-		while (currentShieldStrength < (maxShieldStrength / 3));
+		while (currentShieldStrength <= 0);		
 
 		Shields.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = ShieldNormalColor;
 		Shields.transform.GetChild(1).GetChild(0).GetComponent<Image>().color = ShieldNormalColor;
@@ -425,6 +424,26 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		_shieldBlinkTimer = null;
 	}
 
+	IEnumerator ShieldLowBlink()
+	{
+		do
+		{
+			Shields.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = LowShieldBlink1;
+
+			yield return new WaitForSeconds(shieldBlinkInterval1 * 2);
+
+			Shields.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = ShieldNormalColor;
+			Shields.transform.GetChild(1).GetChild(0).GetComponent<Image>().color = ShieldNormalColor;
+
+			yield return new WaitForSeconds(shieldBlinkInterval2 * 2);
+		}
+		while (currentShieldStrength < (maxShieldStrength / 3) && currentShieldStrength > 0);
+
+		Shields.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = ShieldNormalColor;
+		Shields.transform.GetChild(1).GetChild(0).GetComponent<Image>().color = ShieldNormalColor;
+
+		_shieldBlinkTimer = null;
+	}
 
 
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
