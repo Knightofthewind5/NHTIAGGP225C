@@ -70,11 +70,11 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	IEnumerator _shieldBlinkTimer;
 	#endregion Shield Variables
 
-	ParticleSystem ps;
+	ParticleSystem JetTrailPS;
 	ParticleSystem.MainModule psMain;
 
 	public AudioSource AS { get; private set; }
-	public AudioListener AL { get; private set; }
+	public AudioClip DeathSound;
 
 	#region Input Variables
 	bool forward = false;
@@ -104,9 +104,8 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		photonView = GetComponent<PhotonView>();
 		rb = GetComponent<Rigidbody2D>();
 		polyCollider = GetComponent<PolygonCollider2D>();
-		ps = GetComponent<ParticleSystem>();
+		JetTrailPS = GetComponent<ParticleSystem>();
 		AS = GetComponent<AudioSource>();
-		AL = GetComponent<AudioListener>();
 		SR = transform.GetChild(0).GetComponent<SpriteRenderer>();
 
 		properties = photonView.Controller.CustomProperties;
@@ -117,7 +116,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 	private void Start()
 	{
-		psMain = ps.main;
+		psMain = JetTrailPS.main;
 		psMain.startColor = color;
 
 		GetComponentInChildren<SpriteRenderer>().color = color;
@@ -130,10 +129,11 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 	private void FixedUpdate()
 	{
+		UpdateHUD();
+
 		if (photonView.IsMine)
 		{
 			GetInput();
-			UpdateHUD();
 
 			if (forward && rb.velocity.magnitude < maxSpeed)
 			{
@@ -146,11 +146,11 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 			if (forward)
 			{
-				ps.Play();
+				JetTrailPS.Play();
 			}
 			else if (!forward)
 			{
-				ps.Stop();
+				JetTrailPS.Stop();
 			}
 
 			if (backward)
@@ -176,15 +176,13 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		}
 		else if (!photonView.IsMine)
 		{
-			AL.enabled = false;
-
 			if (forward)
 			{
-				ps.Play();
+				JetTrailPS.Play();
 			}
 			else
 			{
-				ps.Stop();
+				JetTrailPS.Stop();
 			}
 
 			if (psMain.startColor.color != color)
@@ -256,51 +254,6 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		StartCoroutine(PrimaryWeaponCooldown());
 
 		RPCManager.Instance.PV.RPC("ShootProjectile", RpcTarget.AllBuffered, photonView.ViewID, SpawnLocation.transform.position, SpawnLocation.transform.rotation, Random.Range(100000, 999999));
-	}
-
-	public void ModifyHealth(float value)
-	{
-		currentShieldStrength += value;
-
-		ShieldRecharge.fillAmount = 0f;
-
-		if (currentShieldStrength != maxShieldStrength && Shields.alpha != 1)
-		{
-			Shields.StopFade(false);
-		}
-
-		if (currentShieldStrength <= 0) // If the shield is broken
-		{
-			currentShieldStrength = 0;
-			if (_shieldTimer == null) // If the coroutine is not running
-			{
-				_shieldTimer = ShieldRegenTimer();
-				StartCoroutine(_shieldTimer);
-			}
-			else
-			{
-				//Stop the coroutine and restart it as the proper coroutine
-				StopCoroutine(_shieldTimer);
-				_shieldTimer = ShieldRegenTimer();
-				StartCoroutine(_shieldTimer);
-			}
-		}
-		else if (value < 0) // If not healing
-		{
-			if (_shieldTimer == null) // If the coroutine is not running
-			{
-				//Start normally
-				_shieldTimer = ShieldRechargeTimer();
-				StartCoroutine(_shieldTimer);
-			}
-			else
-			{
-				//Stop the coroutine and restart it as the proper coroutine
-				StopCoroutine(_shieldTimer);
-				_shieldTimer = ShieldRechargeTimer();
-				StartCoroutine(_shieldTimer);
-			}
-		}
 	}
 
 	IEnumerator ShieldRechargeTimer()
@@ -389,7 +342,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		Color spriteColor = SR.color;
 		spriteColor.a = 0.5f;
 		SR.color = spriteColor;
-		ParticleSystem.EmissionModule psem = ps.emission;
+		ParticleSystem.EmissionModule psem = JetTrailPS.emission;
 		psem.enabled = false;
 
 		yield return new WaitForSeconds(gracePeriod);
@@ -445,6 +398,60 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		_shieldBlinkTimer = null;
 	}
 
+	public void ModifyHealth(float amount)
+	{
+		photonView.RPC("ModifyHealthRPC", RpcTarget.All, amount);
+	}
+
+	[PunRPC]
+	public void ModifyHealthRPC(float amount)
+	{
+		currentShieldStrength += amount;
+
+		ShieldRecharge.fillAmount = 0f;
+
+		if (currentShieldStrength != maxShieldStrength && Shields.alpha != 1)
+		{
+			Shields.StopFade(false);
+		}
+
+		if (currentShieldStrength <= 0 && hasGraced) // If the shield is broken and the player has entered their grace period
+		{
+			currentShieldStrength = 0;
+			PhotonNetwork.Destroy(this.gameObject);
+		}
+		else if (currentShieldStrength <= 0)
+		{
+			if (_shieldTimer == null) // If the coroutine is not running
+			{
+				_shieldTimer = ShieldRegenTimer();
+				StartCoroutine(_shieldTimer);
+			}
+			else
+			{
+				//Stop the coroutine and restart it as the proper coroutine
+				StopCoroutine(_shieldTimer);
+				_shieldTimer = ShieldRegenTimer();
+				StartCoroutine(_shieldTimer);
+			}
+		}
+		else if (amount < 0) // If not healing
+		{
+			if (_shieldTimer == null) // If the coroutine is not running
+			{
+				//Start normally
+				_shieldTimer = ShieldRechargeTimer();
+				StartCoroutine(_shieldTimer);
+			}
+			else
+			{
+				//Stop the coroutine and restart it as the proper coroutine
+				StopCoroutine(_shieldTimer);
+				_shieldTimer = ShieldRechargeTimer();
+				StartCoroutine(_shieldTimer);
+			}
+		}
+	}
 
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
@@ -457,6 +464,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 			stream.SendNext(color.g);
 			stream.SendNext(color.b);
 			stream.SendNext(color.a);
+			stream.SendNext(currentShieldStrength);
 		}
 		else if (stream.IsReading)
 		{
@@ -467,6 +475,19 @@ public class PlayerController : MonoBehaviour, IPunObservable
 			color.g = (float)stream.ReceiveNext();
 			color.b = (float)stream.ReceiveNext();
 			color.a = (float)stream.ReceiveNext();
+			currentShieldStrength = (float)stream.ReceiveNext();
+		}
+	}
+
+	public void OnDestroy()
+	{
+		GameObject.FindGameObjectWithTag("MainCamera").GetComponent<AudioSource>().PlayOneShot(DeathSound);
+
+		for (int count = 8; count > 0; count--)
+		{
+			float rotation = Random.Range(0f, 360f);
+
+			RPCManager.Instance.PV.RPC("SpawnAsteroidsRPC", RpcTarget.All, 0, gameObject.transform.position, rotation, Random.Range(100000, 999999));
 		}
 	}
 }

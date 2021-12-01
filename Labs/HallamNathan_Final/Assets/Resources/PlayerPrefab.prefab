@@ -171,7 +171,6 @@ GameObject:
   - component: {fileID: 8609755284542961063}
   - component: {fileID: 7129826151054513664}
   - component: {fileID: 7143277716628727136}
-  - component: {fileID: -4644074284428826388}
   - component: {fileID: 1610712468715125134}
   - component: {fileID: 7781543528580111300}
   - component: {fileID: 1610712468715125130}
@@ -5054,14 +5053,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!81 &-4644074284428826388
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1610712468715125143}
-  m_Enabled: 1
 --- !u!114 &1610712468715125134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5162,6 +5153,7 @@ MonoBehaviour:
   LowShieldBlink2: {r: 1, g: 0, b: 0, a: 0.5019608}
   shieldBlinkInterval1: 0.1
   shieldBlinkInterval2: 0.15
+  DeathSound: {fileID: 8300000, guid: 0e25413c6134e9e4f8f4af958972911b, type: 3}
   canThrustBack: 0
   primaryWeaponOnCooldown: 0
   SpawnLocation: {fileID: 3915791228592224358}

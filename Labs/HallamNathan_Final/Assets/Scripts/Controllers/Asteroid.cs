@@ -172,18 +172,23 @@ public class Asteroid : MonoBehaviour
 		{
 			if (Collision.otherCollider)
 			{
-				if (Collision.gameObject.name.Contains("Player"))
-				{
-					GameObject player = Collision.gameObject;
-					PlayerController pc = player.GetComponent<PlayerController>();
-					pc.ModifyHealth(-ASs.damage);
-				}
-				else if (Collision.gameObject.transform.TryGetComponent(out Projectile proj))
+				if (Collision.gameObject.transform.TryGetComponent(out Projectile proj))
 				{
 					ModifyHealth(-proj.damage);
 				}
 			}
-		}		
+		}	
+		
+		if (PhotonNetwork.LocalPlayer.IsLocal)
+		{
+			if (Collision.otherCollider)
+			{
+				if (Collision.gameObject.transform.TryGetComponent(out PlayerController PC))
+				{
+					PC.ModifyHealth(-ASs.damage);
+				}
+			}
+		}
 	}
 
 	private void OnDestroy()
