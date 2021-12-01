@@ -46,7 +46,7 @@ public class Projectile : MonoBehaviour
 		{
 			if (Collision.otherCollider)
 			{
-				if (Collision.gameObject.transform.TryGetComponent(out TestAsteroid asteroid))
+				if (Collision.gameObject.transform.TryGetComponent(out Asteroid asteroid))
 				{
 					HP -= 1;
 

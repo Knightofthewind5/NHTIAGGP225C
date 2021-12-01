@@ -430,12 +430,12 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		{
 			Shields.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = LowShieldBlink1;
 
-			yield return new WaitForSeconds(shieldBlinkInterval1 * 2);
+			yield return new WaitForSeconds(shieldBlinkInterval1 * 1.5f);
 
 			Shields.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = ShieldNormalColor;
 			Shields.transform.GetChild(1).GetChild(0).GetComponent<Image>().color = ShieldNormalColor;
 
-			yield return new WaitForSeconds(shieldBlinkInterval2 * 2);
+			yield return new WaitForSeconds(shieldBlinkInterval2 * 1.5f);
 		}
 		while (currentShieldStrength < (maxShieldStrength / 3) && currentShieldStrength > 0);
 

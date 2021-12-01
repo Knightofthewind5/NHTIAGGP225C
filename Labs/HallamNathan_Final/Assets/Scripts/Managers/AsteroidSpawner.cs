@@ -6,7 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 
 
-public class TestSpawner : MonoBehaviour
+public class AsteroidSpawner : MonoBehaviour
 {
 	[SerializeField] Vector2 noSpawnArea;
 	[SerializeField] Vector2 spawnArea;

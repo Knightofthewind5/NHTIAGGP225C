@@ -6,7 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 
-public class TestAsteroid : MonoBehaviour
+public class Asteroid : MonoBehaviour
 {
 	private const int UPDATE_HEALTH = 0;
 	public string ID;

@@ -40,8 +40,8 @@ public class RPCManager : MonoBehaviour
 	public void SpawnAsteroidsRPC(int spawnIndex, Vector3 location, float angle, int ID)
 	{
 		GameObject spawn = Instantiate(GameManager.Instance.baseGameObject, location, Quaternion.identity);
-		spawn.GetComponent<TestAsteroid>().ASs = new AsteroidStats(GameManager.Instance.asteroids[spawnIndex]);
-		spawn.GetComponent<TestAsteroid>().ID = ID.ToString();
+		spawn.GetComponent<Asteroid>().ASs = new AsteroidStats(GameManager.Instance.asteroids[spawnIndex]);
+		spawn.GetComponent<Asteroid>().ID = ID.ToString();
 
 		spawn.transform.rotation = Quaternion.Euler(0, 0, angle);
 

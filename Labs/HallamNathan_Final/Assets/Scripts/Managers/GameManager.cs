@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
 	public float gameStartWait = 5f;
 	public List<WeaponStats> weapons = new List<WeaponStats>();
 
+	[SerializeField] GameObject PlayerPrefab;
+
 	private void Awake()
 	{
 		if (Instance)
@@ -40,6 +42,8 @@ public class GameManager : MonoBehaviour
 			Instance = this;
 			PV = gameObject.GetPhotonView();
 		}
+
+		StartCoroutine(WaitTimer());
 	}
 
 	private void Update()
@@ -47,8 +51,20 @@ public class GameManager : MonoBehaviour
 		maxWeightForLevel = Mathf.RoundToInt(level * Mathf.Pow((1 + baseAsteroidWeight), asteroidWeightMultiplier));
 		maxScoreForLevel = Mathf.RoundToInt(level * Mathf.Pow((1 + baseScoreForLevel), levelScoreMultiplier));
 
-		currentWeight = TestAsteroid.totalWeight;
+		currentWeight = Asteroid.totalWeight;
 
 		availableWeight = maxWeightForLevel - currentWeight;
+	}
+
+	IEnumerator WaitTimer()
+	{
+		yield return new WaitForSecondsRealtime(2);
+
+		SpawnPlayer();
+	}
+
+	void SpawnPlayer()
+	{
+		PhotonNetwork.Instantiate(PlayerPrefab.name, Vector2.zero, Quaternion.identity);
 	}
 }
