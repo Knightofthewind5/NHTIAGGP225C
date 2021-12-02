@@ -97,6 +97,8 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	[SerializeField] Color color;
 
 	private ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable();
+
+	string shuttleName;
 	#endregion Sync Variables
 
 	private void Awake()
@@ -112,6 +114,27 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 		gameObject.name = "(Player) " + photonView.Controller;
 		color = new Color((float)properties["colorRed"], (float)properties["colorGreen"], (float)properties["colorBlue"], (float)properties["colorAlpha"]);
+
+		shuttleName = (string)properties["shuttleName"];
+
+		foreach (var shuttle in GameManager.Instance.shuttleStats.shuttles)
+		{
+			if (shuttle.shuttleName == shuttleName)
+			{
+				acceleration = shuttle.acceleration;
+				brakingPower = shuttle.brakingPower;
+				gracePeriod = shuttle.gracePeriod;
+				maxShieldStrength = shuttle.maxShieldStrength;
+				maxSpeed = shuttle.maxSpeed;
+				rotationSpeed = shuttle.rotationSpeed;
+				shieldRechargeRate = shuttle.shieldRechargeRate;
+				shieldRechargeWait = shuttle.shieldRechargeWait;
+				shieldRegenPause = shuttle.shieldRegenPause;
+				shieldRegenRate = shuttle.shieldRegenRate;
+				shieldRegenWait = shuttle.shieldRegenWait;
+				gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = shuttle.shuttleSprite;
+			}
+		}
 	}
 
 	private void Start()
@@ -189,6 +212,28 @@ public class PlayerController : MonoBehaviour, IPunObservable
 			{
 				psMain.startColor = color;
 				GetComponent<SpriteRenderer>().color = color;
+			}
+
+			if (shuttleName != properties["shuttleName"].ToString())
+			{
+				foreach (var shuttle in GameManager.Instance.shuttleStats.shuttles)
+				{
+					if (shuttle.shuttleName == shuttleName)
+					{
+						acceleration = shuttle.acceleration;
+						brakingPower = shuttle.brakingPower;
+						gracePeriod = shuttle.gracePeriod;
+						maxShieldStrength = shuttle.maxShieldStrength;
+						maxSpeed = shuttle.maxSpeed;
+						rotationSpeed = shuttle.rotationSpeed;
+						shieldRechargeRate = shuttle.shieldRechargeRate;
+						shieldRechargeWait = shuttle.shieldRechargeWait;
+						shieldRegenPause = shuttle.shieldRegenPause;
+						shieldRegenRate = shuttle.shieldRegenRate;
+						shieldRegenWait = shuttle.shieldRegenWait;
+						gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = shuttle.shuttleSprite;
+					}
+				}
 			}
 		}
 	}
@@ -422,6 +467,8 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		}
 		else if (currentShieldStrength <= 0)
 		{
+			currentShieldStrength = 0;
+
 			if (_shieldTimer == null) // If the coroutine is not running
 			{
 				_shieldTimer = ShieldRegenTimer();
@@ -465,6 +512,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 			stream.SendNext(color.b);
 			stream.SendNext(color.a);
 			stream.SendNext(currentShieldStrength);
+			stream.SendNext(shuttleName);
 		}
 		else if (stream.IsReading)
 		{
@@ -476,6 +524,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 			color.b = (float)stream.ReceiveNext();
 			color.a = (float)stream.ReceiveNext();
 			currentShieldStrength = (float)stream.ReceiveNext();
+			shuttleName = (string)stream.ReceiveNext();
 		}
 	}
 

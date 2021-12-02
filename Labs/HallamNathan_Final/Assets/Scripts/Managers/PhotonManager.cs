@@ -16,7 +16,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	RoomOptions roomOptions = new RoomOptions();
 	new PhotonView photonView;
 
-	private ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable();
+	public ExitGames.Client.Photon.Hashtable properties { get; private set; } = new ExitGames.Client.Photon.Hashtable();
 
 	public string username;
 	public Color color = new Color(1f, 1f, 1f, 1f);

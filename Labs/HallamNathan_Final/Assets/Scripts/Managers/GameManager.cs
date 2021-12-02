@@ -5,7 +5,6 @@ using Photon;
 using Photon.Pun;
 using Photon.Realtime;
 
-[ExecuteInEditMode]
 public class GameManager : MonoBehaviour
 {
 	//Singleton 
@@ -29,7 +28,7 @@ public class GameManager : MonoBehaviour
 	public float gameStartWait = 5f;
 	public List<WeaponStats> weapons = new List<WeaponStats>();
 
-	[SerializeField] GameObject PlayerPrefab;
+	public ShuttleInfo shuttleStats;
 
 	private void Awake()
 	{
@@ -65,6 +64,18 @@ public class GameManager : MonoBehaviour
 
 	void SpawnPlayer()
 	{
-		PhotonNetwork.Instantiate(PlayerPrefab.name, Vector2.zero, Quaternion.identity);
+		PV.RPC("SpawnPlayerRPC", RpcTarget.All);
+	}
+
+	[PunRPC]
+	public void SpawnPlayerRPC()
+	{
+		foreach (var shuttle in shuttleStats.shuttles)
+		{
+			if (shuttle.shuttleName == PhotonManager.Instance.properties["shuttleName"].ToString())
+			{
+				PhotonNetwork.Instantiate(shuttle.shuttlePrefab.name, Vector2.zero, Quaternion.identity);
+			}
+		}
 	}
 }

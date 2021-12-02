@@ -23,7 +23,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 	public float timer { get; private set; }
 	bool gameStarting = false;
 
-	private List<PlayerListing> _listing = new List<PlayerListing>();
+	public List<PlayerListing> lobbyListing { get; private set; } = new List<PlayerListing>();
 
 	private void Awake()
 	{
@@ -128,7 +128,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 			listing.SetPlayerInfo(player);
 
 			//Add the player to the rooms internal list of players
-			_listing.Add(listing);
+			lobbyListing.Add(listing);
 
 			StartCoroutine(TextSizeBuffer(listing));
 		}
@@ -156,13 +156,13 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 
 	public override void OnPlayerLeftRoom(Player otherPlayer)
 	{
-		int index = _listing.FindIndex(x => x.Player == otherPlayer);
+		int index = lobbyListing.FindIndex(x => x.Player == otherPlayer);
 		if (index != -1)
 		{
 			//RPCChat.Instance.chatRoomString.text += "\n" + "(Disconnected)" + _listings[index].gameObject.GetPhotonView().Controller.NickName;
 
-			Destroy(_listing[index].gameObject);
-			_listing.RemoveAt(index);
+			Destroy(lobbyListing[index].gameObject);
+			lobbyListing.RemoveAt(index);
 		}
 
 		#region Send Disconnected Message
@@ -194,7 +194,7 @@ public class GameLobbyManager : MonoBehaviourPunCallbacks
 		_gameHost.text = PhotonNetwork.CurrentRoom.GetPlayer(PhotonNetwork.CurrentRoom.MasterClientId).NickName.ToString();
 		_roomName.text = PhotonNetwork.CurrentRoom.Name;
 
-		foreach (PlayerListing listing in _listing)
+		foreach (PlayerListing listing in lobbyListing)
 		{
 			if (listing.gameObject.GetPhotonView().ControllerActorNr == PhotonNetwork.CurrentRoom.MasterClientId)
 			{

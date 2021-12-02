@@ -282,6 +282,7 @@ GameObject:
   - component: {fileID: 735156507}
   - component: {fileID: 735156506}
   - component: {fileID: 735156508}
+  - component: {fileID: 735156509}
   m_Layer: 0
   m_Name: SceneManager
   m_TagString: Untagged
@@ -373,7 +374,7 @@ MonoBehaviour:
     lifetime: 1
     fireRate: 0.25
     fireSound: {fileID: 8300000, guid: 81b69c8e406f3fe4892debfc08a526e5, type: 3}
-  PlayerPrefab: {fileID: 1610712468715125143, guid: fb78d1c2913eac547bd23c24cc68c375, type: 3}
+  shuttleStats: {fileID: 11400000, guid: d3f88988ad526b4468faa57184740210, type: 2}
 --- !u!4 &735156507
 Transform:
   m_ObjectHideFlags: 0
@@ -407,6 +408,28 @@ MonoBehaviour:
   - {x: 366, y: 35}
   spawnAreaColor: {r: 0, g: 1, b: 0, a: 0.101960786}
   noSpawnAreaColor: {r: 1, g: 0, b: 0, a: 0.5019608}
+--- !u!114 &735156509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735156505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 1
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1468725059
 GameObject:
   m_ObjectHideFlags: 0

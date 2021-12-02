@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fa66f3e979420e4e80c4d5a59374fab, type: 3}
+  m_Name: ShuttleStats
+  m_EditorClassIdentifier: 
+  shuttles:
+  - shuttleName: Vintage
+    shuttleSprite: {fileID: 21300000, guid: 3eb51e29e903bd741a7f82dcc728bdd3, type: 3}
+    shuttlePrefab: {fileID: 1610712468715125143, guid: fb78d1c2913eac547bd23c24cc68c375, type: 3}
+    maxSpeed: 71
+    acceleration: 10
+    rotationSpeed: 145
+    brakingPower: 0.15
+    maxShieldStrength: 10
+    shieldRechargeRate: 10
+    shieldRechargeWait: 3
+    shieldRegenRate: 2
+    shieldRegenPause: 5
+    shieldRegenWait: 10
+    gracePeriod: 1.5
+  - shuttleName: Hopper
+    shuttleSprite: {fileID: 21300000, guid: a4704f50469d1d0449796cac3ca8bfcc, type: 3}
+    shuttlePrefab: {fileID: 1607859935220970277, guid: 11f4af092e251fc4c89b846933573ce3, type: 3}
+    maxSpeed: 150
+    acceleration: 35
+    rotationSpeed: 200
+    brakingPower: 0.25
+    maxShieldStrength: 2
+    shieldRechargeRate: 2
+    shieldRechargeWait: 4
+    shieldRegenRate: 0.5
+    shieldRegenPause: 3
+    shieldRegenWait: 5
+    gracePeriod: 2
+  - shuttleName: Leviathan
+    shuttleSprite: {fileID: 21300000, guid: 89c2cd5e707bcfc4d9140cf94bb30c70, type: 3}
+    shuttlePrefab: {fileID: 7081056584839041076, guid: 947ec76d1a8595246809e4e0ab299ff4, type: 3}
+    maxSpeed: 45
+    acceleration: 5
+    rotationSpeed: 115
+    brakingPower: 0.1
+    maxShieldStrength: 25
+    shieldRechargeRate: 3
+    shieldRechargeWait: 8
+    shieldRegenRate: 2
+    shieldRegenPause: 5
+    shieldRegenWait: 10
+    gracePeriod: 1
