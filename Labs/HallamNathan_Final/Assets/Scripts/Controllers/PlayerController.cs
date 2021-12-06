@@ -152,19 +152,26 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 	private void FixedUpdate()
 	{
-		UpdateHUD();
+		if (!GameSettingsManager.Instance.noShields)
+		{
+			UpdateHUD();
+		}
+		else if (GameSettingsManager.Instance.noShields && Shields.activeInHierarchy())
+		{
+			Shields.SetActive(false);
+		}
 
 		if (photonView.IsMine)
 		{
 			GetInput();
 
-			if (forward && rb.velocity.magnitude < maxSpeed)
+			if (forward && rb.velocity.magnitude < (maxSpeed * GameSettingsManager.Instance.playerMaxSpeedMultiplier))
 			{
-				Move(1);
+				Move(GameSettingsManager.Instance.playerAccelerationMultiplier);
 			}
 			else 
 			{
-				rb.velocity = Vector2.MoveTowards(rb.velocity, Vector2.zero, brakingPower * (rb.velocity.magnitude / 10));				
+				rb.velocity = Vector2.MoveTowards(rb.velocity, Vector2.zero, (brakingPower * GameSettingsManager.Instance.playerBrakingpowerMultiplier) * (rb.velocity.magnitude / 10));				
 			}
 
 			if (forward)
@@ -180,16 +187,16 @@ public class PlayerController : MonoBehaviour, IPunObservable
 			{
 				if (canThrustBack == true)
 				{
-					Move(-1);
+					Move(-GameSettingsManager.Instance.playerAccelerationMultiplier);
 				}
 			}
 			if (right)
 			{
-				Rotate(1);
+				Rotate(GameSettingsManager.Instance.playerRotationMultiplier);
 			}
 			if (left)
 			{
-				Rotate(-1);
+				Rotate(-GameSettingsManager.Instance.playerRotationMultiplier);
 			}
 
 			if (fire1)
@@ -260,11 +267,11 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 	void UpdateHUD()
 	{
-		float shieldPercentage = currentShieldStrength / maxShieldStrength;
+		float shieldPercentage = currentShieldStrength / (maxShieldStrength * GameSettingsManager.Instance.playerHealthMultiplier);
 
 		ShieldBar.fillAmount = shieldPercentage;
 
-		if (_shieldBlinkTimer == null && currentShieldStrength < (maxShieldStrength / 3) && currentShieldStrength > 0)
+		if (_shieldBlinkTimer == null && currentShieldStrength < ((maxShieldStrength * GameSettingsManager.Instance.playerHealthMultiplier) / 3) && currentShieldStrength > 0)
 		{
 			_shieldBlinkTimer = ShieldLowBlink();
 			StartCoroutine(_shieldBlinkTimer);
@@ -325,9 +332,9 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 			yield return new WaitForFixedUpdate();
 		}
-		while (currentShieldStrength < maxShieldStrength);
+		while (currentShieldStrength < (maxShieldStrength * GameSettingsManager.Instance.playerHealthMultiplier));
 
-		currentShieldStrength = maxShieldStrength;
+		currentShieldStrength = (maxShieldStrength * GameSettingsManager.Instance.playerHealthMultiplier);
 
 		_shieldTimer = null;
 
@@ -368,9 +375,9 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 			yield return new WaitForFixedUpdate();
 		}
-		while (currentShieldStrength < maxShieldStrength);
+		while (currentShieldStrength < (maxShieldStrength * GameSettingsManager.Instance.playerHealthMultiplier));
 
-		currentShieldStrength = maxShieldStrength;
+		currentShieldStrength = (maxShieldStrength * GameSettingsManager.Instance.playerHealthMultiplier);
 
 		_shieldTimer = null;
 
@@ -435,7 +442,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 			yield return new WaitForSeconds(shieldBlinkInterval2 * 1.5f);
 		}
-		while (currentShieldStrength < (maxShieldStrength / 3) && currentShieldStrength > 0);
+		while (currentShieldStrength < ((maxShieldStrength * GameSettingsManager.Instance.playerHealthMultiplier) / 3) && currentShieldStrength > 0);
 
 		Shields.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = ShieldNormalColor;
 		Shields.transform.GetChild(1).GetChild(0).GetComponent<Image>().color = ShieldNormalColor;
@@ -445,57 +452,78 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 	public void ModifyHealth(float amount)
 	{
-		photonView.RPC("ModifyHealthRPC", RpcTarget.All, amount);
+		if (!GameSettingsManager.Instance.invulnerability)
+		{
+			photonView.RPC("ModifyHealthRPC", RpcTarget.All, amount);
+		}
 	}
 
 	[PunRPC]
 	public void ModifyHealthRPC(float amount)
 	{
-		currentShieldStrength += amount;
-
-		ShieldRecharge.fillAmount = 0f;
-
-		if (currentShieldStrength != maxShieldStrength && Shields.alpha != 1)
+		if (!GameSettingsManager.Instance.noShields)
 		{
-			Shields.StopFade(false);
-		}
+			currentShieldStrength += amount;
 
-		if (currentShieldStrength <= 0 && hasGraced) // If the shield is broken and the player has entered their grace period
-		{
-			currentShieldStrength = 0;
-			PhotonNetwork.Destroy(this.gameObject);
-		}
-		else if (currentShieldStrength <= 0)
-		{
-			currentShieldStrength = 0;
+			ShieldRecharge.fillAmount = 0f;
 
-			if (_shieldTimer == null) // If the coroutine is not running
+			if (currentShieldStrength != (maxShieldStrength * GameSettingsManager.Instance.playerHealthMultiplier) && Shields.alpha != 1)
 			{
-				_shieldTimer = ShieldRegenTimer();
-				StartCoroutine(_shieldTimer);
+				Shields.StopFade(false);
 			}
-			else
+
+			if (currentShieldStrength <= 0 && hasGraced) // If the shield is broken and the player has entered their grace period
 			{
-				//Stop the coroutine and restart it as the proper coroutine
-				StopCoroutine(_shieldTimer);
-				_shieldTimer = ShieldRegenTimer();
-				StartCoroutine(_shieldTimer);
+				if (PhotonNetwork.LocalPlayer.IsLocal && photonView.IsMine)
+				{
+					currentShieldStrength = 0;
+
+					GameManager.Instance.PV.RPC("RemoveAlivePlayerRPC", RpcTarget.MasterClient, photonView.ViewID);
+
+					PhotonNetwork.Destroy(this.gameObject);
+				}
+			}
+			else if (currentShieldStrength <= 0)
+			{
+				currentShieldStrength = 0;
+
+				if (_shieldTimer == null) // If the coroutine is not running
+				{
+					_shieldTimer = ShieldRegenTimer();
+					StartCoroutine(_shieldTimer);
+				}
+				else
+				{
+					//Stop the coroutine and restart it as the proper coroutine
+					StopCoroutine(_shieldTimer);
+					_shieldTimer = ShieldRegenTimer();
+					StartCoroutine(_shieldTimer);
+				}
+			}
+			else if (amount < 0) // If not healing
+			{
+				if (_shieldTimer == null) // If the coroutine is not running
+				{
+					//Start normally
+					_shieldTimer = ShieldRechargeTimer();
+					StartCoroutine(_shieldTimer);
+				}
+				else
+				{
+					//Stop the coroutine and restart it as the proper coroutine
+					StopCoroutine(_shieldTimer);
+					_shieldTimer = ShieldRechargeTimer();
+					StartCoroutine(_shieldTimer);
+				}
 			}
 		}
-		else if (amount < 0) // If not healing
+		else
 		{
-			if (_shieldTimer == null) // If the coroutine is not running
+			if (PhotonNetwork.LocalPlayer.IsLocal && photonView.IsMine)
 			{
-				//Start normally
-				_shieldTimer = ShieldRechargeTimer();
-				StartCoroutine(_shieldTimer);
-			}
-			else
-			{
-				//Stop the coroutine and restart it as the proper coroutine
-				StopCoroutine(_shieldTimer);
-				_shieldTimer = ShieldRechargeTimer();
-				StartCoroutine(_shieldTimer);
+				GameManager.Instance.PV.RPC("RemoveAlivePlayerRPC", RpcTarget.MasterClient, photonView.ViewID);
+
+				PhotonNetwork.Destroy(this.gameObject);
 			}
 		}
 	}
@@ -531,6 +559,10 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	public void OnDestroy()
 	{
 		GameObject.FindGameObjectWithTag("MainCamera").GetComponent<AudioSource>().PlayOneShot(DeathSound);
+
+		GameManager.Instance.DeathCanvas.Fade(true, 5f);
+		GameManager.Instance.DeathCanvas.interactable = true;
+		GameManager.Instance.DeathCanvas.blocksRaycasts = true;
 
 		for (int count = 8; count > 0; count--)
 		{

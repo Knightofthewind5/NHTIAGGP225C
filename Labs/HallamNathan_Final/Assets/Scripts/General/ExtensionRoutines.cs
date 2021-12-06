@@ -31,7 +31,7 @@ public class ExtensionRoutines : MonoBehaviour
 
 		do
 		{
-			if (CG.alpha != savedCurrentValue) break;
+			if (CG && CG.alpha != savedCurrentValue) break;
 			
 			timeSinceStarted = Time.time - _timeStartLerping;
 			percentageComplete = timeSinceStarted / lerpTime;

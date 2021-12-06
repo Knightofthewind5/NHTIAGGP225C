@@ -47,6 +47,7 @@ public class Asteroid : MonoBehaviour
 		spriteColor = spriteRenderer.color;
 		transform.localScale = ASs.scale;
 		HP = ASs.HP;
+		HP *= GameSettingsManager.Instance.asteroidHealthMultiplier;
 		gameObject.name = ASs.name;
 
 		if (ASs.lifetime > 0)
@@ -64,7 +65,7 @@ public class Asteroid : MonoBehaviour
 
 	public void Update()
 	{
-		Move(ASs.speed);
+		Move(ASs.speed * GameSettingsManager.Instance.asteroidSpeedMultiplier);
 		SpriteRotate();
 
 		Debug.DrawLine(transform.position, transform.position + (transform.up * 2), new Color(0, 0, 255, 255), 0f, false);
@@ -185,7 +186,7 @@ public class Asteroid : MonoBehaviour
 			{
 				if (Collision.gameObject.transform.TryGetComponent(out PlayerController PC))
 				{
-					PC.ModifyHealth(-ASs.damage);
+					PC.ModifyHealth(-ASs.damage * GameSettingsManager.Instance.asteroidDamageMultiplier);
 				}
 			}
 		}

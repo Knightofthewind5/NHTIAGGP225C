@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 {
 	//Singleton 
 	public static GameManager Instance { get; private set; }
-	PhotonView PV;
+	public PhotonView PV { get; private set; }
 
 	[Range(1, 100)]
 	public int level = 1;
@@ -25,10 +25,11 @@ public class GameManager : MonoBehaviour
 	public int availableWeight;
 	public GameObject baseGameObject;
 	public List<AsteroidStats> asteroids = new List<AsteroidStats>();
-	public float gameStartWait = 5f;
 	public List<WeaponStats> weapons = new List<WeaponStats>();
 
 	public ShuttleInfo shuttleStats;
+	public CanvasGroup DeathCanvas;
+	public List<GameObject> AlivePlayers = new List<GameObject>();
 
 	private void Awake()
 	{
@@ -41,6 +42,11 @@ public class GameManager : MonoBehaviour
 			Instance = this;
 			PV = gameObject.GetPhotonView();
 		}
+
+		baseAsteroidWeight = GameSettingsManager.Instance.baseAsteroidWeight;
+		asteroidWeightMultiplier = GameSettingsManager.Instance.asteroidWeightMultiplier;
+		baseScoreForLevel = GameSettingsManager.Instance.baseScorePerLevel;
+		levelScoreMultiplier = GameSettingsManager.Instance.levelScoreMultiplier;
 
 		StartCoroutine(WaitTimer());
 	}
@@ -57,25 +63,43 @@ public class GameManager : MonoBehaviour
 
 	IEnumerator WaitTimer()
 	{
-		yield return new WaitForSecondsRealtime(2);
+		yield return new WaitForSecondsRealtime(GameSettingsManager.Instance.playerSpawnWaitTime);
 
 		SpawnPlayer();
 	}
 
 	void SpawnPlayer()
 	{
-		PV.RPC("SpawnPlayerRPC", RpcTarget.All);
+		foreach (var shuttle in shuttleStats.shuttles)
+		{
+			if (shuttle.shuttleName == PhotonNetwork.LocalPlayer.CustomProperties["shuttleName"].ToString())
+			{
+				GameObject player = PhotonNetwork.Instantiate(shuttle.shuttlePrefab.name, Vector2.zero, Quaternion.identity);
+
+				PV.RPC("AddAlivePlayerRPC", RpcTarget.All, player.GetPhotonView().ViewID);
+			}
+		}
 	}
 
 	[PunRPC]
-	public void SpawnPlayerRPC()
+	public void AddAlivePlayerRPC(int ViewID)
 	{
-		foreach (var shuttle in shuttleStats.shuttles)
+		if (PhotonNetwork.IsMasterClient)
 		{
-			if (shuttle.shuttleName == PhotonManager.Instance.properties["shuttleName"].ToString())
-			{
-				PhotonNetwork.Instantiate(shuttle.shuttlePrefab.name, Vector2.zero, Quaternion.identity);
-			}
+			GameObject player = PhotonNetwork.GetPhotonView(ViewID).gameObject;
+
+			AlivePlayers.Add(player);
+		}
+	}
+
+	[PunRPC]
+	public void RemoveAlivePlayerRPC(int ViewID)
+	{
+		if (PhotonNetwork.IsMasterClient)
+		{
+			GameObject player = PhotonNetwork.GetPhotonView(ViewID).gameObject;
+
+			AlivePlayers.Remove(player);
 		}
 	}
 }

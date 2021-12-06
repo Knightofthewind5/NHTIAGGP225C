@@ -6323,6 +6323,7 @@ GameObject:
   - component: {fileID: 1497272846}
   - component: {fileID: 1497272847}
   - component: {fileID: 1497272849}
+  - component: {fileID: 1497272850}
   m_Layer: 0
   m_Name: PhotonManager
   m_TagString: Untagged
@@ -6383,6 +6384,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee25107e633aa9644a7d145433244187, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1497272850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1497272845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e70bda1538bc1a543bf9fd2e5284d433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerSpawnWaitTime: 0.5
+  playerMaxSpeedMultiplier: 1
+  playerAccelerationMultiplier: 1
+  playerRotationMultiplier: 1
+  playerBrakingpowerMultiplier: 1
+  playerHealthMultiplier: 1
+  playerGraceMultiplier: 1
+  playerLives: 0
+  invulnerability: 0
+  noShields: 0
+  asteroidSpawnWaitTime: 5
+  asteroidSpeedMultiplier: 1
+  asteroidHealthMultiplier: 1
+  asteroidDamageMultiplier: 1
+  baseAsteroidWeight: 22
+  asteroidWeightMultiplier: 1.25
+  baseScorePerLevel: 1
+  levelScoreMultiplier: 5.63
+  setDefault: 0
 --- !u!1 &1544075454
 GameObject:
   m_ObjectHideFlags: 0

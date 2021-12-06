@@ -112,9 +112,6 @@ public class AsteroidSpawner : MonoBehaviour
 		RPCManager.Instance.PV.RPC("SpawnAsteroidsRPC", RpcTarget.All, spawnObjectIndex, new Vector3(x, y, 0), newAngle, Random.Range(100000, 999999));
 	}
 
-
-
-
 	private void OnDrawGizmosSelected()
 	{
 		permitAreas[0] = new Vector2((spawnArea.x - noSpawnArea.x) / 2, spawnArea.y); // Right && Left
@@ -141,7 +138,7 @@ public class AsteroidSpawner : MonoBehaviour
 
 	IEnumerator GameWaitBeforeSpawn()
 	{
-		yield return new WaitForSecondsRealtime(GameManager.Instance.gameStartWait);
+		yield return new WaitForSecondsRealtime(GameSettingsManager.Instance.asteroidSpawnWaitTime);
 
 		StartCoroutine(SpawnTimer());
 	}
