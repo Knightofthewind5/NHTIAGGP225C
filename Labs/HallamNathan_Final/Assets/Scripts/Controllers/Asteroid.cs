@@ -8,7 +8,7 @@ using ExitGames.Client.Photon;
 
 public class Asteroid : MonoBehaviour
 {
-	private const int UPDATE_HEALTH = 0;
+	private const int UPDATE_HEALTH = 1;
 	public string ID;
 
 	public static int totalWeight; // The maximum weight of asteroids currently in the level

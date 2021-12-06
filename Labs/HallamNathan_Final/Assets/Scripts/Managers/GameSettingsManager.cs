@@ -1,3 +1,6 @@
+using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +8,7 @@ using UnityEngine;
 public class GameSettingsManager : MonoBehaviour
 {
 	public static GameSettingsManager Instance { get; private set; }
+	private const int UPDATE_GAME_SETTINGS = 0;
 
 	[Header("Player")]
 	[Tooltip("The amount of time it takes to spawn in the players. \n Default 2")]
@@ -51,6 +55,7 @@ public class GameSettingsManager : MonoBehaviour
 	public bool setDefault = false;
 
 	Dictionary<string, object> defaults = new Dictionary<string, object>();
+	Dictionary<string, object> gameSettings = new Dictionary<string, object>();
 
 	private void Awake()
 	{
@@ -85,14 +90,33 @@ public class GameSettingsManager : MonoBehaviour
 
 		defaults.Add(nameof(baseScorePerLevel), baseScorePerLevel);
 		defaults.Add(nameof(levelScoreMultiplier), levelScoreMultiplier);
+
+		gameSettings = defaults;
+
+		PhotonNetwork.NetworkingClient.EventReceived += this.UpdateGameSettings;
 	}
 
 	public void Update()
 	{
 		if (setDefault)
 		{
-			SetDefault();
+			SetGameSettings(defaults);
 			setDefault = false;
+		}
+		
+		if (PhotonNetwork.IsMasterClient)
+		{
+			SaveGameSettings(gameSettings);
+
+			object[] datas = new object[] { gameSettings };
+
+			RaiseEventOptions REO = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
+
+			PhotonNetwork.RaiseEvent(UPDATE_GAME_SETTINGS, datas, REO, SendOptions.SendReliable);
+		}
+		else
+		{
+			SetGameSettings(gameSettings);
 		}
 	}
 
@@ -117,5 +141,86 @@ public class GameSettingsManager : MonoBehaviour
 
 		baseScorePerLevel = (int)defaults[nameof(baseScorePerLevel)];
 		levelScoreMultiplier = (float)defaults[nameof(levelScoreMultiplier)];
+	}
+
+	public void SetNetworkedSettings()
+	{
+		playerSpawnWaitTime = (float)gameSettings[nameof(playerSpawnWaitTime)];
+		playerMaxSpeedMultiplier = (float)gameSettings[nameof(playerMaxSpeedMultiplier)];
+		playerAccelerationMultiplier = (float)gameSettings[nameof(playerAccelerationMultiplier)];
+		playerRotationMultiplier = (float)gameSettings[nameof(playerRotationMultiplier)];
+		playerBrakingpowerMultiplier = (float)gameSettings[nameof(playerBrakingpowerMultiplier)];
+		playerHealthMultiplier = (float)gameSettings[nameof(playerHealthMultiplier)];
+		playerGraceMultiplier = (float)gameSettings[nameof(playerGraceMultiplier)];
+		playerLives = (int)gameSettings[nameof(playerLives)];
+		invulnerability = (bool)gameSettings[nameof(invulnerability)];
+		noShields = (bool)gameSettings[nameof(noShields)];
+
+		asteroidSpawnWaitTime = (float)gameSettings[nameof(asteroidSpawnWaitTime)];
+		asteroidSpeedMultiplier = (float)gameSettings[nameof(asteroidSpeedMultiplier)];
+		asteroidHealthMultiplier = (float)gameSettings[nameof(asteroidHealthMultiplier)];
+		baseAsteroidWeight = (int)gameSettings[nameof(baseAsteroidWeight)];
+		asteroidWeightMultiplier = (float)gameSettings[nameof(asteroidWeightMultiplier)];
+
+		baseScorePerLevel = (int)gameSettings[nameof(baseScorePerLevel)];
+		levelScoreMultiplier = (float)gameSettings[nameof(levelScoreMultiplier)];
+	}
+
+	public void SetGameSettings(Dictionary<string, object> pairs)
+	{
+		playerSpawnWaitTime = (float)pairs[nameof(playerSpawnWaitTime)];
+		playerMaxSpeedMultiplier = (float)pairs[nameof(playerMaxSpeedMultiplier)];
+		playerAccelerationMultiplier = (float)pairs[nameof(playerAccelerationMultiplier)];
+		playerRotationMultiplier = (float)pairs[nameof(playerRotationMultiplier)];
+		playerBrakingpowerMultiplier = (float)pairs[nameof(playerBrakingpowerMultiplier)];
+		playerHealthMultiplier = (float)pairs[nameof(playerHealthMultiplier)];
+		playerGraceMultiplier = (float)pairs[nameof(playerGraceMultiplier)];
+		playerLives = (int)pairs[nameof(playerLives)];
+		invulnerability = (bool)pairs[nameof(invulnerability)];
+		noShields = (bool)pairs[nameof(noShields)];
+
+		asteroidSpawnWaitTime = (float)pairs[nameof(asteroidSpawnWaitTime)];
+		asteroidSpeedMultiplier = (float)pairs[nameof(asteroidSpeedMultiplier)];
+		asteroidHealthMultiplier = (float)pairs[nameof(asteroidHealthMultiplier)];
+		baseAsteroidWeight = (int)pairs[nameof(baseAsteroidWeight)];
+		asteroidWeightMultiplier = (float)pairs[nameof(asteroidWeightMultiplier)];
+
+		baseScorePerLevel = (int)pairs[nameof(baseScorePerLevel)];
+		levelScoreMultiplier = (float)pairs[nameof(levelScoreMultiplier)];
+	}
+
+	public void SaveGameSettings(Dictionary<string, object> pairs)
+	{
+		pairs[nameof(playerSpawnWaitTime)] = playerSpawnWaitTime;
+		pairs[nameof(playerMaxSpeedMultiplier)] = playerMaxSpeedMultiplier;
+		pairs[nameof(playerAccelerationMultiplier)] = playerAccelerationMultiplier;
+		pairs[nameof(playerRotationMultiplier)] = playerRotationMultiplier;
+		pairs[nameof(playerBrakingpowerMultiplier)] = playerBrakingpowerMultiplier;
+		pairs[nameof(playerHealthMultiplier)] = playerHealthMultiplier;
+		pairs[nameof(playerGraceMultiplier)] = playerGraceMultiplier;
+		pairs[nameof(playerLives)] = playerLives;
+		pairs[nameof(invulnerability)] = invulnerability;
+		pairs[nameof(noShields)] = noShields;
+
+		pairs[nameof(asteroidSpawnWaitTime)] = asteroidSpawnWaitTime;
+		pairs[nameof(asteroidSpeedMultiplier)] = asteroidSpeedMultiplier;
+		pairs[nameof(asteroidHealthMultiplier)] = asteroidHealthMultiplier;
+		pairs[nameof(baseAsteroidWeight)] = baseAsteroidWeight;
+		pairs[nameof(asteroidWeightMultiplier)] = asteroidWeightMultiplier;
+
+		pairs[nameof(baseScorePerLevel)] = baseScorePerLevel;
+		pairs[nameof(levelScoreMultiplier)] = levelScoreMultiplier;
+	}
+
+	private void UpdateGameSettings(EventData obj)
+	{
+		if (obj.Code == UPDATE_GAME_SETTINGS)
+		{
+			Debug.Log("RaiseEvent: UpdateGameSettings on " + PhotonNetwork.LocalPlayer.NickName);
+
+			object[] datas = (object[])obj.CustomData;
+
+			gameSettings = (Dictionary<string, object>)datas[0];
+		}
 	}
 }

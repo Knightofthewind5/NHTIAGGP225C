@@ -39,7 +39,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		{
 			Instance = this;
 			photonView = gameObject.AddComponent<PhotonView>();
-			photonView.ViewID = 999;
+			photonView.ViewID = 199;
 			DontDestroyOnLoad(this);
 		}
 	}
