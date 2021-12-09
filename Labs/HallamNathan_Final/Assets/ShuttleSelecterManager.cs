@@ -15,6 +15,7 @@ public class ShuttleSelecterManager : MonoBehaviour
 	public CanvasGroup ShuttleSelectGroup;
 	public CanvasGroup ShuttleStatsCanvasGroup;
 	public CanvasGroup ShuttleStatInfoCanvasGroup;
+	public CanvasGroup GameSettingsCanvasGroup;
 	public CanvasGroup ChatCanvasGroup;
 	public Button SelectShuttleButton;
 
@@ -33,11 +34,6 @@ public class ShuttleSelecterManager : MonoBehaviour
 
 	public TMP_Text statDescriptionText;
 
-
-
-	bool selectPanelOpen = false;
-
-	// Start is called before the first frame update
 	void Start()
 	{
 		foreach(var shuttle in shuttleStats.shuttles)
@@ -48,26 +44,20 @@ public class ShuttleSelecterManager : MonoBehaviour
 		}
 	}
 
-	// Update is called once per frame
-	void Update()
-	{
-		
-	}
-
 	public void ToggleShuttleSelectPanel()
 	{
-		if (selectPanelOpen)
+		if (ShuttleSelectGroup.activeInHierarchy())
 		{
 			ShuttleSelectGroup.SetActive(false);
 			ShuttleStatsCanvasGroup.SetActive(false);
+			ShuttleStatInfoCanvasGroup.SetActive(false);
 			ChatCanvasGroup.SetActive(true);
-			selectPanelOpen = false;
 		}
 		else
 		{
-			ShuttleSelectGroup.SetActive(true);
 			ChatCanvasGroup.SetActive(false);
-			selectPanelOpen = true;
+			GameSettingsCanvasGroup.SetActive(false);
+			ShuttleSelectGroup.SetActive(true);
 		}
 	}
 
@@ -79,6 +69,7 @@ public class ShuttleSelecterManager : MonoBehaviour
 			{
 				ShuttleStatsCanvasGroup.SetActive(true);
 				SelectShuttleButton.onClick.AddListener(() => SelectShuttle(shuttle.shuttleName));
+				SelectShuttleButton.onClick.AddListener(() => ShuttleStatInfoCanvasGroup.SetActive(false));
 
 				shuttleNameText.text = "Shuttle: " + shuttle.shuttleName;
 				maxSpeedText.text = shuttle.maxSpeed.ToString();
@@ -107,7 +98,6 @@ public class ShuttleSelecterManager : MonoBehaviour
 				ShuttleSelectGroup.SetActive(false);
 				ShuttleStatsCanvasGroup.SetActive(false);
 				ChatCanvasGroup.SetActive(true);
-				selectPanelOpen = false;
 
 				foreach (var listing in GameLobbyManager.Instance.lobbyListing)
 				{
