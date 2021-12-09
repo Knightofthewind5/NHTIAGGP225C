@@ -4,7 +4,10 @@ using UnityEngine;
 using Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.UI;
+using TMPro;
 
+[ExecuteInEditMode]
 public class GameManager : MonoBehaviour
 {
 	//Singleton 
@@ -21,7 +24,10 @@ public class GameManager : MonoBehaviour
 
 	public int maxWeightForLevel;
 	public int maxScoreForLevel;
+	public int scoreForLastLevel;
 	int currentWeight;
+	public float currentScore;
+	public float currentScoreMX = 1f;
 	public int availableWeight;
 	public GameObject baseGameObject;
 	public List<AsteroidStats> asteroids = new List<AsteroidStats>();
@@ -30,6 +36,13 @@ public class GameManager : MonoBehaviour
 	public ShuttleInfo shuttleStats;
 	public CanvasGroup DeathCanvas;
 	public List<GameObject> AlivePlayers = new List<GameObject>();
+
+	public Image scoreMXBar;
+	public TMP_Text scoreText;
+	public TMP_Text scoreMXText;
+	public Image levelBar;
+	public TMP_Text levelText;
+	public float barFillStart = 0.24f;
 
 	private void Awake()
 	{
@@ -53,12 +66,39 @@ public class GameManager : MonoBehaviour
 
 	private void Update()
 	{
+		scoreForLastLevel = 0;
+
 		maxWeightForLevel = Mathf.RoundToInt(level * Mathf.Pow((1 + baseAsteroidWeight), asteroidWeightMultiplier));
-		maxScoreForLevel = Mathf.RoundToInt(level * Mathf.Pow((1 + baseScoreForLevel), levelScoreMultiplier));
+
+		for (int i = level; i > 0; i--)
+		{
+			scoreForLastLevel += Mathf.RoundToInt((level - i) * Mathf.Pow((1 + baseScoreForLevel), levelScoreMultiplier));
+		}
+
+		maxScoreForLevel = Mathf.RoundToInt(level * Mathf.Pow((1 + baseScoreForLevel), levelScoreMultiplier) + scoreForLastLevel);
 
 		currentWeight = Asteroid.totalWeight;
 
 		availableWeight = maxWeightForLevel - currentWeight;
+
+		UpdateInfoBars();
+	}
+
+	void UpdateInfoBars()
+	{
+		float levelPercentage = (currentScore - scoreForLastLevel) / (maxScoreForLevel - scoreForLastLevel);
+		float levelBase = (1 / (1 - barFillStart));
+
+		levelBar.fillAmount = (levelPercentage / levelBase) + barFillStart;
+
+		if (currentScore >= maxScoreForLevel)
+		{
+			level++;
+		}
+
+		levelText.text = level.ToString();
+		scoreText.text = currentScore.ToString("F1");
+		scoreMXText.text = "X" + currentScoreMX.ToString("F1");
 	}
 
 	IEnumerator WaitTimer()

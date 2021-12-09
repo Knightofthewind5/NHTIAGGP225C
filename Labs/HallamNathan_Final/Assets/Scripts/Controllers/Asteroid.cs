@@ -196,9 +196,10 @@ public class Asteroid : MonoBehaviour
 	{
 		PhotonNetwork.NetworkingClient.EventReceived -= this.UpdateAsteroidHealth;
 
-		if (PhotonNetwork.IsMasterClient)
+		if (PhotonNetwork.IsMasterClient && ASs.weight > 0)
 		{
 			totalWeight -= ASs.weight;
+			GameManager.Instance.currentScore += (ASs.score * GameManager.Instance.currentScoreMX);
 		}
 	}
 }
