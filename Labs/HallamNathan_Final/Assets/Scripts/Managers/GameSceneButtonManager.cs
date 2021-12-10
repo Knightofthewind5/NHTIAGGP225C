@@ -7,6 +7,7 @@ public class GameSceneButtonManager : MonoBehaviour
 {
 	public void ReturnToMain()
 	{
+		StopAllCoroutines();
 		PhotonNetwork.LeaveRoom();
 	}
 }

@@ -7,7 +7,6 @@ using Photon.Realtime;
 using UnityEngine.UI;
 using TMPro;
 
-[ExecuteInEditMode]
 public class GameManager : MonoBehaviour
 {
 	//Singleton 
@@ -29,6 +28,7 @@ public class GameManager : MonoBehaviour
 	public float currentScore;
 	public float currentScoreMX = 1f;
 	public int availableWeight;
+	public int livesRemaining;
 	public GameObject baseGameObject;
 	public List<AsteroidStats> asteroids = new List<AsteroidStats>();
 	public List<WeaponStats> weapons = new List<WeaponStats>();
@@ -42,6 +42,11 @@ public class GameManager : MonoBehaviour
 	public TMP_Text scoreMXText;
 	public Image levelBar;
 	public TMP_Text levelText;
+	public TMP_Text livesText;
+	public TMP_Text respawnCounter;
+	float spawnTime = 0;
+	IEnumerator spawnTimer;
+	public bool localPlayerAlive = false;
 	public float barFillStart = 0.24f;
 
 	private void Awake()
@@ -60,8 +65,10 @@ public class GameManager : MonoBehaviour
 		asteroidWeightMultiplier = GameSettingsManager.Instance.asteroidWeightMultiplier;
 		baseScoreForLevel = GameSettingsManager.Instance.baseScorePerLevel;
 		levelScoreMultiplier = GameSettingsManager.Instance.levelScoreMultiplier;
+		livesRemaining = GameSettingsManager.Instance.playerLives + PhotonNetwork.CurrentRoom.PlayerCount;
 
-		StartCoroutine(WaitTimer());
+		spawnTimer = WaitTimer();
+		StartCoroutine(spawnTimer);
 	}
 
 	private void Update()
@@ -99,6 +106,38 @@ public class GameManager : MonoBehaviour
 		levelText.text = level.ToString();
 		scoreText.text = currentScore.ToString("F1");
 		scoreMXText.text = "X" + currentScoreMX.ToString("F1");
+
+		livesText.text = livesRemaining.ToString();
+
+		if (spawnTimer == null && !localPlayerAlive && livesRemaining > 0)
+		{
+			spawnTimer = SpawnTimer(5f);
+			StartCoroutine(spawnTimer);
+		}
+		else if (spawnTimer == null && !localPlayerAlive && livesRemaining == 0)
+		{
+			respawnCounter.text = "No lives remaining!";
+		}
+	}
+
+	IEnumerator SpawnTimer(float time)
+	{
+		spawnTime = time;
+
+		do
+		{
+			spawnTime -= 1;
+			respawnCounter.text = "Respawning in: " + spawnTime;
+			yield return new WaitForSeconds(1f);
+		}
+		while (spawnTime > 0);
+
+		yield return new WaitForSeconds(1f);
+
+		SpawnPlayer();
+		DeathCanvas.SetActive(false);
+
+		spawnTimer = null;
 	}
 
 	IEnumerator WaitTimer()
@@ -106,6 +145,8 @@ public class GameManager : MonoBehaviour
 		yield return new WaitForSecondsRealtime(GameSettingsManager.Instance.playerSpawnWaitTime);
 
 		SpawnPlayer();
+
+		spawnTimer = null;
 	}
 
 	void SpawnPlayer()
@@ -117,6 +158,8 @@ public class GameManager : MonoBehaviour
 				GameObject player = PhotonNetwork.Instantiate(shuttle.shuttlePrefab.name, Vector2.zero, Quaternion.identity);
 
 				PV.RPC("AddAlivePlayerRPC", RpcTarget.All, player.GetPhotonView().ViewID);
+
+				localPlayerAlive = true;
 			}
 		}
 	}
@@ -130,6 +173,8 @@ public class GameManager : MonoBehaviour
 
 			AlivePlayers.Add(player);
 		}
+
+		livesRemaining -= 1;
 	}
 
 	[PunRPC]

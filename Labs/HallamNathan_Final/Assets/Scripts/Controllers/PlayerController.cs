@@ -146,6 +146,12 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 		PrimaryWeapon = new WeaponStats(GameManager.Instance.weapons[primaryWeaponIndex]);
 
+		if (!hasGraced)
+		{
+			_graceTimer = GraceTimer(5f);
+			StartCoroutine(_graceTimer);
+		}
+
 		_shieldTimer = ShieldRechargeTimer();
 		StartCoroutine(_shieldTimer);
 	}
@@ -347,7 +353,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	{
 		if (!hasGraced)
 		{
-			_graceTimer = GraceTimer();
+			_graceTimer = GraceTimer(gracePeriod);
 			StartCoroutine(_graceTimer);
 		}
 
@@ -383,11 +389,10 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 		yield return new WaitForSeconds(1f);
 
-		hasGraced = false;
 		Shields.Fade(false, 1f);
 	}
 
-	IEnumerator GraceTimer()
+	IEnumerator GraceTimer(float time)
 	{
 		hasGraced = true;
 		polyCollider.enabled = false;
@@ -397,14 +402,17 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		ParticleSystem.EmissionModule psem = JetTrailPS.emission;
 		psem.enabled = false;
 
-		yield return new WaitForSeconds(gracePeriod);
+		yield return new WaitForSeconds(time);
 
 		psem.enabled = true;
 		polyCollider.enabled = true;
 		spriteColor.a = (float)properties["colorAlpha"];
 		SR.color = spriteColor;
 
+		yield return new WaitUntil(() => _shieldTimer == null);
+
 		_graceTimer = null;
+		hasGraced = false;
 	}
 
 	IEnumerator ShieldBrokenBlink()
@@ -560,9 +568,13 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	{
 		GameObject.FindGameObjectWithTag("MainCamera").GetComponent<AudioSource>().PlayOneShot(DeathSound);
 
-		GameManager.Instance.DeathCanvas.Fade(true, 5f);
-		GameManager.Instance.DeathCanvas.interactable = true;
-		GameManager.Instance.DeathCanvas.blocksRaycasts = true;
+		if (photonView.IsMine)
+		{
+			GameManager.Instance.DeathCanvas.Fade(true, 5f);
+			GameManager.Instance.DeathCanvas.interactable = true;
+			GameManager.Instance.DeathCanvas.blocksRaycasts = true;
+			GameManager.Instance.localPlayerAlive = false;
+		}
 
 		for (int count = 8; count > 0; count--)
 		{

@@ -65,6 +65,7 @@ public class GameSettingsModifierManager : MonoBehaviour
 		GameSettingsManager.Instance.playerGraceMultiplier = float.Parse(playerGraceMX.text);
 		GameSettingsManager.Instance.invulnerability = Convert.ToBoolean(playerInvulnerability.value);
 		GameSettingsManager.Instance.noShields = Convert.ToBoolean(playerNoShields.value);
+		GameSettingsManager.Instance.playerLives = int.Parse(playerLives.text);
 	}
 
 	public void DefaultSettings()

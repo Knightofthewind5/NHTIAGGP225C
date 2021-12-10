@@ -5,11 +5,18 @@ using UnityEngine;
 public class ExtensionRoutines : MonoBehaviour
 {
 	// This will be null until after Awake()
-	public static ExtensionRoutines Instance = null;
+	public static ExtensionRoutines Instance;
 
 	private void Awake()
 	{
-		Instance = this;
+		if (Instance)
+		{
+			Destroy(this);
+		}
+		else
+		{
+			Instance = this;
+		}
 	}
 
 	public Coroutine StartRoutine(IEnumerator firstIterationResult)
@@ -32,7 +39,8 @@ public class ExtensionRoutines : MonoBehaviour
 		do
 		{
 			if (CG && CG.alpha != savedCurrentValue) break;
-			
+			if (CG == null) break;
+
 			timeSinceStarted = Time.time - _timeStartLerping;
 			percentageComplete = timeSinceStarted / lerpTime;
 
