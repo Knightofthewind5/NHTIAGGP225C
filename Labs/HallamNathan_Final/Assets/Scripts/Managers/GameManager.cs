@@ -98,6 +98,13 @@ public class GameManager : MonoBehaviour
 
 		levelBar.fillAmount = (levelPercentage / levelBase) + barFillStart;
 
+		float scorePercentage = currentScoreMX - (Mathf.Floor(currentScoreMX));
+		float scoreBase = (1 / (1 - barFillStart));
+
+		scoreMXBar.fillAmount = (scorePercentage / scoreBase) + barFillStart;
+
+
+
 		if (currentScore >= maxScoreForLevel)
 		{
 			level++;
@@ -189,9 +196,10 @@ public class GameManager : MonoBehaviour
 	}
 
 	[PunRPC]
-	public void UpdateInfoBarValuesRPC(float score)
+	public void UpdateInfoBarValuesRPC(int score)
 	{
-		currentScore += score;
-		currentScoreMX += (score / 100);
+		currentScore += (score * currentScoreMX);
+		float addScoreMX = score;
+		currentScoreMX += addScoreMX / 100;
 	}
 }

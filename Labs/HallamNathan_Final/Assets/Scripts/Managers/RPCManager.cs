@@ -66,7 +66,7 @@ public class RPCManager : MonoBehaviour
 			rb.velocity = PC.gameObject.transform.up * (WSS.speed + PC.rb.velocity.magnitude);
 			Destroy(proj, WSS.lifetime);
 
-			PC.AS.PlayOneShot(WSS.fireSound);
+			PC.ASgeneral.PlayOneShot(WSS.fireSound);
 		}
 	}
 

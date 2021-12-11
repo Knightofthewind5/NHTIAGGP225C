@@ -73,7 +73,8 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	ParticleSystem JetTrailPS;
 	ParticleSystem.MainModule psMain;
 
-	public AudioSource AS { get; private set; }
+	public AudioSource ASgeneral { get; private set; }
+	public AudioSource ASthrust { get; private set; }
 	public AudioClip DeathSound;
 
 	#region Input Variables
@@ -107,7 +108,8 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		rb = GetComponent<Rigidbody2D>();
 		polyCollider = GetComponent<PolygonCollider2D>();
 		JetTrailPS = GetComponent<ParticleSystem>();
-		AS = GetComponent<AudioSource>();
+		ASgeneral = GetComponent<AudioSource>();
+		ASthrust = transform.GetChild(3).GetChild(0).GetComponent<AudioSource>();
 		SR = transform.GetChild(0).GetComponent<SpriteRenderer>();
 
 		properties = photonView.Controller.CustomProperties;
@@ -183,10 +185,17 @@ public class PlayerController : MonoBehaviour, IPunObservable
 			if (forward)
 			{
 				JetTrailPS.Play();
+				
+				if (!ASthrust.isPlaying)
+				{
+					ASthrust.Play();
+				}
+
 			}
 			else if (!forward)
 			{
 				JetTrailPS.Stop();
+				ASthrust.Stop();
 			}
 
 			if (backward)

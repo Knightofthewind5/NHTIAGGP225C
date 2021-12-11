@@ -199,7 +199,7 @@ public class Asteroid : MonoBehaviour
 		if (PhotonNetwork.IsMasterClient && ASs.weight > 0)
 		{
 			totalWeight -= ASs.weight;
-			GameManager.Instance.PV.RPC("UpdateInfoBarValuesRPC", RpcTarget.AllBuffered, ASs.score * GameManager.Instance.currentScoreMX);
+			GameManager.Instance.PV.RPC("UpdateInfoBarValuesRPC", RpcTarget.AllBuffered, ASs.score);
 		}
 
 		//GameManager.Instance.currentScore += (ASs.score * GameManager.Instance.currentScoreMX);
