@@ -187,4 +187,11 @@ public class GameManager : MonoBehaviour
 			AlivePlayers.Remove(player);
 		}
 	}
+
+	[PunRPC]
+	public void UpdateInfoBarValuesRPC(float score)
+	{
+		currentScore += score;
+		currentScoreMX += (score / 100);
+	}
 }

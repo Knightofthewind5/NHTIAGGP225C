@@ -50,6 +50,7 @@ MonoBehaviour:
   - SpawnPlayerRPC
   - RemoveAlivePlayerRPC
   - AddAlivePlayerRPC
+  - UpdateInfoBarValuesRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

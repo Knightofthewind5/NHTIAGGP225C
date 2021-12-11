@@ -471,6 +471,8 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	{
 		if (!GameSettingsManager.Instance.noShields)
 		{
+			GameManager.Instance.currentScoreMX = 1f;
+
 			currentShieldStrength += amount;
 
 			ShieldRecharge.fillAmount = 0f;
