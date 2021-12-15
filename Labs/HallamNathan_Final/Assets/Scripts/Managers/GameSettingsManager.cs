@@ -12,7 +12,7 @@ public class GameSettingsManager : MonoBehaviour
 
 	[Header("Player")]
 	[Tooltip("The amount of time it takes to spawn in the players. \n Default 2")]
-	public float playerSpawnWaitTime = 2f;
+	public float playerSpawnWaitTime = 0.5f;
 	[Tooltip("Multiplies the max speed of each shuttle by the given value. \n Default 1")]
 	public float playerMaxSpeedMultiplier = 1f;
 	[Tooltip("Multiplies the acceleration of each shuttle by the given value. \n Default 1")]

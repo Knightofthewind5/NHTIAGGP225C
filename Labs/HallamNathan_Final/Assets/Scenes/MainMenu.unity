@@ -1173,8 +1173,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1768,8 +1768,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1944,7 +1944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3108,7 +3108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5079,8 +5079,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6658,7 +6658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8840,6 +8840,7 @@ MonoBehaviour:
     splitIndex: 2
     lifetime: 0
     scale: {x: 2, y: 2, z: 2}
+  deathSound: {fileID: 0}
 --- !u!1 &1988307627327090444
 GameObject:
   m_ObjectHideFlags: 0
@@ -8887,6 +8888,7 @@ MonoBehaviour:
     splitIndex: 2
     lifetime: 0
     scale: {x: 2, y: 2, z: 2}
+  deathSound: {fileID: 0}
 --- !u!1 &1988307627488765101
 GameObject:
   m_ObjectHideFlags: 0
@@ -8934,6 +8936,7 @@ MonoBehaviour:
     splitIndex: 2
     lifetime: 0
     scale: {x: 2, y: 2, z: 2}
+  deathSound: {fileID: 0}
 --- !u!1 &1988307627556288452
 GameObject:
   m_ObjectHideFlags: 0
@@ -8981,6 +8984,7 @@ MonoBehaviour:
     splitIndex: 2
     lifetime: 0
     scale: {x: 2, y: 2, z: 2}
+  deathSound: {fileID: 0}
 --- !u!1 &1988307627941080526
 GameObject:
   m_ObjectHideFlags: 0
@@ -9028,6 +9032,7 @@ MonoBehaviour:
     splitIndex: 2
     lifetime: 0
     scale: {x: 2, y: 2, z: 2}
+  deathSound: {fileID: 0}
 --- !u!1 &2173608527460742924
 GameObject:
   m_ObjectHideFlags: 0
@@ -10254,6 +10259,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594417024602821
 GameObject:
   m_ObjectHideFlags: 0
@@ -10301,6 +10307,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594417070747369
 GameObject:
   m_ObjectHideFlags: 0
@@ -10348,6 +10355,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594417645636528
 GameObject:
   m_ObjectHideFlags: 0
@@ -10395,6 +10403,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594417888805742
 GameObject:
   m_ObjectHideFlags: 0
@@ -10442,6 +10451,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594417926928925
 GameObject:
   m_ObjectHideFlags: 0
@@ -10489,6 +10499,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594418025814819
 GameObject:
   m_ObjectHideFlags: 0
@@ -10536,6 +10547,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594418125401971
 GameObject:
   m_ObjectHideFlags: 0
@@ -10583,6 +10595,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594418132861528
 GameObject:
   m_ObjectHideFlags: 0
@@ -10630,6 +10643,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594418324041290
 GameObject:
   m_ObjectHideFlags: 0
@@ -10677,6 +10691,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594418550407569
 GameObject:
   m_ObjectHideFlags: 0
@@ -10724,6 +10739,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594418632584389
 GameObject:
   m_ObjectHideFlags: 0
@@ -10771,6 +10787,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594418666996377
 GameObject:
   m_ObjectHideFlags: 0
@@ -10818,6 +10835,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594418761924772
 GameObject:
   m_ObjectHideFlags: 0
@@ -10865,6 +10883,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594418823264342
 GameObject:
   m_ObjectHideFlags: 0
@@ -10912,6 +10931,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!1 &3300594418874595328
 GameObject:
   m_ObjectHideFlags: 0
@@ -10959,6 +10979,7 @@ MonoBehaviour:
     splitIndex: 1
     lifetime: 0
     scale: {x: 1, y: 1, z: 1}
+  deathSound: {fileID: 0}
 --- !u!212 &3502395074420791651
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -15304,6 +15325,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750641745072100
 GameObject:
   m_ObjectHideFlags: 0
@@ -15351,6 +15373,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750641862521623
 GameObject:
   m_ObjectHideFlags: 0
@@ -15398,6 +15421,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750641890043143
 GameObject:
   m_ObjectHideFlags: 0
@@ -15445,6 +15469,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750641902944212
 GameObject:
   m_ObjectHideFlags: 0
@@ -15492,6 +15517,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750641920593473
 GameObject:
   m_ObjectHideFlags: 0
@@ -15539,6 +15565,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750641961693746
 GameObject:
   m_ObjectHideFlags: 0
@@ -15586,6 +15613,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750642069611467
 GameObject:
   m_ObjectHideFlags: 0
@@ -15633,6 +15661,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750642072076002
 GameObject:
   m_ObjectHideFlags: 0
@@ -15680,6 +15709,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750642343260242
 GameObject:
   m_ObjectHideFlags: 0
@@ -15727,6 +15757,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750642484958344
 GameObject:
   m_ObjectHideFlags: 0
@@ -15774,6 +15805,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750642561736123
 GameObject:
   m_ObjectHideFlags: 0
@@ -15821,6 +15853,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750642723018257
 GameObject:
   m_ObjectHideFlags: 0
@@ -15868,6 +15901,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750642749877047
 GameObject:
   m_ObjectHideFlags: 0
@@ -15915,6 +15949,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750642750302492
 GameObject:
   m_ObjectHideFlags: 0
@@ -15962,6 +15997,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750642762479092
 GameObject:
   m_ObjectHideFlags: 0
@@ -16009,6 +16045,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750642780857763
 GameObject:
   m_ObjectHideFlags: 0
@@ -16056,6 +16093,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750642854788398
 GameObject:
   m_ObjectHideFlags: 0
@@ -16103,6 +16141,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750642923636698
 GameObject:
   m_ObjectHideFlags: 0
@@ -16150,6 +16189,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750642993888865
 GameObject:
   m_ObjectHideFlags: 0
@@ -16197,6 +16237,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750643019375283
 GameObject:
   m_ObjectHideFlags: 0
@@ -16244,6 +16285,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750643109645914
 GameObject:
   m_ObjectHideFlags: 0
@@ -16291,6 +16333,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750643111678797
 GameObject:
   m_ObjectHideFlags: 0
@@ -16338,6 +16381,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750643134991727
 GameObject:
   m_ObjectHideFlags: 0
@@ -16385,6 +16429,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750643309413666
 GameObject:
   m_ObjectHideFlags: 0
@@ -16432,6 +16477,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750643357223535
 GameObject:
   m_ObjectHideFlags: 0
@@ -16479,6 +16525,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750643393099816
 GameObject:
   m_ObjectHideFlags: 0
@@ -16526,6 +16573,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750643494002702
 GameObject:
   m_ObjectHideFlags: 0
@@ -16573,6 +16621,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750643537529824
 GameObject:
   m_ObjectHideFlags: 0
@@ -16620,6 +16669,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750643640787318
 GameObject:
   m_ObjectHideFlags: 0
@@ -16667,6 +16717,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750643738083278
 GameObject:
   m_ObjectHideFlags: 0
@@ -16714,6 +16765,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750643817921809
 GameObject:
   m_ObjectHideFlags: 0
@@ -16761,6 +16813,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!1 &6593750643834551055
 GameObject:
   m_ObjectHideFlags: 0
@@ -16808,6 +16861,7 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0.5, y: 0.5, z: 0.5}
+  deathSound: {fileID: 0}
 --- !u!4 &6689278182016303300
 Transform:
   m_ObjectHideFlags: 0
