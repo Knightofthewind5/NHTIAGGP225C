@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	#endregion Input Variables
 
 	#region Weapon Variables
-	int primaryWeaponIndex = 0;
+	public int primaryWeaponIndex = 0;
 	public WeaponStats PrimaryWeapon { get; private set; }
 	float primaryWeaponCooldown = 0;
 	public bool primaryWeaponOnCooldown = false;
@@ -560,6 +560,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 			stream.SendNext(color.a);
 			stream.SendNext(currentShieldStrength);
 			stream.SendNext(shuttleName);
+			stream.SendNext(polyCollider.enabled);
 		}
 		else if (stream.IsReading)
 		{
@@ -572,6 +573,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 			color.a = (float)stream.ReceiveNext();
 			currentShieldStrength = (float)stream.ReceiveNext();
 			shuttleName = (string)stream.ReceiveNext();
+			polyCollider.enabled = (bool)stream.ReceiveNext();
 		}
 	}
 

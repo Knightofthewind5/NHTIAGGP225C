@@ -356,7 +356,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1607859935220970277}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -5101,8 +5101,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.15
-  m_Pitch: 0.75
+  m_Volume: 0.1
+  m_Pitch: 1.5
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -5287,6 +5287,7 @@ MonoBehaviour:
   shieldBlinkInterval2: 0.15
   DeathSound: {fileID: 8300000, guid: 0e25413c6134e9e4f8f4af958972911b, type: 3}
   canThrustBack: 0
+  primaryWeaponIndex: 2
   primaryWeaponOnCooldown: 0
   SpawnLocation: {fileID: 3917442296529253076}
   color: {r: 1, g: 1, b: 1, a: 1}

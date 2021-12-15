@@ -834,11 +834,33 @@ MonoBehaviour:
   - weaponName: Pew
     icon: {fileID: 0}
     projectilePrefab: {fileID: 6506785029176839810, guid: d1e75c4dea671f94e893ace0f9349732, type: 3}
-    damage: 1
+    damage: 2
     speed: 50
     lifetime: 1
     fireRate: 0.25
     fireSound: {fileID: 8300000, guid: 81b69c8e406f3fe4892debfc08a526e5, type: 3}
+    mass: 50
+    life: 1
+  - weaponName: Pud
+    icon: {fileID: 0}
+    projectilePrefab: {fileID: 6506785029176839810, guid: d1e75c4dea671f94e893ace0f9349732, type: 3}
+    damage: 3
+    speed: 25
+    lifetime: 3
+    fireRate: 0.54
+    fireSound: {fileID: 8300000, guid: 81b69c8e406f3fe4892debfc08a526e5, type: 3}
+    mass: 200
+    life: 4
+  - weaponName: Pak
+    icon: {fileID: 0}
+    projectilePrefab: {fileID: 6506785029176839810, guid: d1e75c4dea671f94e893ace0f9349732, type: 3}
+    damage: 1
+    speed: 75
+    lifetime: 0.5
+    fireRate: 0.2
+    fireSound: {fileID: 8300000, guid: 81b69c8e406f3fe4892debfc08a526e5, type: 3}
+    mass: 1
+    life: 1
   shuttleStats: {fileID: 11400000, guid: d3f88988ad526b4468faa57184740210, type: 2}
   DeathCanvas: {fileID: 671249932}
   AlivePlayers: []

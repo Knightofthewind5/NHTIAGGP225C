@@ -21,6 +21,10 @@ public class WeaponStats
 	public float fireRate;
 	[Tooltip("The sound that will play when firing this weapon")]
 	public AudioClip fireSound;
+	[Tooltip("The amount of knockback this projectile will deal on impact")]
+	public float mass;
+	[Tooltip("The amount of objects the projectile can pierce")]
+	public float life;
 
 	public WeaponStats(WeaponStats stats)
 	{
@@ -32,5 +36,7 @@ public class WeaponStats
 		lifetime = stats.lifetime;
 		fireRate = stats.fireRate;
 		fireSound = stats.fireSound;
+		mass = stats.mass;
+		life = stats.life;
 	}
 }

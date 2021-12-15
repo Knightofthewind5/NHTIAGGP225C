@@ -51,21 +51,40 @@ public class GameSettingsModifierManager : MonoBehaviour
 		playerLives.text = GameSettingsManager.Instance.playerLives.ToString();
 		playerInvulnerability.value = Convert.ToInt32(GameSettingsManager.Instance.invulnerability);
 		playerNoShields.value = Convert.ToInt32(GameSettingsManager.Instance.noShields);
+
+		asteroidSpawnWait.text = GameSettingsManager.Instance.asteroidSpawnWaitTime.ToString();
+		asteroidSpeedMX.text = GameSettingsManager.Instance.asteroidSpeedMultiplier.ToString();
+		asteroidHealthMX.text = GameSettingsManager.Instance.asteroidHealthMultiplier.ToString();
+		asteroidDamageMX.text = GameSettingsManager.Instance.asteroidDamageMultiplier.ToString();
+		asteroidBaseWeight.text = GameSettingsManager.Instance.baseAsteroidWeight.ToString();
+		asteroidWeightMX.text = GameSettingsManager.Instance.asteroidWeightMultiplier.ToString();
+
+		scoreBasePerLevel.text = GameSettingsManager.Instance.baseScorePerLevel.ToString();
+		scoreLevelMX.text = GameSettingsManager.Instance.levelScoreMultiplier.ToString();
 	}
 
 	public void SaveSettings()
 	{
 		if (playerSpawnWait.text.Length > 0) GameSettingsManager.Instance.playerSpawnWaitTime = float.Parse(playerSpawnWait.text);
-
-		GameSettingsManager.Instance.playerMaxSpeedMultiplier = float.Parse(playerMaxSpeedMX.text);
-		GameSettingsManager.Instance.playerAccelerationMultiplier = float.Parse(playerAccelerationMX.text);
-		GameSettingsManager.Instance.playerRotationMultiplier = float.Parse(playerRotationMX.text);
-		GameSettingsManager.Instance.playerBrakingpowerMultiplier = float.Parse(playerBrakingPowerMX.text);
-		GameSettingsManager.Instance.playerHealthMultiplier = float.Parse(playerHealthMX.text);
-		GameSettingsManager.Instance.playerGraceMultiplier = float.Parse(playerGraceMX.text);
+		if (playerMaxSpeedMX.text.Length > 0) GameSettingsManager.Instance.playerMaxSpeedMultiplier = float.Parse(playerMaxSpeedMX.text);
+		if (playerAccelerationMX.text.Length > 0) GameSettingsManager.Instance.playerAccelerationMultiplier = float.Parse(playerAccelerationMX.text);
+		if (playerRotationMX.text.Length > 0) GameSettingsManager.Instance.playerRotationMultiplier = float.Parse(playerRotationMX.text);
+		if (playerBrakingPowerMX.text.Length > 0) GameSettingsManager.Instance.playerBrakingpowerMultiplier = float.Parse(playerBrakingPowerMX.text);
+		if (playerHealthMX.text.Length > 0) GameSettingsManager.Instance.playerHealthMultiplier = float.Parse(playerHealthMX.text);
+		if (playerGraceMX.text.Length > 0) GameSettingsManager.Instance.playerGraceMultiplier = float.Parse(playerGraceMX.text);
+		if (playerLives.text.Length > 0) GameSettingsManager.Instance.playerLives = int.Parse(playerLives.text);
 		GameSettingsManager.Instance.invulnerability = Convert.ToBoolean(playerInvulnerability.value);
 		GameSettingsManager.Instance.noShields = Convert.ToBoolean(playerNoShields.value);
-		GameSettingsManager.Instance.playerLives = int.Parse(playerLives.text);
+
+		if (asteroidSpawnWait.text.Length > 0) GameSettingsManager.Instance.asteroidSpawnWaitTime = float.Parse(asteroidSpawnWait.text);
+		if (asteroidSpeedMX.text.Length > 0) GameSettingsManager.Instance.asteroidSpeedMultiplier = float.Parse(asteroidSpeedMX.text);
+		if (asteroidHealthMX.text.Length > 0) GameSettingsManager.Instance.asteroidHealthMultiplier = float.Parse(asteroidHealthMX.text);
+		if (asteroidDamageMX.text.Length > 0) GameSettingsManager.Instance.asteroidDamageMultiplier = float.Parse(asteroidDamageMX.text);
+		if (asteroidBaseWeight.text.Length > 0) GameSettingsManager.Instance.baseAsteroidWeight = int.Parse(asteroidBaseWeight.text);
+		if (asteroidWeightMX.text.Length > 0) GameSettingsManager.Instance.asteroidWeightMultiplier = float.Parse(asteroidWeightMX.text);
+
+		if (scoreBasePerLevel.text.Length > 0) GameSettingsManager.Instance.baseScorePerLevel = int.Parse(scoreBasePerLevel.text);
+		if (scoreLevelMX.text.Length > 0) GameSettingsManager.Instance.levelScoreMultiplier = float.Parse(scoreLevelMX.text);
 	}
 
 	public void DefaultSettings()

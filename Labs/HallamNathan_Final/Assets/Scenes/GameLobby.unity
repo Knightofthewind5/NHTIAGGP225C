@@ -17282,14 +17282,14 @@ MonoBehaviour:
   playerLives: {fileID: 213258372}
   playerInvulnerability: {fileID: 1964592889}
   playerNoShields: {fileID: 873651388}
-  asteroidSpawnWait: {fileID: 0}
-  asteroidSpeedMX: {fileID: 0}
-  asteroidHealthMX: {fileID: 0}
-  asteroidDamageMX: {fileID: 0}
-  asteroidBaseWeight: {fileID: 0}
-  asteroidWeightMX: {fileID: 0}
-  scoreBasePerLevel: {fileID: 0}
-  scoreLevelMX: {fileID: 0}
+  asteroidSpawnWait: {fileID: 928072017}
+  asteroidSpeedMX: {fileID: 1532150551}
+  asteroidHealthMX: {fileID: 96466746}
+  asteroidDamageMX: {fileID: 434651541}
+  asteroidBaseWeight: {fileID: 1159158945}
+  asteroidWeightMX: {fileID: 1431033338}
+  scoreBasePerLevel: {fileID: 1833473145}
+  scoreLevelMX: {fileID: 1681282075}
 --- !u!1 &1445644471
 GameObject:
   m_ObjectHideFlags: 0

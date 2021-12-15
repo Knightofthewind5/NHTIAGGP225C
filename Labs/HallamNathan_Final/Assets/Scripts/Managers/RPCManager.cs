@@ -61,6 +61,8 @@ public class RPCManager : MonoBehaviour
 			script.owner = PC.photonView.Owner.NickName;
 			script.ID = ID.ToString();
 			script.damage = WSS.damage;
+			script.HP = WSS.life;
+			proj.GetComponent<Rigidbody2D>().mass = WSS.mass;
 
 			Rigidbody2D rb = proj.GetComponent<Rigidbody2D>();
 			rb.velocity = PC.gameObject.transform.up * (WSS.speed + PC.rb.velocity.magnitude);

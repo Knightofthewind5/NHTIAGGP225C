@@ -19,7 +19,6 @@ public class Projectile : MonoBehaviour
 		ID = owner + ID;
 
 		PhotonNetwork.NetworkingClient.EventReceived += this.UpdateProjectileHealth;
-		HP = 1f;
 	}
 
 	private void UpdateProjectileHealth(EventData obj)
@@ -48,7 +47,12 @@ public class Projectile : MonoBehaviour
 			{
 				if (Collision.gameObject.transform.TryGetComponent(out Asteroid asteroid))
 				{
-					HP -= 1;
+					HP -= asteroid.ASs.size;
+
+					if (HP < 0)
+					{
+						HP = 0;
+					}
 
 					object[] datas = new object[] { ID, HP };
 

@@ -153,7 +153,11 @@ public class Asteroid : MonoBehaviour
 	{
 		if (PhotonNetwork.IsMasterClient)
 		{
+			Debug.Log(HP);
+			Debug.Log(value);
 			HP += value;
+
+			Debug.Log(HP);
 
 			if (HP <= 0)
 			{
@@ -175,7 +179,7 @@ public class Asteroid : MonoBehaviour
 			{
 				if (Collision.gameObject.transform.TryGetComponent(out Projectile proj))
 				{
-					ModifyHealth(-proj.damage);
+					ModifyHealth(-proj.HP - proj.damage);
 				}
 			}
 		}	
