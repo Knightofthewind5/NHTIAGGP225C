@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 public class RPCManager : MonoBehaviour
 {
@@ -78,5 +79,11 @@ public class RPCManager : MonoBehaviour
 		GameObject obj = GameObject.Find(customID.ToString());
 
 		Destroy(obj);
+	}
+
+	[PunRPC]
+	public void RestartGameRPC()
+	{
+		SceneManager.LoadScene("GameScene");
 	}
 }

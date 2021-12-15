@@ -44,6 +44,8 @@ public class GameManager : MonoBehaviour
 	public TMP_Text levelText;
 	public TMP_Text livesText;
 	public TMP_Text respawnCounter;
+	public Button restartGame;
+	public Button returnToLobby;
 	float spawnTime = 0;
 	IEnumerator spawnTimer;
 	public bool localPlayerAlive = false;
@@ -89,6 +91,12 @@ public class GameManager : MonoBehaviour
 		availableWeight = maxWeightForLevel - currentWeight;
 
 		UpdateInfoBars();
+
+		if (PhotonNetwork.IsMasterClient && livesRemaining == 0 && !restartGame.gameObject.activeInHierarchy)
+		{
+			restartGame.gameObject.SetActive(true);
+			returnToLobby.gameObject.SetActive(true);
+		}
 	}
 
 	void UpdateInfoBars()

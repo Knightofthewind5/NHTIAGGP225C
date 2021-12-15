@@ -5187,6 +5187,7 @@ MonoBehaviour:
   shieldBlinkInterval2: 0.15
   DeathSound: {fileID: 8300000, guid: 0e25413c6134e9e4f8f4af958972911b, type: 3}
   canThrustBack: 0
+  primaryWeaponIndex: 0
   primaryWeaponOnCooldown: 0
   SpawnLocation: {fileID: 3915791228592224358}
   color: {r: 0, g: 0, b: 0, a: 0}
