@@ -25,7 +25,7 @@ public class Asteroid : MonoBehaviour
 	Color spriteColor;
 	float randomRotationValue;
 
-
+	public AudioClip deathSound;
 	public void Awake()
 	{
 		Sprite = gameObject.transform.Find("SpriteRenderer");
@@ -153,11 +153,7 @@ public class Asteroid : MonoBehaviour
 	{
 		if (PhotonNetwork.IsMasterClient)
 		{
-			Debug.Log(HP);
-			Debug.Log(value);
 			HP += value;
-
-			Debug.Log(HP);
 
 			if (HP <= 0)
 			{
@@ -184,11 +180,11 @@ public class Asteroid : MonoBehaviour
 			}
 		}	
 		
-		if (PhotonNetwork.LocalPlayer.IsLocal)
+		if (Collision.otherCollider)
 		{
-			if (Collision.otherCollider)
+			if (Collision.gameObject.transform.TryGetComponent(out PlayerController PC))
 			{
-				if (Collision.gameObject.transform.TryGetComponent(out PlayerController PC))
+				if (PC.photonView.IsMine)
 				{
 					PC.ModifyHealth(-ASs.damage * GameSettingsManager.Instance.asteroidDamageMultiplier);
 				}
@@ -202,10 +198,13 @@ public class Asteroid : MonoBehaviour
 
 		if (PhotonNetwork.IsMasterClient && ASs.weight > 0)
 		{
+			if (Camera.main)
+			{
+				Camera.main.gameObject.GetComponent<AudioSource>().PlayOneShot(deathSound);
+			}
+
 			totalWeight -= ASs.weight;
 			GameManager.Instance.PV.RPC("UpdateInfoBarValuesRPC", RpcTarget.AllBuffered, ASs.score);
 		}
-
-		//GameManager.Instance.currentScore += (ASs.score * GameManager.Instance.currentScoreMX);
 	}
 }

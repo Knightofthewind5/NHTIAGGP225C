@@ -51,6 +51,8 @@ public class GameManager : MonoBehaviour
 	public bool localPlayerAlive = false;
 	public float barFillStart = 0.24f;
 
+	public CanvasGroup noShieldVignette;
+
 	private void Awake()
 	{
 		if (Instance)

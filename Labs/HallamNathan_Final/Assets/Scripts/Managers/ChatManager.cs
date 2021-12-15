@@ -5,12 +5,16 @@ using UnityEngine.UI;
 using TMPro;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.EventSystems;
 
 public class ChatManager : MonoBehaviourPunCallbacks
 {
 	public TMP_Text chatRoomString;
 	public TMP_InputField inputString;
 	public Button enterButton;
+	EventSystem EventSystemManager;
+	GameManager GM;
+
 
 	public static ChatManager Instance { get; private set; }
 
@@ -24,10 +28,31 @@ public class ChatManager : MonoBehaviourPunCallbacks
 		{
 			Instance = this;
 		}
+
+		EventSystemManager = FindObjectOfType<EventSystem>();
+		GM = FindObjectOfType<GameManager>();
 	}
 
 	public void Update()
 	{
+		if (Input.GetKeyDown(KeyCode.Tab) && GM != null)
+		{
+			gameObject.GetComponentInParent<CanvasGroup>().Toggle();
+			
+			if (gameObject.GetComponentInParent<CanvasGroup>().activeInHierarchy())
+			{
+				EventSystemManager.SetSelectedGameObject(inputString.gameObject);
+
+				Cursor.lockState = CursorLockMode.None;
+			}
+			else
+			{
+				EventSystemManager.SetSelectedGameObject(null);
+
+				Cursor.lockState = CursorLockMode.Locked;
+			}	
+		}
+
 		if (inputString.text.Length > 0)
 		{
 			enterButton.interactable = true;

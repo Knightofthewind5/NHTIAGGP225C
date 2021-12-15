@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	#endregion Shield Variables
 
 	ParticleSystem JetTrailPS;
+	ParticleSystem ShieldsDestroyedPS;
 	ParticleSystem.MainModule psMain;
 
 	public AudioSource ASgeneral { get; private set; }
@@ -102,12 +103,16 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	string shuttleName;
 	#endregion Sync Variables
 
+	CanvasGroup chat;
+
 	private void Awake()
 	{
+		Cursor.lockState = CursorLockMode.Locked;
+
 		photonView = GetComponent<PhotonView>();
 		rb = GetComponent<Rigidbody2D>();
 		polyCollider = GetComponent<PolygonCollider2D>();
-		JetTrailPS = GetComponent<ParticleSystem>();
+		JetTrailPS = transform.GetComponent<ParticleSystem>();
 		ASgeneral = GetComponent<AudioSource>();
 		ASthrust = transform.GetChild(3).GetChild(0).GetComponent<AudioSource>();
 		SR = transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -137,6 +142,8 @@ public class PlayerController : MonoBehaviour, IPunObservable
 				gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = shuttle.shuttleSprite;
 			}
 		}
+
+		chat = ChatManager.Instance.gameObject.GetComponentInParent<CanvasGroup>();
 	}
 
 	private void Start()
@@ -145,6 +152,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		psMain.startColor = color;
 
 		GetComponentInChildren<SpriteRenderer>().color = color;
+		ShieldsDestroyedPS = transform.GetChild(0).GetComponentInChildren<ParticleSystem>();
 
 		PrimaryWeapon = new WeaponStats(GameManager.Instance.weapons[primaryWeaponIndex]);
 
@@ -173,7 +181,7 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		{
 			GetInput();
 
-			if (forward && rb.velocity.magnitude < (maxSpeed * GameSettingsManager.Instance.playerMaxSpeedMultiplier))
+			if (forward && rb.velocity.magnitude < (maxSpeed * GameSettingsManager.Instance.playerMaxSpeedMultiplier) && !chat.activeInHierarchy())
 			{
 				Move(GameSettingsManager.Instance.playerAccelerationMultiplier);
 			}
@@ -182,10 +190,10 @@ public class PlayerController : MonoBehaviour, IPunObservable
 				rb.velocity = Vector2.MoveTowards(rb.velocity, Vector2.zero, (brakingPower * GameSettingsManager.Instance.playerBrakingpowerMultiplier) * (rb.velocity.magnitude / 10));				
 			}
 
-			if (forward)
+			if (forward && !chat.activeInHierarchy())
 			{
-				JetTrailPS.Play();
-				
+				JetTrailPS.Play(false);
+
 				if (!ASthrust.isPlaying)
 				{
 					ASthrust.Play();
@@ -194,40 +202,41 @@ public class PlayerController : MonoBehaviour, IPunObservable
 			}
 			else if (!forward)
 			{
-				JetTrailPS.Stop();
+				JetTrailPS.Stop(false);
 				ASthrust.Stop();
 			}
 
-			if (backward)
+			if (backward && !chat.activeInHierarchy())
 			{
 				if (canThrustBack == true)
 				{
 					Move(-GameSettingsManager.Instance.playerAccelerationMultiplier);
 				}
 			}
-			if (right)
+			if (right && !chat.activeInHierarchy())
 			{
 				Rotate(GameSettingsManager.Instance.playerRotationMultiplier);
 			}
-			if (left)
+			if (left && !chat.activeInHierarchy())
 			{
 				Rotate(-GameSettingsManager.Instance.playerRotationMultiplier);
 			}
 
-			if (fire1)
+			if (fire1 && !chat.activeInHierarchy())
 			{
 				Fire1();
 			}
+				
 		}
 		else if (!photonView.IsMine)
 		{
 			if (forward)
 			{
-				JetTrailPS.Play();
+				JetTrailPS.Play(false);
 			}
 			else
 			{
-				JetTrailPS.Stop();
+				JetTrailPS.Stop(false);
 			}
 
 			if (psMain.startColor.color != color)
@@ -359,7 +368,13 @@ public class PlayerController : MonoBehaviour, IPunObservable
 	}
 
 	IEnumerator ShieldRegenTimer()
-	{
+	{	
+		if (photonView.IsMine)
+		{
+			GameManager.Instance.noShieldVignette.Fade(true, 0.5f);
+			ShieldsDestroyedPS.Play();
+		}
+
 		if (!hasGraced)
 		{
 			_graceTimer = GraceTimer(gracePeriod);
@@ -383,6 +398,11 @@ public class PlayerController : MonoBehaviour, IPunObservable
 		while (currentShieldEnergy < shieldRegenWait);
 
 		yield return new WaitForEndOfFrame();
+
+		if (photonView.IsMine)
+		{
+			GameManager.Instance.noShieldVignette.Fade(false, 0.5f);
+		}
 
 		do
 		{
@@ -579,6 +599,9 @@ public class PlayerController : MonoBehaviour, IPunObservable
 
 	public void OnDestroy()
 	{
+		Cursor.lockState = CursorLockMode.None;
+
+		GameManager.Instance.noShieldVignette.Fade(false, 0.5f);
 		GameObject.FindGameObjectWithTag("MainCamera").GetComponent<AudioSource>().PlayOneShot(DeathSound);
 
 		if (photonView.IsMine)

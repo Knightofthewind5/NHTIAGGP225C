@@ -205,3 +205,4 @@ MonoBehaviour:
     splitIndex: 0
     lifetime: 0
     scale: {x: 0, y: 0, z: 0}
+  deathSound: {fileID: 8300000, guid: 4029b85da7870a0438c67d5b630c2cd1, type: 3}
